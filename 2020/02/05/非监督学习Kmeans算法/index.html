@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Donq-Ching">
+
+
+    <meta name="subtitle" content="大家好好休息">
+
+
+    <meta name="description" content="Donq-Ching的笔记本">
+
+
+    <meta name="keywords" content="BLOG">
+
+
+<title>非监督学习Kmeans算法 | Wait</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Donq&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Donq&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">非监督学习Kmeans算法</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Donq-Ching</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">二月 5, 2020&nbsp;&nbsp;0:00:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>@<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/K-%E5%B9%B3%E5%9D%87%E7%AE%97%E6%B3%95">维基百科</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">K-平均算法（英文：k-means clustering）源于信号处理中的一种向量量化方法，现在则更多地作为一种聚类分析方</span><br><span class="line">法流行于数据挖掘领域。k-平均聚类的目的是：把n个点（可以是样本的一次观察或一个实例）划分到k个聚类中，使得</span><br><span class="line">每个点都属于离他最近的均值（此即聚类中心）对应的聚类，以之作为聚类的标准。这个问题将归结为一个把数据空间</span><br><span class="line">划分为Voronoi cells的问题。</span><br><span class="line"></span><br><span class="line">这个问题在计算上是NP困难的，不过存在高效的启发式算法。一般情况下，都使用效率比较高的启发式算法，它们能够</span><br><span class="line">快速收敛于一个局部最优解。这些算法通常类似于通过迭代优化方法处理高斯混合分布的最大期望算法（EM算法）。而</span><br><span class="line">且，它们都使用聚类中心来为数据建模；然而k-平均聚类倾向于在可比较的空间范围内寻找聚类，期望-最大化技术却允</span><br><span class="line">许聚类有不同的形状。</span><br></pre></td></tr></table></figure>
+<p>此外K-means算法（k-平均聚类）与<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/K-%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95">KNN算法（K-近邻算法）</a>没有任何关系。<br>本文内容皆源自<a target="_blank" rel="noopener" href="https://www.coursera.org/learn/machine-learning/home/welcome">Andrew Ng</a></p>
+<h1 id="K-means算法思想"><a href="#K-means算法思想" class="headerlink" title="K-means算法思想"></a>K-means算法思想</h1><p>输入：<br>    1.训练集，即需要进行聚类的数据，只有X没有标记Y。<br>    2.K即聚类族的个数。</p>
+<p>根据K随机初始化K个聚类中心。</p>
+<p>族分配。</p>
+<p>移动聚类中心。</p>
+<p>例如下图所示：<br><img src="/2020/02/05/%E9%9D%9E%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0Kmeans%E7%AE%97%E6%B3%95/2.png" alt="1"><br><img src="/2020/02/05/%E9%9D%9E%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0Kmeans%E7%AE%97%E6%B3%95/1.png" alt="2"></p>
+<h1 id="优化函数"><a href="#优化函数" class="headerlink" title="优化函数"></a>优化函数</h1><p><img src="/2020/02/05/%E9%9D%9E%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0Kmeans%E7%AE%97%E6%B3%95/3.png" alt="优化函数"></p>
+<h1 id="初始聚类中心的方式"><a href="#初始聚类中心的方式" class="headerlink" title="初始聚类中心的方式"></a>初始聚类中心的方式</h1><p>随机选择K个输入点的坐标作为聚类中心，然后执行150-1000次循环，计算其代价函数，选择其最小的结果。例如</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">for _ in range(100):</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+
+<h1 id="选择K的大小"><a href="#选择K的大小" class="headerlink" title="选择K的大小"></a>选择K的大小</h1><h2 id="肘部法则"><a href="#肘部法则" class="headerlink" title="肘部法则"></a>肘部法则</h2><p><img src="/2020/02/05/%E9%9D%9E%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0Kmeans%E7%AE%97%E6%B3%95/4.png" alt="肘部法则"></p>
+<h2 id="根据实际应用选择"><a href="#根据实际应用选择" class="headerlink" title="根据实际应用选择"></a>根据实际应用选择</h2>
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Donq-Ching</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://cdongquan.site/2020/02/05/%E9%9D%9E%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0Kmeans%E7%AE%97%E6%B3%95/">https://cdongquan.site/2020/02/05/%E9%9D%9E%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0Kmeans%E7%AE%97%E6%B3%95/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E7%AE%97%E6%B3%95/"># 算法</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2020/02/08/%E6%95%B0%E6%8D%AE%E9%99%8D%E7%BB%B4PCA/">数据降维PCA</a>
+            
+            
+            <a class="next" rel="next" href="/2020/02/04/scrapy-and-selenium-%E4%BD%BF%E7%94%A8%E6%89%8B%E6%B3%95/">Use Scrapy and Selenium</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Donq-Ching | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
