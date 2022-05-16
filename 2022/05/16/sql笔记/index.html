@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Donq-Ching">
+
+
+    <meta name="subtitle" content="大家好好休息">
+
+
+    <meta name="description" content="Donq-Ching的笔记本">
+
+
+    <meta name="keywords" content="BLOG">
+
+
+<title>sql笔记.md | Wait</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Donq&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Donq&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">sql笔记.md</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Donq-Ching</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">五月 16, 2022&nbsp;&nbsp;23:09:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/SQL/">SQL</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="SQL-命令"><a href="#SQL-命令" class="headerlink" title="SQL 命令"></a>SQL 命令</h1><h1 id="基础命令"><a href="#基础命令" class="headerlink" title="基础命令"></a>基础命令</h1><ul>
+<li>select<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from table_name;</span><br></pre></td></tr></table></figure></li>
+<li>select distinct<br>去重<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select distinct column_name from table_name;</span><br></pre></td></tr></table></figure></li>
+<li>where<br>过滤<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">select column_name from table_name where column_name&gt;10;</span><br><span class="line">=</span><br><span class="line">&lt;</span><br><span class="line">&lt;&gt; or !=</span><br><span class="line">&gt;=</span><br><span class="line">&lt;=</span><br><span class="line">between在某个范围内</span><br><span class="line">like搜索某种模式</span><br><span class="line">in</span><br></pre></td></tr></table></figure></li>
+<li>and or<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from table_name where column_name = 10 and/or column_name in ...</span><br></pre></td></tr></table></figure></li>
+<li>order by<br>排序 默认为升序排序，若需要降序则使用关键字DESC<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from table_name order by column_name, column_name2 desc;</span><br></pre></td></tr></table></figure></li>
+<li>insert into<br>插入<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">insert into table_name (column_name, column_name) values (value1, value2)</span><br><span class="line">or </span><br><span class="line">insert into table_name values (value1, value2)</span><br></pre></td></tr></table></figure></li>
+<li>update<br>修改<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update table_name set column1=value1, column2=value2 where column=value;</span><br></pre></td></tr></table></figure></li>
+<li>delete<br>删除<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">delect from table_name where column=value;</span><br></pre></td></tr></table></figure>
+<h1 id="进阶命令"><a href="#进阶命令" class="headerlink" title="进阶命令"></a>进阶命令</h1></li>
+<li>select top<br>top, limit, rownum<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">select top 10 column_name from table_name;</span><br><span class="line">or</span><br><span class="line">select column_name from table_name limit 10;</span><br><span class="line">or </span><br><span class="line">select column_name from table_name where rownum &lt;= 10;</span><br><span class="line">or</span><br><span class="line"># 选择5-15行的数据 offset</span><br><span class="line">select column_name from table_name where limit 10 offset 5;</span><br></pre></td></tr></table></figure></li>
+<li>like<br>模糊搜索<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select column_name from table_name where column_name like pattern;</span><br></pre></td></tr></table></figure>
+通配符|说明</li>
+</ul>
+<p>—|—<br>%|代表零个、一个或者多个任意的字符。<br>_|代表单个字符或者数字。<br>[charlist]|字符列表中的任何单一字符。可以使用连字符（-）根据 ASCII 编码指定一个字符范围，例如：<br>[0-9]|表示从 0 到 9 的任一数字；<br>[a-z]|表示小写英文字母；<br>[a-zA-Z]|表示英文字母，不区分大小写；<br>[a-zA-Z0-9]|表示英文字母和阿拉伯数字。<br>[^charlist] 或 [!charlist]|不在字符列表中的任何单一字符。</p>
+<ul>
+<li>in<br>配合where子句使用<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select column_name from table_name where column_name in (value1, value2, ...)</span><br></pre></td></tr></table></figure></li>
+<li>between<br>选取介于两个值之间的数据范围内的值。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select column_name from table_name where column_name between 0 and 10;</span><br><span class="line"># 文本值, 选取name以介于A-J 之间字母开始的所以。</span><br><span class="line">select * from table_name where name between &#x27;A&#x27; and &#x27;J&#x27;;</span><br></pre></td></tr></table></figure></li>
+<li>别名 as<br>通常配和SQL函数使用。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select column_name as name from table_name;</span><br><span class="line">or</span><br><span class="line">select column_name from table_name as table;</span><br></pre></td></tr></table></figure>
+<h2 id="join"><a href="#join" class="headerlink" title="join"></a>join</h2></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>join类型</th>
+<th>sql</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>内连接</td>
+<td>sql inner join</td>
+</tr>
+<tr>
+<td>全连接</td>
+<td>sql full join</td>
+</tr>
+<tr>
+<td>左连接</td>
+<td>sql left join</td>
+</tr>
+<tr>
+<td>右连接</td>
+<td>sql right join</td>
+</tr>
+<tr>
+<td>padnas.merge 也是同样的操作</td>
+<td></td>
+</tr>
+</tbody></table>
+<ul>
+<li>inner join<br>inner join 与 join 相同<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select colnum_name from table1 inner join table2 on table1.col=table2.col;</span><br></pre></td></tr></table></figure></li>
+<li>full join<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from table1 full outer join table2 on table1.col=table2.col;</span><br></pre></td></tr></table></figure></li>
+<li>left join</li>
+<li>right join</li>
+<li>union<br>合并多个select语句的结果, union将选取不同的值。union all允许重复的值。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select col from table1</span><br><span class="line">union</span><br><span class="line">select col from table2;</span><br></pre></td></tr></table></figure>
+<h2 id="create"><a href="#create" class="headerlink" title="create"></a>create</h2></li>
+<li>create database<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">create database dbname;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li>create table<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">create table table_name</span><br><span class="line">(</span><br><span class="line">column_name type(site),</span><br><span class="line">column_name type(site),</span><br><span class="line">...</span><br><span class="line">)</span><br><span class="line"># eg.</span><br><span class="line">create table user</span><br><span class="line">(</span><br><span class="line">uid int PRIMARY KEY,</span><br><span class="line">name varchar(255) not null,</span><br><span class="line">password varchar(255),</span><br><span class="line">email varchar(32) UNIQUE,</span><br><span class="line">group varchar(32) foreign key references Groups(gid)</span><br><span class="line">)</span><br></pre></td></tr></table></figure></li>
+<li>约束</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>constraint</th>
+<th>details</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>not null</td>
+<td>非空</td>
+</tr>
+<tr>
+<td>unique</td>
+<td>唯一</td>
+</tr>
+<tr>
+<td>primary key</td>
+<td>主键</td>
+</tr>
+<tr>
+<td>foreign key</td>
+<td>外键</td>
+</tr>
+<tr>
+<td>check</td>
+<td>存储条件</td>
+</tr>
+<tr>
+<td>default</td>
+<td>默认值</td>
+</tr>
+</tbody></table>
+<ul>
+<li>is null<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from table_name where col is null;</span><br></pre></td></tr></table></figure></li>
+<li>is not null<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from table_name where col is not null;</span><br></pre></td></tr></table></figure>
+<h2 id="sql函数"><a href="#sql函数" class="headerlink" title="sql函数"></a>sql函数</h2></li>
+<li>avg<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select avg(name) as name_avg from table_name;</span><br></pre></td></tr></table></figure></li>
+<li>count<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select count(distinct col) as count, avg(col) from table_name;</span><br></pre></td></tr></table></figure></li>
+<li>first</li>
+<li>last</li>
+<li>max</li>
+<li>min</li>
+<li>sum</li>
+<li>ucase<br>字段大小写转化</li>
+<li>lcase</li>
+<li>mid</li>
+<li>len</li>
+<li>round</li>
+<li>now</li>
+<li>format<h3 id="group-by"><a href="#group-by" class="headerlink" title="group by"></a>group by</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select col1, max(col1) as max, count(distinct col2) as count</span><br><span class="line">from table_name</span><br><span class="line">where ...</span><br><span class="line">group by column_name</span><br></pre></td></tr></table></figure>
+<h3 id="having"><a href="#having" class="headerlink" title="having"></a>having</h3>group by的where，用来选择分组<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select col1, max(col1) as max, count(distinct col2) as count</span><br><span class="line">from table_name</span><br><span class="line">where ...</span><br><span class="line">group by column_name</span><br><span class="line">having sum(col3)&gt;10 ...</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Donq-Ching</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://www.cdongquan.site/2022/05/16/sql%E7%AC%94%E8%AE%B0/">https://www.cdongquan.site/2022/05/16/sql%E7%AC%94%E8%AE%B0/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"># 数据库</a>
+                    
+                        <a href="/tags/sql/"># sql</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2022/05/14/scrapy%E7%AC%94%E8%AE%B0/">scrapy笔记</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Donq-Ching | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
