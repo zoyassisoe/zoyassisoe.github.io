@@ -19,7 +19,7 @@
     <meta name="keywords" content="BLOG">
 
 
-<title>sql笔记.md | Wait</title>
+<title>sql笔记 | Wait</title>
 
 
 
@@ -203,7 +203,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">sql笔记.md</h1>
+            <h1 class="post-title">sql笔记</h1>
             
                 <div class="post-meta">
                     
@@ -239,10 +239,48 @@
 <li>delete<br>删除<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">delect from table_name where column=value;</span><br></pre></td></tr></table></figure>
 <h1 id="进阶命令"><a href="#进阶命令" class="headerlink" title="进阶命令"></a>进阶命令</h1></li>
 <li>select top<br>top, limit, rownum<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">select top 10 column_name from table_name;</span><br><span class="line">or</span><br><span class="line">select column_name from table_name limit 10;</span><br><span class="line">or </span><br><span class="line">select column_name from table_name where rownum &lt;= 10;</span><br><span class="line">or</span><br><span class="line"># 选择5-15行的数据 offset</span><br><span class="line">select column_name from table_name where limit 10 offset 5;</span><br></pre></td></tr></table></figure></li>
-<li>like<br>模糊搜索<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select column_name from table_name where column_name like pattern;</span><br></pre></td></tr></table></figure>
-通配符|说明</li>
+<li>like<br>模糊搜索<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select column_name from table_name where column_name like pattern;</span><br></pre></td></tr></table></figure></li>
 </ul>
-<p>—|—<br>%|代表零个、一个或者多个任意的字符。<br>_|代表单个字符或者数字。<br>[charlist]|字符列表中的任何单一字符。可以使用连字符（-）根据 ASCII 编码指定一个字符范围，例如：<br>[0-9]|表示从 0 到 9 的任一数字；<br>[a-z]|表示小写英文字母；<br>[a-zA-Z]|表示英文字母，不区分大小写；<br>[a-zA-Z0-9]|表示英文字母和阿拉伯数字。<br>[^charlist] 或 [!charlist]|不在字符列表中的任何单一字符。</p>
+<table>
+<thead>
+<tr>
+<th>通配符</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>%</td>
+<td>代表零个、一个或者多个任意的字符</td>
+</tr>
+<tr>
+<td>_</td>
+<td>代表单个字符或者数字</td>
+</tr>
+<tr>
+<td>[charlist]</td>
+<td>字符列表中的任何单一字符。可以使用连字符（-）根据 ASCII 编码指定一个字符范围，例如：</td>
+</tr>
+<tr>
+<td>[0-9]</td>
+<td>表示从 0 到 9 的任一数字</td>
+</tr>
+<tr>
+<td>[a-z]</td>
+<td>表示小写英文字母</td>
+</tr>
+<tr>
+<td>[a-zA-Z]</td>
+<td>表示英文字母，不区分大小写</td>
+</tr>
+<tr>
+<td>[a-zA-Z0-9]</td>
+<td>表示英文字母和阿拉伯数字</td>
+</tr>
+<tr>
+<td>[^charlist] 或 [!charlist]</td>
+<td>不在字符列表中的任何单一字符</td>
+</tr>
+</tbody></table>
 <ul>
 <li>in<br>配合where子句使用<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select column_name from table_name where column_name in (value1, value2, ...)</span><br></pre></td></tr></table></figure></li>
 <li>between<br>选取介于两个值之间的数据范围内的值。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select column_name from table_name where column_name between 0 and 10;</span><br><span class="line"># 文本值, 选取name以介于A-J 之间字母开始的所以。</span><br><span class="line">select * from table_name where name between &#x27;A&#x27; and &#x27;J&#x27;;</span><br></pre></td></tr></table></figure></li>
