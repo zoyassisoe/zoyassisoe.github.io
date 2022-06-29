@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Donq-Ching">
+
+
+    <meta name="subtitle" content="大家好好休息">
+
+
+    <meta name="description" content="Donq-Ching的笔记本">
+
+
+    <meta name="keywords" content="BLOG">
+
+
+<title>OCPP-BootNotification（不定期更新） | Wait</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Donq&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Donq&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">OCPP-BootNotification（不定期更新）</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Donq-Ching</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">六月 29, 2022&nbsp;&nbsp;21:07:03</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/OCPP/">OCPP</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a target="_blank" rel="noopener" href="https://github.com/mobilityhouse/ocpp">python-ocpp</a><br><a target="_blank" rel="noopener" href="https://github.com/mobilityhouse/ocpp/tree/master/docs/v16">ocpp v16 文档</a>  </p>
+<h1 id="一个会话流程"><a href="#一个会话流程" class="headerlink" title="一个会话流程"></a>一个会话流程</h1><p>1.清楚你的消息类型<br><img src="/2022/06/29/OCPP-BootNotification/message-type.png" alt="message-type"></p>
+<p>2.设置你的唯一会话ID<br><img src="/2022/06/29/OCPP-BootNotification/message-id.png" alt="message-id"></p>
+<p>3.清楚你的call所需要的字段<br><img src="/2022/06/29/OCPP-BootNotification/call.png" alt="call"><br><em>eg.</em></p>
+<p><img src="/2022/06/29/OCPP-BootNotification/call-exp.png" alt="call-exp"></p>
+<p>4.清楚你的call-result所需要的字段<br><img src="/2022/06/29/OCPP-BootNotification/call-result.png" alt="call-result"><br><em>eg.</em></p>
+<p><img src="/2022/06/29/OCPP-BootNotification/call-result-exp.png" alt="call-result-exp"></p>
+<h1 id="BootNotification"><a href="#BootNotification" class="headerlink" title="BootNotification"></a>BootNotification</h1><h2 id="req-字段解释"><a href="#req-字段解释" class="headerlink" title="req 字段解释"></a>req 字段解释</h2><h3 id="必须携带的参数"><a href="#必须携带的参数" class="headerlink" title="必须携带的参数"></a>必须携带的参数</h3><ul>
+<li><code>chargePointModel</code> ChargePoint的model标识</li>
+<li><code>chargePointVendor</code> ChargePoint的vendor标识</li>
+</ul>
+<h3 id="可选参数"><a href="#可选参数" class="headerlink" title="可选参数"></a>可选参数</h3><ul>
+<li><code>chargePointSerialNumber</code> ChargePoint的序列号</li>
+<li><code>firmwareVersion</code> ChargePoint的固件版本</li>
+<li><code>iccid</code> ICCID of the<br>modem’s SIM card. 参考翻译：modem’s SIM卡的ICCID</li>
+<li><code>imsi</code> IMSI of the modem’s<br>SIM card. 参考翻译：modem’s SIM卡的IMSI</li>
+<li><code>meterSerialNumber</code> the serial number of the<br>main power meter of<br>the Charge Point. 参考翻译：ChargePoint的主功率表的序列号</li>
+<li><code>meterType</code> the type of the main<br>power meter of the<br>Charge Point. 参考翻译：ChargePoint的主功率表的类型</li>
+<li><code>chargeBoxSerialNumber</code> 已弃用，将在未来版本中删除</li>
+</ul>
+<h3 id="v16-json-官方request说明"><a href="#v16-json-官方request说明" class="headerlink" title="v16-json-官方request说明"></a>v16-json-官方request说明</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;$schema&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://json-schema.org/draft-04/schema#&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;title&quot;</span><span class="punctuation">:</span> <span class="string">&quot;BootNotificationRequest&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;object&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;chargePointVendor&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;string&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;maxLength&quot;</span><span class="punctuation">:</span> <span class="number">20</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;chargePointModel&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;string&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;maxLength&quot;</span><span class="punctuation">:</span> <span class="number">20</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;chargePointSerialNumber&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;string&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;maxLength&quot;</span><span class="punctuation">:</span> <span class="number">25</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;chargeBoxSerialNumber&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;string&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;maxLength&quot;</span><span class="punctuation">:</span> <span class="number">25</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;firmwareVersion&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;string&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;maxLength&quot;</span><span class="punctuation">:</span> <span class="number">50</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;iccid&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;string&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;maxLength&quot;</span><span class="punctuation">:</span> <span class="number">20</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;imsi&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;string&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;maxLength&quot;</span><span class="punctuation">:</span> <span class="number">20</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;meterType&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;string&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;maxLength&quot;</span><span class="punctuation">:</span> <span class="number">25</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;meterSerialNumber&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;string&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;maxLength&quot;</span><span class="punctuation">:</span> <span class="number">25</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;additionalProperties&quot;</span><span class="punctuation">:</span> <span class="keyword">false</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;required&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;chargePointVendor&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;chargePointModel&quot;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="req-例子"><a href="#req-例子" class="headerlink" title="req 例子"></a>req 例子</h1><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span><span class="number">2</span><span class="punctuation">,</span></span><br><span class="line"> <span class="string">&quot;19223201&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="string">&quot;BootNotification&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;chargePointVendor&quot;</span><span class="punctuation">:</span> <span class="string">&quot;None&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;chargePointModel&quot;</span><span class="punctuation">:</span> <span class="string">&quot;None&quot;</span></span><br><span class="line"> <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="携带请求头"><a href="#携带请求头" class="headerlink" title="携带请求头"></a>携带请求头</h3><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/webServices/ocpp/CS3211</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>some.server.com:33033</span><br><span class="line"><span class="attribute">Upgrade</span><span class="punctuation">: </span>websocket</span><br><span class="line"><span class="attribute">Connection</span><span class="punctuation">: </span>Upgrade</span><br><span class="line"><span class="attribute">Sec-WebSocket-Key</span><span class="punctuation">: </span>x3JJHMbDL1EzLkh9GBhXDw==</span><br><span class="line"><span class="attribute">Sec-WebSocket-Protocol</span><span class="punctuation">: </span>ocpp1.6, ocpp2.0</span><br><span class="line"><span class="attribute">Sec-WebSocket-Version</span><span class="punctuation">: </span>13</span><br><span class="line"></span><br><span class="line"><span class="language-csharp">[<span class="meta">2,</span></span></span><br><span class="line"><span class="meta"><span class="language-csharp"> <span class="string">&quot;19223201&quot;</span>,</span></span></span><br><span class="line"><span class="meta"><span class="language-csharp"> <span class="string">&quot;BootNotification&quot;</span>,</span></span></span><br><span class="line"><span class="meta"><span class="language-csharp"> &#123;</span></span></span><br><span class="line"><span class="meta"><span class="language-csharp">  <span class="string">&quot;chargePointVendor&quot;</span>: <span class="string">&quot;None&quot;</span>,</span></span></span><br><span class="line"><span class="meta"><span class="language-csharp">  <span class="string">&quot;chargePointModel&quot;</span>: <span class="string">&quot;None&quot;</span></span></span></span><br><span class="line"><span class="meta"><span class="language-csharp"> &#125;</span></span></span><br><span class="line"><span class="meta"><span class="language-csharp"></span>]</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="python-websockets-ocpp-尝试"><a href="#python-websockets-ocpp-尝试" class="headerlink" title="python websockets ocpp 尝试"></a>python websockets ocpp 尝试</h1><h2 id="server"><a href="#server" class="headerlink" title="server"></a>server</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> asyncio</span><br><span class="line"><span class="keyword">import</span> websockets</span><br><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> ocpp.routing <span class="keyword">import</span> on</span><br><span class="line"><span class="keyword">from</span> ocpp.v16 <span class="keyword">import</span> ChargePoint <span class="keyword">as</span> cp</span><br><span class="line"><span class="keyword">from</span> ocpp.v16.enums <span class="keyword">import</span> Action, RegistrationStatus</span><br><span class="line"><span class="keyword">from</span> ocpp.v16 <span class="keyword">import</span> call_result, call</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ChargePoint</span>(<span class="title class_ inherited__">cp</span>):</span><br><span class="line"><span class="meta">    @on(<span class="params">Action.BootNotification</span>)</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">on_boot_notitication</span>(<span class="params">self, charge_point_vendor, charge_point_model, **kwargs</span>):</span><br><span class="line">        <span class="built_in">print</span>(charge_point_vendor)</span><br><span class="line">        <span class="built_in">print</span>(charge_point_model)</span><br><span class="line">        <span class="keyword">return</span> call_result.BootNotificationPayload(</span><br><span class="line">            current_time=datetime.utcnow().isoformat(),</span><br><span class="line">            interval=<span class="number">10</span>,</span><br><span class="line">            status=RegistrationStatus.accepted,</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">on_connect</span>(<span class="params">websocket, path</span>):</span><br><span class="line">    charge_point_id = path.strip(<span class="string">&#x27;/&#x27;</span>)</span><br><span class="line">    cp = ChargePoint(charge_point_id, websocket)</span><br><span class="line">    <span class="keyword">await</span> cp.start()</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    server = <span class="keyword">await</span> websockets.serve(</span><br><span class="line">        on_connect,</span><br><span class="line">        <span class="string">&#x27;0.0.0.0&#x27;</span>,</span><br><span class="line">        <span class="number">9000</span>,</span><br><span class="line">        subprotocols=[<span class="string">&#x27;ocpp1.6&#x27;</span>]</span><br><span class="line">    )</span><br><span class="line">    <span class="keyword">await</span> server.wait_closed()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    asyncio.run(main())</span><br></pre></td></tr></table></figure>
+<h2 id="client"><a href="#client" class="headerlink" title="client"></a>client</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> asyncio</span><br><span class="line"><span class="keyword">import</span> websockets</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">boot</span>():</span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">with</span> websockets.connect(<span class="string">&#x27;ws://127.0.0.1:9000/exp01/&#x27;</span>) <span class="keyword">as</span> websocket:</span><br><span class="line">        message = [<span class="number">2</span>,</span><br><span class="line">        <span class="string">&quot;20220613001&quot;</span>,</span><br><span class="line">        <span class="string">&quot;BootNotification&quot;</span>,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;chargePointVendor&quot;</span>: <span class="string">&quot;china&quot;</span>,</span><br><span class="line">            <span class="string">&quot;chargePointModel&quot;</span>: <span class="string">&quot;unknow&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">        ]</span><br><span class="line">        <span class="keyword">await</span> websocket.send(json.dumps(message))</span><br><span class="line"></span><br><span class="line">        result = <span class="keyword">await</span> websocket.recv()</span><br><span class="line">        <span class="built_in">print</span>(result)</span><br><span class="line">        <span class="keyword">await</span> websocket.close()</span><br><span class="line"></span><br><span class="line">asyncio.get_event_loop().run_until_complete(boot())</span><br></pre></td></tr></table></figure>
+
+<h2 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h2><p>server</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">china</span><br><span class="line">unknow</span><br><span class="line">connection handler failed</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">&quot;C:\Users\R\AppData\Local\Programs\Python\Python37\lib\site-packages\websockets\legacy\server.py&quot;</span>, line <span class="number">232</span>, <span class="keyword">in</span> handler</span><br><span class="line">    <span class="keyword">await</span> self.ws_handler(self)</span><br><span class="line">  File <span class="string">&quot;C:\Users\R\AppData\Local\Programs\Python\Python37\lib\site-packages\websockets\legacy\server.py&quot;</span>, line <span class="number">1149</span>, <span class="keyword">in</span> _ws_handler</span><br><span class="line">    )(websocket, websocket.path)</span><br><span class="line">  File <span class="string">&quot;c:\Users\R\Desktop\充电桩\ocpp-test\server.py&quot;</span>, line <span class="number">94</span>, <span class="keyword">in</span> on_connect</span><br><span class="line">    <span class="keyword">await</span> cp.start()</span><br><span class="line">  File <span class="string">&quot;C:\Users\R\AppData\Local\Programs\Python\Python37\lib\site-packages\ocpp\charge_point.py&quot;</span>, line <span class="number">128</span>, <span class="keyword">in</span> start</span><br><span class="line">    message = <span class="keyword">await</span> self._connection.recv()</span><br><span class="line">  File <span class="string">&quot;C:\Users\R\AppData\Local\Programs\Python\Python37\lib\site-packages\websockets\legacy\protocol.py&quot;</span>, line <span class="number">553</span>, <span class="keyword">in</span> recv</span><br><span class="line">    <span class="keyword">await</span> self.ensure_open()</span><br><span class="line">  File <span class="string">&quot;C:\Users\R\AppData\Local\Programs\Python\Python37\lib\site-packages\websockets\legacy\protocol.py&quot;</span>, line <span class="number">930</span>, <span class="keyword">in</span> ensure_open</span><br><span class="line">    <span class="keyword">raise</span> self.connection_closed_exc()</span><br><span class="line">websockets.exceptions.ConnectionClosedOK: received <span class="number">1000</span> (OK); then sent <span class="number">1000</span> (OK)</span><br></pre></td></tr></table></figure>
+
+<p>client</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">3</span>,<span class="string">&quot;20220613001&quot;</span>,&#123;<span class="string">&quot;currentTime&quot;</span>:<span class="string">&quot;2022-06-13T02:49:13.748448&quot;</span>,<span class="string">&quot;interval&quot;</span>:<span class="number">10</span>,<span class="string">&quot;status&quot;</span>:<span class="string">&quot;Accepted&quot;</span>&#125;]</span><br></pre></td></tr></table></figure>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Donq-Ching</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://www.cdongquan.site/2022/06/29/OCPP-BootNotification/">https://www.cdongquan.site/2022/06/29/OCPP-BootNotification/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/OCPP/"># OCPP</a>
+                    
+                        <a href="/tags/%E6%B1%BD%E8%BD%A6%E5%85%85%E7%94%B5%E6%A1%A9/"># 汽车充电桩</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2022/06/29/bitbucket%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/">bitbucket使用笔记</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Donq-Ching | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
