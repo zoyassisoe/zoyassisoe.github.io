@@ -19,7 +19,7 @@
     <meta name="keywords" content="BLOG">
 
 
-<title>2022下半年想要做的事 | Wait</title>
+<title>OCPP协议会话流程 | Wait</title>
 
 
 
@@ -203,7 +203,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">2022下半年想要做的事</h1>
+            <h1 class="post-title">OCPP协议会话流程</h1>
             
                 <div class="post-meta">
                     
@@ -212,14 +212,14 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">六月 29, 2022&nbsp;&nbsp;21:39:29</a>
+                        Date: <a href="#">七月 2, 2022&nbsp;&nbsp;9:47:41</a>
                         </span>
                     
                     
                         <span class="post-category">
                     Category:
                             
-                                <a href="/categories/%E5%B9%B4%E5%BA%A6%E8%AE%A1%E5%88%92/">年度计划</a>
+                                <a href="/categories/OCPP/">OCPP</a>
                             
                         </span>
                     
@@ -228,30 +228,19 @@
         </header>
 
         <div class="post-content">
-            <h1 id="在这之前"><a href="#在这之前" class="headerlink" title="在这之前"></a>在这之前</h1><p>学着别人写写年度计划，经历2021年6月份大学毕业，6月到12月尝试去考研，但结果差强人意。引以为傲的数学给了我沉重的一击。以86分的数学宣告第一次计算机专业学硕的考研失败。为什么是第一次呢？为什么是毕业后考研呢？得问我自己。</p>
-<p>后来呢？后来因为有调剂的借口，在家浑浑噩噩过了4个月，也尝试了leecode开始刷题，也学着去看acwing的算法课。</p>
-<p>结果呢？结果就是想要开始捡起大学4年学到的知识，想要重新出发去找工作，但是又想要在工作中准备考研。</p>
-<p>然后呢？然后是到了现在，我向目前所在的公司提了辞职通知，开始进行工作交接。没错，就是今天。</p>
-<p>现在想干什么呢？现在想从工作中抽出身来，去好好准备考研。</p>
-<p>但是又为什么有2022年下半年年度计划呢？是因为现在我多了许多想要做的事情，想在这里留下记录。</p>
-<h1 id="Todo"><a href="#Todo" class="headerlink" title="Todo"></a>Todo</h1><ul>
-<li>Micropython与ESP32 实现智能蓝牙遥控小车，对接xbox手柄</li>
-<li>学习摄影、构图、PS、PR（主要给猫拍照）</li>
-<li>考上研究生（考数学还是计算机呢）</li>
-<li>一次性骑完天府绿道</li>
-<li>体重减至67.5kg（BMI 20.2）</li>
-<li>养猫（虽然可能还不能养的起自己）</li>
-<li>将我的博客更换主题为<a target="_blank" rel="noopener" href="https://xaoxuu.com/wiki/stellar/">stellar</a>（但目前它还不支持数学公式）</li>
-<li>博客想加个谷歌分析和百度统计（万一博客有人看呢）</li>
-<li>学习fastapi、flask、tornado、redis、asyncio编程、socket编程、mongodb</li>
-<li>捡起机器学习</li>
-<li>捡起数据分析与学习spss</li>
-<li>想要接触分布式与大数据</li>
-<li>想要捡起爬虫（scrapy）</li>
-<li>想要听完<a target="_blank" rel="noopener" href="https://space.bilibili.com/1567748478/channel/seriesdetail?sid=358497">李沐老师</a>的课</li>
-<li>查询开设网络店铺相关程序与流程</li>
-<li>不定期更新</li>
+            <h1 id="MESSAGE-ID"><a href="#MESSAGE-ID" class="headerlink" title="MESSAGE ID"></a>MESSAGE ID</h1><p><img src="/2022/07/02/OCPP%E5%8D%8F%E8%AE%AE%E4%BC%9A%E8%AF%9D%E6%B5%81%E7%A8%8B/message.png" alt="message文档中的解释"></p>
+<ul>
+<li>消息id是一个websocket连接中每次CALL与CALL_RESULT相同</li>
+<li>每次的CALL的消息id是不同</li>
 </ul>
+<h1 id="Start-Stop-充电流程"><a href="#Start-Stop-充电流程" class="headerlink" title="Start Stop 充电流程"></a>Start Stop 充电流程</h1><p> <em>目前ocpp server与充电桩远程开始充电与远程结束充电的整套流程是：</em></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">Client call BootNotification</span><br><span class="line">Server call_result BootNotification Success!</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Server call RemoteStartTransaction</span><br><span class="line">Client call_result accepted</span><br><span class="line"></span><br><span class="line">Client call StartTranscation</span><br><span class="line">Server call_result accepted</span><br><span class="line"></span><br><span class="line">Client call StatusNotification (<span class="string">&quot;status&quot;</span>:<span class="string">&quot;Preparing&quot;</span> <span class="keyword">or</span> <span class="string">&quot;Charging&quot;</span> <span class="keyword">or</span> <span class="string">&quot;Finishing&quot;</span> <span class="keyword">or</span> …)</span><br><span class="line">Server call_result <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">Client 重复 call&#123;</span><br><span class="line">    Client call MeterValues</span><br><span class="line">    Server call_result <span class="literal">None</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Server call RemoteStopTransaction</span><br><span class="line">Client call_result Accepted</span><br><span class="line"></span><br><span class="line">Client call StopTransaction</span><br><span class="line">Server call_result Accepted</span><br><span class="line"></span><br><span class="line">Client call StatusNotification</span><br><span class="line">Server call_result <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h1><ul>
+<li>BOOT NOTIFICATION</li>
+<li>HEARTBEAT</li>
+</ul>
+<p><img src="/2022/07/02/OCPP%E5%8D%8F%E8%AE%AE%E4%BC%9A%E8%AF%9D%E6%B5%81%E7%A8%8B/2.png" alt="运行图"></p>
 
         </div>
 
@@ -266,7 +255,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="https://www.cdongquan.site/2022/06/29/2022%E4%B8%8B%E5%8D%8A%E5%B9%B4%E6%83%B3%E8%A6%81%E5%81%9A%E7%9A%84%E4%BA%8B/">https://www.cdongquan.site/2022/06/29/2022%E4%B8%8B%E5%8D%8A%E5%B9%B4%E6%83%B3%E8%A6%81%E5%81%9A%E7%9A%84%E4%BA%8B/</a></span>
+                        <span><a href="https://www.cdongquan.site/2022/07/02/OCPP%E5%8D%8F%E8%AE%AE%E4%BC%9A%E8%AF%9D%E6%B5%81%E7%A8%8B/">https://www.cdongquan.site/2022/07/02/OCPP%E5%8D%8F%E8%AE%AE%E4%BC%9A%E8%AF%9D%E6%B5%81%E7%A8%8B/</a></span>
                     </p>
                 
                 
@@ -285,7 +274,9 @@
                 <span class="tag">
                     
                     
-                        <a href="/tags/%E5%B9%B4%E5%BA%A6%E8%AE%A1%E5%88%92/"># 年度计划</a>
+                        <a href="/tags/OCPP/"># OCPP</a>
+                    
+                        <a href="/tags/%E6%B1%BD%E8%BD%A6%E5%85%85%E7%94%B5%E6%A1%A9/"># 汽车充电桩</a>
                     
                         
                 </span>
@@ -298,10 +289,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2022/07/02/OCPP%E5%8D%8F%E8%AE%AE%E4%BC%9A%E8%AF%9D%E6%B5%81%E7%A8%8B/">OCPP协议会话流程</a>
             
-            
-            <a class="next" rel="next" href="/2022/06/29/OCPP-BootNotification/">OCPP-BootNotification（不定期更新）</a>
+            <a class="next" rel="next" href="/2022/06/29/2022%E4%B8%8B%E5%8D%8A%E5%B9%B4%E6%83%B3%E8%A6%81%E5%81%9A%E7%9A%84%E4%BA%8B/">2022下半年想要做的事</a>
             
         </section>
 
