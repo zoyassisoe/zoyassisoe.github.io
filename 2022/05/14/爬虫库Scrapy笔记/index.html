@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Donq-Ching">
+
+
+    <meta name="subtitle" content="大家好好休息">
+
+
+    <meta name="description" content="琐碎日记">
+
+
+    <meta name="keywords" content="BLOG">
+
+
+<title>爬虫库Scrapy笔记 | Wait</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-XJ388BQHX4');
+</script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Donq&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Donq&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">爬虫库Scrapy笔记</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Donq-Ching</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">五月 14, 2022&nbsp;&nbsp;16:05:28</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="重返-Scrapy"><a href="#重返-Scrapy" class="headerlink" title="重返 Scrapy"></a>重返 Scrapy</h1><p>一些爬虫库</p>
+<ul>
+<li>requests</li>
+<li>urllib</li>
+<li>re</li>
+<li>scrapy</li>
+<li>selenium</li>
+</ul>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/ck784101777/article/details/104468780">JJH的创世纪</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_30781107/article/details/97430048">scrapy爬虫框架setting模块解析</a></p>
+<h1 id="Scrapy"><a href="#Scrapy" class="headerlink" title="Scrapy"></a>Scrapy</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 创建项目</span><br><span class="line">scrapy startproject projectname</span><br><span class="line"># 创建spider</span><br><span class="line">scrapy genspider spider spider.com</span><br><span class="line"># 启动spider</span><br><span class="line">scrapy crawl spider</span><br></pre></td></tr></table></figure>
+<p><img src="https://www.runoob.com/wp-content/uploads/2018/10/8c591d54457bb033812a2b0364011e9c_articlex.png" alt="runoob"></p>
+<p><a target="_blank" rel="noopener" href="https://www.runoob.com/w3cnote/scrapy-detail.html">Scrapy架构图解释</a></p>
+<ul>
+<li>Scheduler(调度器)</li>
+<li>Item Pipeline(管道)</li>
+<li>Downloader Middlewares（下载中间件）</li>
+<li>Spider Middlewares（Spider中间件）</li>
+</ul>
+<p>其中Item Pipeline负责处理Spider中获取到的Item，并进行进行后期处理。这里就遇到了xpath。</p>
+<ul>
+<li>xpath</li>
+</ul>
+<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><p>新建项目(scrapy startproject xxx): 新建一个新的爬虫项目<br>明确目标(编写items.py): 明确你想要抓取的目标<br>制作爬虫(spiders&#x2F;xxspider.py): 制作爬虫开始爬取网页<br>存储内容(pipelines.py): 设计管道存储爬取内容<br><em>此处参考菜鸟教程</em></p>
+<h2 id="spider"><a href="#spider" class="headerlink" title="spider"></a>spider</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> scrapy</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BaiduSpider</span>(scrapy.Spider):</span><br><span class="line">    <span class="comment"># spider的唯一名字</span></span><br><span class="line">    name = <span class="string">&#x27;baidu&#x27;</span></span><br><span class="line">    <span class="comment"># 允许的域名范围</span></span><br><span class="line">    allowed_domains = [<span class="string">&#x27;image.baidu.com&#x27;</span>]</span><br><span class="line">    <span class="comment"># start_urls</span></span><br><span class="line">    start_urls = [<span class="string">&#x27;http://image.baidu.com/&#x27;</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 解析的方法，下载器下载后将response传入这个函数</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">parse</span>(<span class="params">self, response</span>):</span><br><span class="line">        <span class="comment"># 该函数返回的数据会传入到管道文件中</span></span><br><span class="line">        <span class="comment"># return item</span></span><br><span class="line">        <span class="comment"># yield item</span></span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+<p><code>yield item</code>是返回一个可迭代的generator(生成器)对象的意思。</p>
+<h2 id="setting"><a href="#setting" class="headerlink" title="setting"></a>setting</h2><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/cwp-bg/p/7840678.html">转载自倥偬时光的分享</a></p>
+<ul>
+<li>模块相关说明信息</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># -*- coding: utf-8 -*-</span><br><span class="line"></span><br><span class="line"># Scrapy settings for new_center project</span><br><span class="line">#</span><br><span class="line"># For simplicity, this file contains only settings considered important or</span><br><span class="line"># commonly used. You can find more settings consulting the documentation:</span><br><span class="line">#</span><br><span class="line">#     http://doc.scrapy.org/en/latest/topics/settings.html</span><br><span class="line">#     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html</span><br><span class="line">#     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>项目名字和爬虫模块说明，引擎根据这个信息找到爬虫</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">BOT_NAME = &#x27;new_center&#x27;  # 项目名字</span><br><span class="line"></span><br><span class="line">SPIDER_MODULES = [&#x27;new_center.spiders&#x27;]</span><br><span class="line">NEWSPIDER_MODULE = &#x27;new_center.spiders&#x27; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>浏览器的USER_AGENT，可以自定义伪装。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># Crawl responsibly by identifying yourself (and your website) on the user-agent</span><br><span class="line">#USER_AGENT = &#x27;new_center (+http://www.yourdomain.com)&#x27; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>是否遵守robots协议，默认是遵守的，可以改成False或将其注释</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># Obey robots.txt rules</span><br><span class="line">ROBOTSTXT_OBEY = True </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置scrapy爬虫最大的并发请求数量，默认是16</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># Configure maximum concurrent requests performed by Scrapy (default: 16)</span><br><span class="line">#CONCURRENT_REQUESTS = 32 </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置对访问同一个网站进行请求的延时时间，默认情况下，Scrapy在两个请求间不等待一个固定的值，而是使用0.5到1.5之间的一个随机值。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Configure a delay for requests for the same website (default: 0)</span><br><span class="line"># See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay</span><br><span class="line"># See also autothrottle settings and docs</span><br><span class="line">#DOWNLOAD_DELAY = 3</span><br><span class="line"># The download delay setting will honor only one of: </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置对每个网站和每个IP的最大并发请求数量，两个最好只设置一个，如果都设置，则按照限制IP生效。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#CONCURRENT_REQUESTS_PER_DOMAIN = 16</span><br><span class="line">#CONCURRENT_REQUESTS_PER_IP = 16 </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置是否禁用cookie，目前默认是可用的，去掉注释则禁用</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># Disable cookies (enabled by default)</span><br><span class="line">#COOKIES_ENABLED = False </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置是否可远程登录控制台，目前默认是可以的，去掉注释则禁用</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># Disable Telnet Console (enabled by default)</span><br><span class="line">#TELNETCONSOLE_ENABLED = False </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>用来设置请求头，一般不用，因为请求头可以动态设置</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Override the default request headers:</span><br><span class="line">#DEFAULT_REQUEST_HEADERS = &#123;</span><br><span class="line">#   &#x27;Accept&#x27;: &#x27;text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8&#x27;,</span><br><span class="line">#   &#x27;Accept-Language&#x27;: &#x27;en&#x27;,</span><br><span class="line">#&#125; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>是否开启使用爬虫spider的中间件,默认不启用，解除注释后启用，后面的数字代表优先级，数字越小，优先级越高</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Enable or disable spider middlewares</span><br><span class="line"># See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html</span><br><span class="line">#SPIDER_MIDDLEWARES = &#123;</span><br><span class="line">#    &#x27;new_center.middlewares.NewCenterSpiderMiddleware&#x27;: 543,</span><br><span class="line">#&#125; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>是否开启爬虫下载器的中间件,默认不启用，解除注释后启用</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Enable or disable downloader middlewares</span><br><span class="line"># See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html</span><br><span class="line">#DOWNLOADER_MIDDLEWARES = &#123;</span><br><span class="line">#    &#x27;new_center.middlewares.MyCustomDownloaderMiddleware&#x27;: 543,</span><br><span class="line">#&#125; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>是否禁用爬虫扩展，默认禁用，解除注释后将None改成数字，如500，扩展的优先级一般不重要，因为他们并不相互依赖，多个扩展的value值可以写相同。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Enable or disable extensions</span><br><span class="line"># See http://scrapy.readthedocs.org/en/latest/topics/extensions.html</span><br><span class="line">#EXTENSIONS = &#123;</span><br><span class="line">#    &#x27;scrapy.extensions.telnet.TelnetConsole&#x27;: None,</span><br><span class="line">#&#125; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>是否开启管道，默认关闭，开启則解除注释。是一个字典，默认为空，值任意，不过一般设置在0-1000之间，值越小优先级越高。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Configure item pipelines</span><br><span class="line"># See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html</span><br><span class="line">#ITEM_PIPELINES = &#123;</span><br><span class="line">#    &#x27;new_center.pipelines.NewCenterPipeline&#x27;: 300,</span><br><span class="line">#&#125; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置自动限速，根据Scrapy服务器及爬取的网站的负载自动限制爬取速度，默认关闭，开启需解除注释。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># Enable and configure the AutoThrottle extension (disabled by default)</span><br><span class="line"># See http://doc.scrapy.org/en/latest/topics/autothrottle.html</span><br><span class="line">#AUTOTHROTTLE_ENABLED = True  # 自动限速的开关</span><br><span class="line"># The initial download delay </span><br><span class="line">#AUTOTHROTTLE_START_DELAY = 5  # 初始下载延时</span><br><span class="line"># The maximum download delay to be set in case of high latencies</span><br><span class="line">#AUTOTHROTTLE_MAX_DELAY = 60  # 最大下载延时</span><br><span class="line"># The average number of requests Scrapy should be sending in parallel to</span><br><span class="line"># each remote server</span><br><span class="line">#AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0</span><br><span class="line"># Enable showing throttling stats for every response received:</span><br><span class="line">#AUTOTHROTTLE_DEBUG = False </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>启用和配置HTTP缓存</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># Enable and configure HTTP caching (disabled by default)</span><br><span class="line"># See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings</span><br><span class="line">#HTTPCACHE_ENABLED = True</span><br><span class="line">#HTTPCACHE_EXPIRATION_SECS = 0</span><br><span class="line">#HTTPCACHE_DIR = &#x27;httpcache&#x27;</span><br><span class="line">#HTTPCACHE_IGNORE_HTTP_CODES = []</span><br><span class="line">#HTTPCACHE_STORAGE = &#x27;scrapy.extensions.httpcache.FilesystemCacheStorage&#x27; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>另外的重要的设置：</li>
+</ul>
+<ol>
+<li>DEPTH_LIMIT：爬取网站最大的允许深度，默认值为0，表示没有限制；如果为1，表示只允许解析一层的url。</li>
+<li>DOWNLOAD_TIMEOUT:下载器超时时间，默认180s.</li>
+<li>LOG_ENABLED:是否启用logging，即日志文件，默认为True。</li>
+<li>LOG_ENCODING：设置日志文件的编码，默认使用UTF_8。</li>
+<li>LOG_LEVEL：对日志的内容进行等级的设置，有五个级别可以选择:</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CRITICAL: 严重错误；</span><br><span class="line">ERROR：一般错误；</span><br><span class="line">WARNING：警告信息；</span><br><span class="line">INFO：一般信息；</span><br><span class="line">DEBUG：调试信息 </span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>PROXIES：设置代理；这不是scrapy内置的参数，但可以定义在setting模块，使用的时候可以导入。</li>
+</ol>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Donq-Ching</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://www.cdongquan.site/2022/05/14/%E7%88%AC%E8%99%AB%E5%BA%93Scrapy%E7%AC%94%E8%AE%B0/">https://www.cdongquan.site/2022/05/14/%E7%88%AC%E8%99%AB%E5%BA%93Scrapy%E7%AC%94%E8%AE%B0/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Python/"># Python</a>
+                    
+                        <a href="/tags/%E7%88%AC%E8%99%AB/"># 爬虫</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/05/16/SQL%E8%AF%AD%E6%B3%95%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/">Sql笔记</a>
+            
+            
+            <a class="next" rel="next" href="/2022/05/07/Django-DRF%E8%AE%A4%E8%AF%81%E6%96%B9%E5%BC%8F/">Django DRF 认证方式</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Donq-Ching | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Donq-Ching">
+
+
+    <meta name="subtitle" content="大家好好休息">
+
+
+    <meta name="description" content="琐碎日记">
+
+
+    <meta name="keywords" content="BLOG">
+
+
+<title>Torchvision | Wait</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-XJ388BQHX4');
+</script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Donq&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Donq&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Torchvision</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Donq-Ching</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">四月 21, 2021&nbsp;&nbsp;0:00:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="torch-预处理图形数据"><a href="#torch-预处理图形数据" class="headerlink" title="torch 预处理图形数据"></a>torch 预处理图形数据</h1><ul>
+<li>torchvision</li>
+<li>torch.utils.data 对象构建</li>
+</ul>
+<h1 id="torchvision"><a href="#torchvision" class="headerlink" title="torchvision"></a>torchvision</h1><h2 id="torchvision-transform"><a href="#torchvision-transform" class="headerlink" title="torchvision-transform"></a>torchvision-transform</h2><p><a target="_blank" rel="noopener" href="https://pytorch-cn.readthedocs.io/zh/latest/torchvision/torchvision-transform/">torchvision-transform 中文文档</a></p>
+<h3 id="对PIL-Image进行变换"><a href="#对PIL-Image进行变换" class="headerlink" title="对PIL.Image进行变换"></a>对PIL.Image进行变换</h3><h4 id="class-torchvision-transforms-Compose-transforms"><a href="#class-torchvision-transforms-Compose-transforms" class="headerlink" title="class torchvision.transforms.Compose(transforms)"></a>class torchvision.transforms.Compose(transforms)</h4><p>将多个transform组合起来使用。<br>参数transforms是由transform构成的列表。<br>exp:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> torchvision <span class="keyword">import</span> transforms</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"></span><br><span class="line">image = Image.<span class="built_in">open</span>(<span class="string">&#x27;test.png&#x27;</span>)</span><br><span class="line">crop = transforms.Compose([transforms.CenterCrop(<span class="number">50</span>),transforms.ToTensor()])</span><br><span class="line">train_data = crop(image)</span><br></pre></td></tr></table></figure>
+
+<p>exp中transforms.CenterCrop(50)等列表元素均是torchvision.transforms中的方法，是对图片做处理的方法。</p>
+<h4 id="class-torchvision-transforms-CenterCrop-size"><a href="#class-torchvision-transforms-CenterCrop-size" class="headerlink" title="class torchvision.transforms.CenterCrop(size)"></a>class torchvision.transforms.CenterCrop(size)</h4><p>pass</p>
+<h4 id="class-torchvision-transforms-RandomCrop-size-padding-x3D-0"><a href="#class-torchvision-transforms-RandomCrop-size-padding-x3D-0" class="headerlink" title="class torchvision.transforms.RandomCrop(size, padding&#x3D;0)"></a>class torchvision.transforms.RandomCrop(size, padding&#x3D;0)</h4><p>pass</p>
+<h4 id="class-torchvision-transforms-RandomHorizontalFlip"><a href="#class-torchvision-transforms-RandomHorizontalFlip" class="headerlink" title="class torchvision.transforms.RandomHorizontalFlip"></a>class torchvision.transforms.RandomHorizontalFlip</h4><p>pass</p>
+<h4 id="class-torchvision-transforms-RandomSizedCrop-size-interpolation-x3D-2"><a href="#class-torchvision-transforms-RandomSizedCrop-size-interpolation-x3D-2" class="headerlink" title="class torchvision.transforms.RandomSizedCrop(size, interpolation&#x3D;2)"></a>class torchvision.transforms.RandomSizedCrop(size, interpolation&#x3D;2)</h4><p>pass</p>
+<h4 id="class-torchvision-transforms-Pad-padding-fill-x3D-0"><a href="#class-torchvision-transforms-Pad-padding-fill-x3D-0" class="headerlink" title="class torchvision.transforms.Pad(padding, fill&#x3D;0)"></a>class torchvision.transforms.Pad(padding, fill&#x3D;0)</h4><p>pass</p>
+<h3 id="对Tensor进行变换"><a href="#对Tensor进行变换" class="headerlink" title="对Tensor进行变换"></a>对Tensor进行变换</h3><h4 id="class-torchvision-transforms-ToTensor"><a href="#class-torchvision-transforms-ToTensor" class="headerlink" title="class torchvision.transforms.ToTensor"></a>class torchvision.transforms.ToTensor</h4><p>pass</p>
+<h4 id="class-torchvision-transforms-ToPILImage"><a href="#class-torchvision-transforms-ToPILImage" class="headerlink" title="class torchvision.transforms.ToPILImage"></a>class torchvision.transforms.ToPILImage</h4><p>pass</p>
+<h3 id="在我目前的项目超分辨率中需要做的预处理代码"><a href="#在我目前的项目超分辨率中需要做的预处理代码" class="headerlink" title="在我目前的项目超分辨率中需要做的预处理代码"></a>在我目前的项目超分辨率中需要做的预处理代码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crop = transforms.Compose([transforms.RandomCrop(<span class="number">100</span>),transforms.ToTensor()])</span><br></pre></td></tr></table></figure>
+
+<h2 id="torchvision-datasets"><a href="#torchvision-datasets" class="headerlink" title="torchvision.datasets"></a>torchvision.datasets</h2><p>只做读取图片文件夹的解释，其他参考<a target="_blank" rel="noopener" href="https://pytorch-cn.readthedocs.io/zh/latest/torchvision/torchvision-datasets/">torchvision-datasets 中文文档</a></p>
+<h3 id="class-torchvision-datasets-ImageFolder"><a href="#class-torchvision-datasets-ImageFolder" class="headerlink" title="class torchvision.datasets.ImageFolder"></a>class torchvision.datasets.ImageFolder</h3><p><strong>原型</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">dataset=torchvision.datasets.ImageFolder(</span><br><span class="line">                       root, transform=<span class="literal">None</span>, </span><br><span class="line">                       target_transform=<span class="literal">None</span>, </span><br><span class="line">                       loader=&lt;function default_loader&gt;, </span><br><span class="line">                       is_valid_file=<span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数解释</strong></p>
+<ul>
+<li>root 图片存储的根目录，即各类别文件夹所在目录的上一级目录。</li>
+<li>transform 对图片进行预处理的操作（函数），原始图片作为输入，返回一个转换后的图片。对应torchvision-transform。</li>
+<li>target_transform 对图片类别进行预处理的操作，输入为target，输出对其的转换。</li>
+<li>loader：表示数据集加载方式，通常默认加载方式即可。</li>
+<li>is_valid_file：获取图像文件的路径并检查该文件是否为有效文件的函数(用于检查损坏文件)<br><strong>返回的dataset的三种属性</strong></li>
+<li>self.classes：用一个list保存类别名称</li>
+<li>self.class_to_idx：类别对应的索引，与不做任何转换返回的target对应</li>
+<li>self.imgs：保存(img-path, class)tuple的list<br>exp:</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torchvision.datasets <span class="keyword">as</span> dset</span><br><span class="line"></span><br><span class="line">data = dset.ImageFolder(<span class="string">&#x27;image/&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(data.classes, data.class_to_idx)</span><br><span class="line"><span class="built_in">print</span>(data.imgs[<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行结果</span></span><br><span class="line">[<span class="string">&#x27;target&#x27;</span>, <span class="string">&#x27;train&#x27;</span>] &#123;<span class="string">&#x27;target&#x27;</span>: <span class="number">0</span>, <span class="string">&#x27;train&#x27;</span>: <span class="number">1</span>&#125;</span><br><span class="line">(<span class="string">&#x27;image/target\\100075.jpg&#x27;</span>, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># image/ 文件夹结构</span></span><br><span class="line">- image</span><br><span class="line"> - train</span><br><span class="line">  - <span class="number">8049.j</span>pg</span><br><span class="line">  - <span class="number">8143.j</span>pg</span><br><span class="line">  - ...</span><br><span class="line"> - target</span><br><span class="line">  - <span class="number">8049.j</span>pg</span><br><span class="line">  - <span class="number">8143.j</span>pg</span><br><span class="line">  - ...</span><br></pre></td></tr></table></figure>
+
+<h2 id="torch-utils-data"><a href="#torch-utils-data" class="headerlink" title="torch.utils.data"></a>torch.utils.data</h2><p><a target="_blank" rel="noopener" href="https://pytorch-cn.readthedocs.io/zh/latest/package_references/data/">torch.utils.data 中文文档</a></p>
+<h3 id="lass-torch-utils-data-DataLoader"><a href="#lass-torch-utils-data-DataLoader" class="headerlink" title="lass torch.utils.data.DataLoader"></a>lass torch.utils.data.DataLoader</h3><p><strong>函数原型</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">lass torch.utils.data.DataLoader(</span><br><span class="line">                        dataset, </span><br><span class="line">                        batch_size=1, </span><br><span class="line">                        shuffle=False, </span><br><span class="line">                        sampler=None, </span><br><span class="line">                        num_workers=0, </span><br><span class="line">                        collate_fn=&lt;function default_collate&gt;, </span><br><span class="line">                        pin_memory=False, drop_last=False)</span><br></pre></td></tr></table></figure>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Donq-Ching</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://www.cdongquan.site/2021/04/21/Python%E6%89%B9%E9%87%8F%E5%A4%84%E7%90%86%E5%9B%BE%E5%83%8F%E5%BA%93Torchvision/">https://www.cdongquan.site/2021/04/21/Python%E6%89%B9%E9%87%8F%E5%A4%84%E7%90%86%E5%9B%BE%E5%83%8F%E5%BA%93Torchvision/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Python/"># Python</a>
+                    
+                        <a href="/tags/Torchvision/"># Torchvision</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/03/20/C-ctime%E5%BA%93%E5%88%A4%E6%96%AD%E6%97%A5%E6%9C%9F%E6%98%AF%E5%90%A6%E8%BF%9E%E7%BB%AD/">C++利用ctime判断日期是否连续</a>
+            
+            
+            <a class="next" rel="next" href="/2021/02/09/Python%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">Python 正则表达式(Re)</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Donq-Ching | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

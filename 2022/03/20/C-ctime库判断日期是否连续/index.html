@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Donq-Ching">
+
+
+    <meta name="subtitle" content="大家好好休息">
+
+
+    <meta name="description" content="琐碎日记">
+
+
+    <meta name="keywords" content="BLOG">
+
+
+<title>C++利用ctime判断日期是否连续 | Wait</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-XJ388BQHX4');
+</script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Donq&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Donq&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">C++利用ctime判断日期是否连续</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Donq-Ching</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">三月 20, 2022&nbsp;&nbsp;15:09:53</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="我的目的"><a href="#我的目的" class="headerlink" title="我的目的"></a>我的目的</h1><p>判断日期格式为yyyymmdd的日期列表是否连续,如20220313与20220314是否为连续两天。</p>
+<h1 id="关于ctime库"><a href="#关于ctime库" class="headerlink" title="关于ctime库"></a>关于ctime库</h1><p>时间常见的有两种存储方式:<br><code>time_t</code>: 整数类型，用来存储从1970年到现在经过了多少秒<br><code>tm</code>: 结构类型，把日期和时间以C结构体的形式保存，tm结构的定义如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">tm</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> tm_sec;   <span class="comment">// 秒，正常范围从0到59，但允许至61</span></span><br><span class="line">    <span class="type">int</span> tm_min;   <span class="comment">// 分，范围从0到59</span></span><br><span class="line">    <span class="type">int</span> tm_hour;  <span class="comment">// 小时，范围从0到23</span></span><br><span class="line">    <span class="type">int</span> tm_mday;  <span class="comment">// 一月中的第几天，范围从1到31</span></span><br><span class="line">    <span class="type">int</span> tm_mon;   <span class="comment">// 月，范围从0到11</span></span><br><span class="line">    <span class="type">int</span> tm_year;  <span class="comment">// 自1900年起的年数</span></span><br><span class="line">    <span class="type">int</span> tm_wday;  <span class="comment">// 一周中的第几天，范围从0到6，从星期日算起</span></span><br><span class="line">    <span class="type">int</span> tm_yday;  <span class="comment">// 一年中的第几天，范围从0到365，从1月1日算起</span></span><br><span class="line">    <span class="type">int</span> tm_isdst; <span class="comment">// 夏令时</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Function"><a href="#Function" class="headerlink" title="Function"></a>Function</h2><p>time_t time(time_t* t);<br>&#x2F;&#x2F;取得从1970年1月1日至今的秒数</p>
+<p>char <em>asctime(const struct tm</em> timeptr);<br>&#x2F;&#x2F;将结构中的信息转换为真实世界的时间，以字符串的形式显示</p>
+<p>char <em>ctime(const time_t</em> timep);<br>&#x2F;&#x2F;将timep转换为真是世界的时间，以字符串显示</p>
+<p>struct tm* gmtime(const time_t* timep);<br>&#x2F;&#x2F;将time_t表示的时间转换为没有经过时区转换的UTC时间，是一个struct tm结构指针</p>
+<p>struct tm* localtime(const time_t* timep);<br>&#x2F;&#x2F;和gmtime类似，但是它是经过时区转换的时间</p>
+<p>time_t mktime(struct tm* timeptr);<br>&#x2F;&#x2F;将struct tm 结构的时间转换为从1970年至今的秒数</p>
+<h1 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h1><h2 id="将string转化为struct-tm"><a href="#将string转化为struct-tm" class="headerlink" title="将string转化为struct tm"></a>将string转化为struct tm</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    string date = <span class="string">&quot;20220311&quot;</span>;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">tm</span> mytm;</span><br><span class="line">    <span class="built_in">memset</span>(&amp;mytm, <span class="number">0</span>, <span class="built_in">sizeof</span>(mytm));</span><br><span class="line">    <span class="built_in">sscanf</span>(date.<span class="built_in">c_str</span>(), <span class="string">&quot;%4d%2d%2d&quot;</span>, &amp;mytm.tm_year, &amp;mytm.tm_mon, &amp;mytm.tm_mday);</span><br><span class="line">    mytm.tm_year -= <span class="number">1900</span>;</span><br><span class="line">    mytm.tm_mon--;</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; mytm.tm_year &lt;&lt; <span class="string">&quot;-&quot;</span> &lt;&lt; mytm.tm_mon &lt;&lt; <span class="string">&quot;-&quot;</span> &lt;&lt; mytm.tm_mday &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">122-2-11</span><br></pre></td></tr></table></figure>
+<h2 id="struct-tm-转化为-time-t"><a href="#struct-tm-转化为-time-t" class="headerlink" title="struct tm 转化为 time_t"></a>struct tm 转化为 time_t</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    string date = <span class="string">&quot;20220311&quot;</span>;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">tm</span> mytm;</span><br><span class="line">    <span class="built_in">memset</span>(&amp;mytm, <span class="number">0</span>, <span class="built_in">sizeof</span>(mytm));</span><br><span class="line">    <span class="built_in">sscanf</span>(date.<span class="built_in">c_str</span>(), <span class="string">&quot;%4d%2d%2d&quot;</span>, &amp;mytm.tm_year, &amp;mytm.tm_mon, &amp;mytm.tm_mday);</span><br><span class="line">    mytm.tm_year -= <span class="number">1900</span>;</span><br><span class="line">    mytm.tm_mon--;</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; mytm.tm_year &lt;&lt; <span class="string">&quot;-&quot;</span> &lt;&lt; mytm.tm_mon &lt;&lt; <span class="string">&quot;-&quot;</span> &lt;&lt; mytm.tm_mday &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; <span class="built_in">mktime</span>(&amp;mytm) &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">122-2-11</span><br><span class="line">1646928000</span><br></pre></td></tr></table></figure>
+<p>验证输出：<br><img src="/2022/03/20/C-ctime%E5%BA%93%E5%88%A4%E6%96%AD%E6%97%A5%E6%9C%9F%E6%98%AF%E5%90%A6%E8%BF%9E%E7%BB%AD/1.png" alt="验证输出"></p>
+<h2 id="检查是否连续-总代码"><a href="#检查是否连续-总代码" class="headerlink" title="检查是否连续(总代码)"></a>检查是否连续(总代码)</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;ctime&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">time_t</span> <span class="title">strTot</span><span class="params">(string date)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">tm</span> mytm;</span><br><span class="line">    <span class="built_in">memset</span>(&amp;mytm, <span class="number">0</span>, <span class="built_in">sizeof</span>(mytm));</span><br><span class="line">    <span class="built_in">sscanf</span>(date.<span class="built_in">c_str</span>(), <span class="string">&quot;%4d%2d%2d&quot;</span>,</span><br><span class="line">           &amp;mytm.tm_year, &amp;mytm.tm_mon, &amp;mytm.tm_mday);</span><br><span class="line">    mytm.tm_year -= <span class="number">1900</span>;</span><br><span class="line">    mytm.tm_mon--;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">mktime</span>(&amp;mytm);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">checkTimef</span><span class="params">(string dates[], <span class="type">int</span> len)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">time_t</span> ts[len];</span><br><span class="line">    <span class="type">int</span> ns[len];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; len; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        ts[i] = <span class="built_in">strTot</span>(dates[i]);</span><br><span class="line">        ns[i] = (ts[i] - ts[<span class="number">0</span>]) / (<span class="number">24</span> * <span class="number">60</span> * <span class="number">60</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; len - <span class="number">1</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (ns[i + <span class="number">1</span>] - ns[i] != <span class="number">1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    string dates[] = &#123;<span class="string">&quot;20220311&quot;</span>, <span class="string">&quot;20220312&quot;</span>, <span class="string">&quot;20220313&quot;</span>&#125;;</span><br><span class="line">    cout &lt;&lt; <span class="built_in">checkTimef</span>(dates, <span class="number">3</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1</span><br></pre></td></tr></table></figure>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a target="_blank" rel="noopener" href="https://tool.lu/timestamp/">时间戳(Unix timestamp)转换工具</a></p>
+<h1 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h1><p>最后说说最近的心情，过两天就要出复试线了，求求复试踩线求求复试踩线求求复试踩线（；´д｀）ゞ</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Donq-Ching</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://www.cdongquan.site/2022/03/20/C-ctime%E5%BA%93%E5%88%A4%E6%96%AD%E6%97%A5%E6%9C%9F%E6%98%AF%E5%90%A6%E8%BF%9E%E7%BB%AD/">https://www.cdongquan.site/2022/03/20/C-ctime%E5%BA%93%E5%88%A4%E6%96%AD%E6%97%A5%E6%9C%9F%E6%98%AF%E5%90%A6%E8%BF%9E%E7%BB%AD/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/C/"># C++</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/04/24/VUE%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">Vue基础</a>
+            
+            
+            <a class="next" rel="next" href="/2021/04/21/Python%E6%89%B9%E9%87%8F%E5%A4%84%E7%90%86%E5%9B%BE%E5%83%8F%E5%BA%93Torchvision/">Torchvision</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Donq-Ching | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
