@@ -229,7 +229,8 @@
         </header>
 
         <div class="post-content">
-            <h1 id="统一"><a href="#统一" class="headerlink" title="统一"></a>统一</h1><ul>
+            <p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/zoyassisoe/fastapi-blog">https://github.com/zoyassisoe/fastapi-blog</a></p>
+<h1 id="统一"><a href="#统一" class="headerlink" title="统一"></a>统一</h1><ul>
 <li>若请求api成功则状态码（status）统一为200。</li>
 <li>若请求api逻辑成功（例如请求login，且登录成功），在response data信息中code码为200或2000+x（x&#x3D;1,2,3…）。</li>
 <li>若请求api逻辑失败（例如请求login，且登录失败），在response data信息中code则有相应的错误码对应，且携带message进行说明。</li>
@@ -237,7 +238,7 @@
 <h1 id="User"><a href="#User" class="headerlink" title="User"></a>User</h1><p>关于user的接口都在&#x2F;u下面，例如<a target="_blank" rel="noopener" href="https://localhost/api/u/login">https://localhost/api/u/login</a></p>
 <h2 id="u-x2F-login-POST"><a href="#u-x2F-login-POST" class="headerlink" title="u&#x2F;login POST"></a>u&#x2F;login POST</h2><p>request</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">数据类型: json</span><br><span class="line">必选字段：email，password</span><br><span class="line">可选字段：无</span><br><span class="line">eg.</span><br><span class="line">&#123;</span><br><span class="line">    &quot;email&quot;:&quot;3354007602@qq.com&quot;,</span><br><span class="line">    &quot;password&quot;:&quot;123&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>response<br>返回的token需要携带在request header中，字段名为Authorization，值为’Bearer token’<br><img src="/2023/03/20/fastapi-blog-api-docs/03/20/fastapi-blog-api-docs/img.png" alt="fastapi-blog-api-docs/img.png"></p>
+<p>response<br>返回的token需要携带在request header中，字段名为Authorization，值为’Bearer token’<br><img src="/2023/03/20/fastapi-blog-api-docs/img.png" alt="fastapi-blog-api-docs/img.png"></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;code&quot;: 2001,</span><br><span class="line">    &quot;message&quot;: &quot;login success!&quot;,</span><br><span class="line">    &quot;user&quot;: &#123;</span><br><span class="line">        &quot;email&quot;: &quot;3354007602@qq.com&quot;,</span><br><span class="line">        &quot;name&quot;: &quot;cheng&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;token&quot;: &quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjMzNTQwMDc2MDJAcXEuY29tIiwibmFtZSI6ImNoZW5nIiwiZXhwIjoxNjc5Mjc5ODUwfQ.V5P7YtQZEiuM6Bc3qiW6PgMeA3c9zwu7j9eBiF4iROk&quot;</span><br><span class="line">&#125;</span><br><span class="line">or</span><br><span class="line">&#123;</span><br><span class="line">    &quot;code&quot;: 4001,</span><br><span class="line">    &quot;message&quot;: &quot;login filed!&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="u-x2F-send-email-code-POST"><a href="#u-x2F-send-email-code-POST" class="headerlink" title="u&#x2F;send_email_code POST"></a>u&#x2F;send_email_code POST</h2><p>发送邮箱验证码，有效时间为5分钟，这里未完成后续会加一些邮箱验证码的发送时间限制，不能频繁请求发送验证码<br>request</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">数据类型: json</span><br><span class="line">必选字段：email</span><br><span class="line">可选字段：无</span><br><span class="line">eg.</span><br><span class="line">&#123;</span><br><span class="line">    &quot;email&quot;:&quot;2066820263@qq.com&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -268,7 +269,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="https://www.cdongquan.site/2023/03/20/fastapi-blog-api-docs/">https://www.cdongquan.site/2023/03/20/fastapi-blog-api-docs/</a></span>
+                        <span><a href="https://www.zoyass.site/2023/03/20/fastapi-blog-api-docs/">https://www.zoyass.site/2023/03/20/fastapi-blog-api-docs/</a></span>
                     </p>
                 
                 
