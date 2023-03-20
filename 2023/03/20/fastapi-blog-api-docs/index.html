@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-XJ388BQHX4');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="zoyass">
+
+
+    <meta name="subtitle" content="大家好好休息">
+
+
+    <meta name="description" content="琐碎日记">
+
+
+    <meta name="keywords" content="BLOG">
+
+
+<title>Fastapi Blog Api Docs | Wait</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">zoyass&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">zoyass&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Fastapi Blog Api Docs</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">zoyass</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">三月 20, 2023&nbsp;&nbsp;10:28:41</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="统一"><a href="#统一" class="headerlink" title="统一"></a>统一</h1><ul>
+<li>若请求api成功则状态码（status）统一为200。</li>
+<li>若请求api逻辑成功（例如请求login，且登录成功），在response data信息中code码为200或2000+x（x&#x3D;1,2,3…）。</li>
+<li>若请求api逻辑失败（例如请求login，且登录失败），在response data信息中code则有相应的错误码对应，且携带message进行说明。</li>
+</ul>
+<h1 id="User"><a href="#User" class="headerlink" title="User"></a>User</h1><p>关于user的接口都在&#x2F;u下面，例如<a target="_blank" rel="noopener" href="https://localhost/api/u/login">https://localhost/api/u/login</a></p>
+<h2 id="u-x2F-login-POST"><a href="#u-x2F-login-POST" class="headerlink" title="u&#x2F;login POST"></a>u&#x2F;login POST</h2><p>request</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">数据类型: json</span><br><span class="line">必选字段：email，password</span><br><span class="line">可选字段：无</span><br><span class="line">eg.</span><br><span class="line">&#123;</span><br><span class="line">    &quot;email&quot;:&quot;3354007602@qq.com&quot;,</span><br><span class="line">    &quot;password&quot;:&quot;123&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>response<br>返回的token需要携带在request header中，字段名为Authorization，值为’Bearer token’<br><img src="/2023/03/20/fastapi-blog-api-docs/03/20/fastapi-blog-api-docs/img.png" alt="fastapi-blog-api-docs/img.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;code&quot;: 2001,</span><br><span class="line">    &quot;message&quot;: &quot;login success!&quot;,</span><br><span class="line">    &quot;user&quot;: &#123;</span><br><span class="line">        &quot;email&quot;: &quot;3354007602@qq.com&quot;,</span><br><span class="line">        &quot;name&quot;: &quot;cheng&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;token&quot;: &quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjMzNTQwMDc2MDJAcXEuY29tIiwibmFtZSI6ImNoZW5nIiwiZXhwIjoxNjc5Mjc5ODUwfQ.V5P7YtQZEiuM6Bc3qiW6PgMeA3c9zwu7j9eBiF4iROk&quot;</span><br><span class="line">&#125;</span><br><span class="line">or</span><br><span class="line">&#123;</span><br><span class="line">    &quot;code&quot;: 4001,</span><br><span class="line">    &quot;message&quot;: &quot;login filed!&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="u-x2F-send-email-code-POST"><a href="#u-x2F-send-email-code-POST" class="headerlink" title="u&#x2F;send_email_code POST"></a>u&#x2F;send_email_code POST</h2><p>发送邮箱验证码，有效时间为5分钟，这里未完成后续会加一些邮箱验证码的发送时间限制，不能频繁请求发送验证码<br>request</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">数据类型: json</span><br><span class="line">必选字段：email</span><br><span class="line">可选字段：无</span><br><span class="line">eg.</span><br><span class="line">&#123;</span><br><span class="line">    &quot;email&quot;:&quot;2066820263@qq.com&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>response</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;code&quot;: 200,</span><br><span class="line">    &quot;message&quot;: &quot;resp success!&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="u-x2F-create-POST"><a href="#u-x2F-create-POST" class="headerlink" title="u&#x2F;create POST"></a>u&#x2F;create POST</h2><p>注册用户<br>request</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">数据类型: json</span><br><span class="line">必选字段：email: EmailStr; code: str; pasword: str; name: str</span><br><span class="line">这里的code是验证码，即请求u/send_email_code收到的验证码</span><br><span class="line">可选字段：无</span><br></pre></td></tr></table></figure>
+
+<h1 id="Article"><a href="#Article" class="headerlink" title="Article"></a>Article</h1><p>关于article的接口都在&#x2F;a下面，例如<a target="_blank" rel="noopener" href="https://localhost/api/a/all">https://localhost/api/a/all</a></p>
+<h2 id="a-x2F-all-GET"><a href="#a-x2F-all-GET" class="headerlink" title="a&#x2F;all GET"></a>a&#x2F;all GET</h2><p>获取全部文章及其详细信息<br>eg. response: 字段名称直接翻译即知道其意。其中body是文章内容是markdown格式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;code&quot;: 200,</span><br><span class="line">    &quot;message&quot;: &quot;resp success!&quot;,</span><br><span class="line">    &quot;articles&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;title&quot;: &quot;test&quot;,</span><br><span class="line">            &quot;body&quot;: &quot;test&quot;,</span><br><span class="line">            &quot;path&quot;: null,</span><br><span class="line">            &quot;create_time&quot;: &quot;2023-03-20T08:12:13&quot;,</span><br><span class="line">            &quot;last_update_time&quot;: &quot;2023-03-20T08:12:13&quot;,</span><br><span class="line">            &quot;first_author&quot;: &quot;cheng&quot;,</span><br><span class="line">            &quot;other_author&quot;: [],</span><br><span class="line">            &quot;tag&quot;: []</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;title&quot;: &quot;test markdown&quot;,</span><br><span class="line">            &quot;body&quot;: &quot;#123&quot;,</span><br><span class="line">            &quot;path&quot;: null,</span><br><span class="line">            &quot;create_time&quot;: &quot;2023-03-20T09:37:05&quot;,</span><br><span class="line">            &quot;last_update_time&quot;: &quot;2023-03-20T09:37:05&quot;,</span><br><span class="line">            &quot;first_author&quot;: &quot;cheng&quot;,</span><br><span class="line">            &quot;other_author&quot;: [],</span><br><span class="line">            &quot;tag&quot;: [</span><br><span class="line">                &quot;markdown&quot;,</span><br><span class="line">                &quot;test&quot;</span><br><span class="line">            ]</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;title&quot;: &quot;test3&quot;,</span><br><span class="line">            &quot;body&quot;: &quot;test&quot;,</span><br><span class="line">            &quot;path&quot;: null,</span><br><span class="line">            &quot;create_time&quot;: &quot;2023-03-20T08:27:26&quot;,</span><br><span class="line">            &quot;last_update_time&quot;: &quot;2023-03-20T08:27:26&quot;,</span><br><span class="line">            &quot;first_author&quot;: &quot;cheng&quot;,</span><br><span class="line">            &quot;other_author&quot;: [],</span><br><span class="line">            &quot;tag&quot;: [</span><br><span class="line">                &quot;test&quot;,</span><br><span class="line">                &quot;python&quot;</span><br><span class="line">            ]</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="a-x2F-my-GET"><a href="#a-x2F-my-GET" class="headerlink" title="a&#x2F;my GET"></a>a&#x2F;my GET</h2><p>和a&#x2F;all类似，只是只查找属于对应token的用户的文章</p>
+<h2 id="a-x2F-create-POST"><a href="#a-x2F-create-POST" class="headerlink" title="a&#x2F;create POST"></a>a&#x2F;create POST</h2><p>创建新文章<br>request</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">数据类型: json</span><br><span class="line">必选字段：</span><br><span class="line">    body: str</span><br><span class="line">    title: str</span><br><span class="line">    tag: List[tag_name: str]</span><br><span class="line">    other_author: List[user_name: str]</span><br><span class="line">other_author对应的是已注册用户，且不包含当前token对应的用户</span><br><span class="line">可选字段：无</span><br><span class="line">eg.</span><br><span class="line">&#123;</span><br><span class="line">    &quot;title&quot;:&quot;test markdown&quot;,</span><br><span class="line">    &quot;body&quot;:&quot;#test&quot;,</span><br><span class="line">    &quot;tag&quot;:[&quot;test&quot;, &quot;markdown&quot;],</span><br><span class="line">    &quot;other_author&quot;:[]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>resp</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">success: </span><br><span class="line">&#123;</span><br><span class="line">    &quot;code&quot;: 200,</span><br><span class="line">    &quot;message&quot;: &quot;resp success!&quot;</span><br><span class="line">&#125;</span><br><span class="line">unsuccessful:</span><br><span class="line">则对应相应错误码且携带错误信息</span><br></pre></td></tr></table></figure>
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>zoyass</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://www.cdongquan.site/2023/03/20/fastapi-blog-api-docs/">https://www.cdongquan.site/2023/03/20/fastapi-blog-api-docs/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/docs/"># docs</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2022/07/28/%E5%B7%A5%E5%85%B7Docker%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/">工具Docker安装与使用</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© zoyass | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
