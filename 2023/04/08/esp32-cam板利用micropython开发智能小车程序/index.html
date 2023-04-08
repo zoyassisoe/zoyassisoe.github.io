@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-XJ388BQHX4');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="zoyass">
+
+
+    <meta name="subtitle" content="大家好好休息">
+
+
+    <meta name="description" content="琐碎日记">
+
+
+    <meta name="keywords" content="BLOG">
+
+
+<title>Esp32-Cam板利用micropython开发智能小车程序 | Wait</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">zoyass&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">zoyass&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Esp32-Cam板利用micropython开发智能小车程序</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">zoyass</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">四月 8, 2023&nbsp;&nbsp;18:12:34</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p>他们的设计思想更加完善，而我只是初学者…<br><a target="_blank" rel="noopener" href="http://t.csdn.cn/EtJ4P">云逸之: ESP32CAM 视频小车</a><br><a target="_blank" rel="noopener" href="http://t.csdn.cn/7M14l">Yehchitsai: ESP32-CAM 使用 MicroPython 进行开发 - 使用图形化工具 Thonny (Mac)</a><br><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1G34y1E7tE?p=51">b站王铭东老师</a></p>
+<h1 id="使用的配件"><a href="#使用的配件" class="headerlink" title="使用的配件"></a>使用的配件</h1><ul>
+<li>esp32-cam</li>
+<li>杜邦线若干</li>
+<li>L298N 双H桥电机驱动模块</li>
+<li>智能小车套件</li>
+</ul>
+<h1 id="设计思想"><a href="#设计思想" class="headerlink" title="设计思想"></a>设计思想</h1><p>利用websocket协议通信来控制小车的前进，后退与转向。其中esp32-cam端websocket通信使用第三方库<a target="_blank" rel="noopener" href="https://pypi.org/project/micropython-async-websocket-client/">micropython-async_websocket_client</a>，server端使用fastapi完成开发。</p>
+<h1 id="esp32-cam代码"><a href="#esp32-cam代码" class="headerlink" title="esp32-cam代码"></a>esp32-cam代码</h1><p><strong>main.py</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> uasyncio <span class="keyword">as</span> asyncio</span><br><span class="line"><span class="keyword">import</span> network</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> async_websocket_client <span class="keyword">import</span> AsyncWebsocketClient</span><br><span class="line"><span class="keyword">from</span> EspPoint <span class="keyword">import</span> EspPoint</span><br><span class="line"></span><br><span class="line">url = <span class="string">&#x27;ws://192.168.101.7:8000/socket/&#x27;</span></span><br><span class="line">cpid = <span class="string">&#x27;esp32_1&#x27;</span></span><br><span class="line"></span><br><span class="line">wifi_name = <span class="string">&quot;ChinaNet-44DM&quot;</span></span><br><span class="line">wifi_password = <span class="string">&quot;123&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">wifi_connect</span>():</span><br><span class="line">    wlan = network.WLAN(network.STA_IF)</span><br><span class="line">    wlan.active(<span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">not</span> wlan.isconnected():</span><br><span class="line">        wlan.connect(wifi_name, wifi_password)</span><br><span class="line">        <span class="keyword">await</span> asyncio.sleep(<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">connect</span>():</span><br><span class="line">    ws = AsyncWebsocketClient(<span class="number">5</span>)</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="keyword">await</span> ws.handshake(url+cpid)</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">await</span> ws.<span class="built_in">open</span>():</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27;ws start.&#x27;</span>)</span><br><span class="line">                ep = EspPoint(ws, cpid)</span><br><span class="line">                <span class="keyword">await</span> ep.start()</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27;ws open error, try reconnect.&#x27;</span>)</span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;waln error!&#x27;</span>)</span><br><span class="line">            <span class="keyword">await</span> wifi_connect()</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    asyncio.run(connect())</span><br></pre></td></tr></table></figure>
+<p><strong>EspPoint.py</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> uasyncio <span class="keyword">as</span> asyncio</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">from</span> machine <span class="keyword">import</span> Pin</span><br><span class="line"><span class="keyword">import</span> network</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p12 = Pin(<span class="number">12</span>, Pin.OUT)</span><br><span class="line">p13 = Pin(<span class="number">13</span>, Pin.OUT)</span><br><span class="line"><span class="comment"># 控制1个电机</span></span><br><span class="line">p14 = Pin(<span class="number">14</span>, Pin.OUT)</span><br><span class="line">p15 = Pin(<span class="number">15</span>, Pin.OUT)</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ResponseCommand</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, recv_message</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        :param recv_message:</span></span><br><span class="line"><span class="string">            json字段为message_type, message_id, action, payload</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        self.origin_message = recv_message</span><br><span class="line">        self.json_message = json.loads(recv_message)</span><br><span class="line">        self.parse(self.json_message)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">parse</span>(<span class="params">self, res</span>):</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(res) == <span class="number">4</span>:</span><br><span class="line">            self.message_type = res[<span class="string">&#x27;message_type&#x27;</span>]</span><br><span class="line">            self.message_id = res[<span class="string">&#x27;message_id&#x27;</span>]</span><br><span class="line">            self.action = res[<span class="string">&#x27;action&#x27;</span>]</span><br><span class="line">            self.payload = res[<span class="string">&#x27;payload&#x27;</span>]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># 此处为error！</span></span><br><span class="line">            <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__str__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self.origin_message</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">display</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(self.json_message)==<span class="number">4</span>:</span><br><span class="line">            <span class="built_in">print</span>([self.message_type, self.message_id, self.action, self.payload])</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;message error!&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">EspPoint</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, ws, _<span class="built_in">id</span></span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        self._ws = ws</span><br><span class="line">        self.<span class="built_in">id</span> = _<span class="built_in">id</span></span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">start</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">await</span> asyncio.gather(self.erecv(), self.esend())</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">wifi_connect</span>(<span class="params">self</span>):</span><br><span class="line">        wlan = network.WLAN(network.STA_IF)</span><br><span class="line">        wlan.active(<span class="literal">True</span>)</span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">not</span> wlan.isconnected():</span><br><span class="line">            wlan.connect(wifi_name, wifi_password)</span><br><span class="line">            <span class="keyword">await</span> asyncio.sleep(<span class="number">10</span>)</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">erecv</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            message = <span class="keyword">await</span> self._ws.recv()</span><br><span class="line">            <span class="keyword">if</span> message:</span><br><span class="line">                res = ResponseCommand(message)</span><br><span class="line">                self.distribute_res(res, p12, p13, p14, p15)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27;recv message is none.&#x27;</span>)</span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">esend</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            <span class="keyword">await</span> self._ws.send(<span class="string">&quot;heartbeat&quot;</span>)</span><br><span class="line">            <span class="keyword">await</span> asyncio.sleep(<span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">distribute_res</span>(<span class="params">self, rc: ResponseCommand, p12, p13, p14, p15</span>):</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> rc.action == <span class="string">&#x27;move front&#x27;</span>:</span><br><span class="line">            <span class="comment"># 前进</span></span><br><span class="line">            p13.value(<span class="number">1</span>)</span><br><span class="line">            p12.value(<span class="number">0</span>)</span><br><span class="line">            p14.value(<span class="number">1</span>)</span><br><span class="line">            p15.value(<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">elif</span> rc.action == <span class="string">&#x27;move back&#x27;</span>:</span><br><span class="line">            <span class="comment"># 后退</span></span><br><span class="line">            p13.value(<span class="number">0</span>)</span><br><span class="line">            p12.value(<span class="number">1</span>)</span><br><span class="line">            p14.value(<span class="number">0</span>)</span><br><span class="line">            p15.value(<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">elif</span> rc.action == <span class="string">&#x27;move left&#x27;</span>:</span><br><span class="line">            <span class="comment"># 左转</span></span><br><span class="line">            p13.value(<span class="number">0</span>)</span><br><span class="line">            p12.value(<span class="number">1</span>)</span><br><span class="line">            p14.value(<span class="number">1</span>)</span><br><span class="line">            p15.value(<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">elif</span> rc.action == <span class="string">&#x27;move right&#x27;</span>:</span><br><span class="line">            <span class="comment"># 右转</span></span><br><span class="line">            p13.value(<span class="number">1</span>)</span><br><span class="line">            p12.value(<span class="number">0</span>)</span><br><span class="line">            p14.value(<span class="number">0</span>)</span><br><span class="line">            p15.value(<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">elif</span> rc.action == <span class="string">&#x27;move stop&#x27;</span>:</span><br><span class="line">            p13.value(<span class="number">0</span>)</span><br><span class="line">            p12.value(<span class="number">0</span>)</span><br><span class="line">            p14.value(<span class="number">0</span>)</span><br><span class="line">            p15.value(<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            rc.display()</span><br></pre></td></tr></table></figure>
+
+<h1 id="Server端代码"><a href="#Server端代码" class="headerlink" title="Server端代码"></a>Server端代码</h1><p><strong>websocket_32.py</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> fastapi <span class="keyword">import</span> APIRouter, Depends, WebSocket</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">router = APIRouter()</span><br><span class="line"></span><br><span class="line">client_dict = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@router.websocket(<span class="params"><span class="string">&quot;/&#123;client_id&#125;&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">websocket_endpoint</span>(<span class="params">websocket: WebSocket, client_id: <span class="built_in">str</span></span>):</span><br><span class="line">    <span class="keyword">await</span> websocket.accept()</span><br><span class="line">    client_dict[client_id] = websocket</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        data = <span class="keyword">await</span> websocket.receive_text()</span><br><span class="line">        res = &#123;</span><br><span class="line">            <span class="string">&#x27;message_type&#x27;</span>: <span class="string">&#x27;client send&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;message_id&#x27;</span>: <span class="string">&#x27;client send&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;action&#x27;</span>: data,</span><br><span class="line">            <span class="string">&#x27;payload&#x27;</span>: &#123;&#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">await</span> websocket.send_text(json.dumps(res))</span><br><span class="line"></span><br><span class="line"><span class="meta">@router.get(<span class="params"><span class="string">&#x27;/&#123;client_id&#125;&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">run</span>(<span class="params">client_id, action</span>):</span><br><span class="line">    <span class="keyword">if</span> client_id <span class="keyword">in</span> client_dict.keys():</span><br><span class="line">        ws = client_dict[client_id]</span><br><span class="line">        res = &#123;</span><br><span class="line">            <span class="string">&#x27;message_type&#x27;</span>: <span class="string">&#x27;server run&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;message_id&#x27;</span>: <span class="string">&#x27;server run&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;action&#x27;</span>: action,</span><br><span class="line">            <span class="string">&#x27;payload&#x27;</span>: &#123;&#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">await</span> ws.send_text(json.dumps(res))</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;client ont fount!&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="End"><a href="#End" class="headerlink" title="End"></a>End</h1><p>该项目，未完成，正在进行中…</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>zoyass</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://www.zoyass.site/2023/04/08/esp32-cam%E6%9D%BF%E5%88%A9%E7%94%A8micropython%E5%BC%80%E5%8F%91%E6%99%BA%E8%83%BD%E5%B0%8F%E8%BD%A6%E7%A8%8B%E5%BA%8F/">https://www.zoyass.site/2023/04/08/esp32-cam%E6%9D%BF%E5%88%A9%E7%94%A8micropython%E5%BC%80%E5%8F%91%E6%99%BA%E8%83%BD%E5%B0%8F%E8%BD%A6%E7%A8%8B%E5%BA%8F/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/esp32-cam/"># esp32-cam</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2023/03/20/fastapi-blog-api-docs/">Fastapi Blog Api Docs</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© zoyass | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
