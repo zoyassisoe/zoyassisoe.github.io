@@ -28,7 +28,7 @@
     <meta name="keywords" content="BLOG">
 
 
-<title>机器学习线性回归算法 | Wait</title>
+<title>谨以此献给我考研的两年 | Wait</title>
 
 
 
@@ -55,45 +55,6 @@
 
     
     
-        
-            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-    "HTML-CSS": {
-        preferredFont: "TeX",
-        availableFonts: ["STIX","TeX"],
-        linebreaks: { automatic:true },
-        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
-    },
-    tex2jax: {
-        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
-        processEscapes: true,
-        ignoreClass: "tex2jax_ignore|dno",
-        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-        equationNumbers: { autoNumber: "AMS" },
-        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
-        Macros: { href: "{}" }
-    },
-    messageStyle: "none"
-    });
-</script>
-<!-- 给MathJax元素添加has-jax class -->
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for(i=0; i < all.length; i += 1) {
-            all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-    });
-</script>
-<!-- 通过连接CDN加载MathJax的js代码 -->
-<script type="text/javascript" async
-        src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
-
-
         
     
 
@@ -250,7 +211,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">机器学习线性回归算法</h1>
+            <h1 class="post-title">谨以此献给我考研的两年</h1>
             
                 <div class="post-meta">
                     
@@ -259,54 +220,44 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">十二月 10, 2019&nbsp;&nbsp;0:00:00</a>
+                        Date: <a href="#">四月 23, 2023&nbsp;&nbsp;21:43:06</a>
                         </span>
                     
-                    
-                        <span class="post-category">
-                    Category:
-                            
-                                <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
-                            
-                        </span>
                     
                 </div>
             
         </header>
 
         <div class="post-content">
-            <p><img src="https://img-blog.csdnimg.cn/20191112131128429.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODQ3Njc3,size_16,color_FFFFFF,t_70" alt="线性回归图"></p>
-<h2 id="假设-基于二维"><a href="#假设-基于二维" class="headerlink" title="假设(基于二维)"></a>假设(基于二维)</h2><p><strong>训练集</strong></p>
-<p>$$<br>\begin{bmatrix}<br>1&amp;x_{11}&amp;{\cdots}&amp;x_{1n}\<br>1&amp;x_{21}&amp;{\cdots}&amp;x_{2n}\<br>{\vdots}&amp;{\vdots}&amp;{\ddots}&amp;{\vdots}\<br>1&amp;x_{m1}&amp;{\cdots}&amp;x_{mn}\<br>\end{bmatrix}*<br>\begin{bmatrix}<br>\theta_{0}\<br>\theta_{1}\<br>{\vdots}\<br>\theta_{n}\<br>\end{bmatrix}&#x3D;<br>\begin{bmatrix}<br>y_{1}\<br>y_{2}\<br>{\vdots}\<br>y_{n}\<br>\end{bmatrix}<br>$$</p>
-<p><strong>表达式</strong></p>
-<p>$$<br>h_\theta(x)&#x3D;\theta_0+\theta_1x_1+…+\theta_nx_n…x为向量<br>$$</p>
-<h2 id="定义代价函数"><a href="#定义代价函数" class="headerlink" title="定义代价函数"></a>定义代价函数</h2><p>$$<br>J_\theta(\theta_0,\theta_1,\theta_2,…,\theta_n)&#x3D;\frac{1}{2m}\sum_{i&#x3D;1}^{m}({h_\theta(x^i)-y(x^i)})^2<br>$$</p>
-<h2 id="梯度下降法"><a href="#梯度下降法" class="headerlink" title="梯度下降法"></a>梯度下降法</h2><p>$$<br>min_{\theta_0…\theta_n}J(\theta_0,\theta_1,\theta_2,…,\theta_n)<br>$$</p>
-<p>$$<br>\theta_j&#x3D;\theta_j-\alpha\frac{\partial}{\partial\theta_j}J(\theta_0,\theta_1,\theta_2,…,\theta_n)…\alpha为学习率<br>$$</p>
-<p>故</p>
-<p>$$<br>\frac{\partial}{\partial\theta_j}J(\theta_0,\theta_1,\theta_2,…,\theta_n)&#x3D;\frac{1}{m}\sum_{i&#x3D;1}^{m}({h_\theta(x^i)-y(x^i)})x^i<br>$$</p>
-<p>带入得</p>
-<p>$$<br>\theta_j&#x3D;\theta_j-\alpha\frac{1}{m}\sum_{i&#x3D;1}^{m}({h_\theta(x^i)-y(x^i)})x^{ij}<br>$$</p>
-<h2 id="梯度下降法实现"><a href="#梯度下降法实现" class="headerlink" title="梯度下降法实现"></a>梯度下降法实现</h2><p> <strong>定义精度为P</strong></p>
-<p> $$<br> 当\theta_j^n-\theta_j^{n-1}&lt;&#x3D;P时递归停止<br> $$</p>
-<p> <strong>初始化</strong></p>
-<p> $$<br> (\theta_0,\theta_1,\theta_2,…,\theta_n)为(0,0,0,…,0)或者其他<br> $$</p>
-<p> <strong>执行递归</strong></p>
-<p> $$<br> \theta_j一步一步变化直到达到J(\theta)最小值<br> $$</p>
-<p> <strong>为什么可以实现？</strong></p>
-<p> <img src="https://img-blog.csdnimg.cn/20191112151736273.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODQ3Njc3,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<p> 该图为取$(\theta_0…\theta_{j-1},\theta_{j+1}…\theta_n)$为固定值时$J(\theta)$的切片<br> 当</p>
-<p> $$<br> \theta_j&#x3D;x_1时\frac{\partial}{\partial\theta_j}J(\theta)&lt;0故\theta_j增加逐渐靠近h，同时精度P决定递归是否停止<br> $$</p>
-<p>  当$\theta_j&#x3D;x_2$时同理</p>
-<h3 id="学习率-alpha"><a href="#学习率-alpha" class="headerlink" title="学习率$\alpha$"></a>学习率$\alpha$</h3><p> 过大导致可能不收敛</p>
-<p> <img src="https://img-blog.csdnimg.cn/20191112153836226.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODQ3Njc3,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<p> 过小导致收敛太慢<br> 故多次实验，取合适的$\alpha$</p>
-<p> $$<br> \alpha&#x3D;\begin{bmatrix}0.001&amp;0.01&amp;0.1&amp;1&amp;10\\end{bmatrix}<br> $$</p>
-<h3 id="特征缩放"><a href="#特征缩放" class="headerlink" title="特征缩放"></a>特征缩放</h3><p>  $$<br>  \begin{bmatrix}x_{1i}\x_{2i}\{\vdots}\x_{ni}\\end{bmatrix}&#x3D;\begin{bmatrix}1000\1001\{\vdots}\1020\\end{bmatrix}-&gt;1000*\begin{bmatrix}1.000\1.001\{\vdots}\1.020\\end{bmatrix}<br>  $$</p>
-<h2 id="若-h-theta-x3D-theta-0-theta-1x-1-2-theta-1x-2-3-…"><a href="#若-h-theta-x3D-theta-0-theta-1x-1-2-theta-1x-2-3-…" class="headerlink" title="若$h_\theta&#x3D;\theta_0+\theta_1x_1^2+\theta_1x_2^3+…$"></a>若$h_\theta&#x3D;\theta_0+\theta_1x_1^2+\theta_1x_2^3+…$</h2><p> 可令</p>
-<p> $$<br> x_1^2&#x3D;t_1,x_2^3&#x3D;t_2…<br> $$ </p>
-<p> 即可实现</p>
-<h2 id="正则方程实现"><a href="#正则方程实现" class="headerlink" title="正则方程实现"></a>正则方程实现</h2><p>$$<br>\theta&#x3D;(X^TX)^{-1}X^TY…(X^T为X的转置，X^{-1}为X的逆)<br>$$</p>
+            <h1 id="谨以此献给我考研的两年"><a href="#谨以此献给我考研的两年" class="headerlink" title="谨以此献给我考研的两年"></a>谨以此献给我考研的两年</h1><p>无疑，对于我最后的结果我已经很满足了。</p>
+<p>一战重邮计算机以3分差距无缘复试，76，40，86，106，总308。对于此结果我很失望，数学选填错的7个，专业课失分的不明所以，英语就是烂能过线已经很满足了，政治是我万万没有想到的76分确确实实给我了一些安慰。</p>
+<p>调剂就不说了，唯一收到一个调剂信息是西藏大学，复试科目没准备，g。</p>
+<p>关于考重邮计算机：</p>
+<p>复习时间2021.07-考前</p>
+<p>首先我的英语稀烂，大学4年英语四级最高分341…，最后考40也完全是瞎蒙。背了斌斌老师作文模板，感觉确实有用，估计作文给了15分以上，不然真不知道怎么能有40分了，也没对过答案，因为压根不知道自己选的啥。</p>
+<p>英语一我的复试方式是天天拿个破本子用刘晓燕的单词书对着咔哧咔哧抄，有没有用我也不知道，平均每天就记了40个…，然后英语正题只做阅读理解，全部做完也不知道做的是啥，反正就是折磨自己…，最后实在顶不住了用考研真相看阅读理解翻译一句一句抄。</p>
+<p>平均每天4个小时…</p>
+<p>然后大头数学，因为我本科就是学数学的，信计专业。开始就看汤家凤，看到难的就看自己的数学分析书，比如梯度这块，泰勒公式证明这块，数列极限这块。高数一轮看完之后已经9月的，到这时1800的高数模块做了个大概，就是想做哪做哪，估计做了三分之一吗，主打一个摆烂考研…</p>
+<p>当时想着9月了顶不住了，二轮高数一轮线代一轮概率论一轮专业课（数据结构802）一轮政治一起来。</p>
+<p>这阶段就是追求速度不管质量了，高数二刷张宇，线代一轮也是最后一轮张宇，概率论一轮也是最后一轮张宇，专业课王道，政治徐涛。</p>
+<p>买了本张宇1000题，压根做不动…</p>
+<p>专业课数据结构，单面打印了王道的思维导图，看视频做笔记然后做书后面的课后习题。</p>
+<p>估摸11月数学结束，专业课结束，政治还在看徐涛，开始做数学真题专业课正题了，然后在寻找英语的解救办法。</p>
+<p>做了数一正题，张宇模拟题，李林模拟题…最后86…，改错两个选择题，填空题写错答案格式…，概率论一个选择题的概念不明所以</p>
+<p><img src="https://raw.githubusercontent.com/zoyassisoe/images/main/image-20230423204953150.png" alt="image-20230423204953150"></p>
+<p>就这道，现在发现当时就是纯纯的菜，不会做…</p>
+<img src="https://raw.githubusercontent.com/zoyassisoe/images/main/new%20ducument.jpg" alt="new ducument" style="zoom: 15%;">
+
+<p>…单纯菜罢了</p>
+<p>第一年就结束了，2022年4月入职开始工作了，小公司老板挺好不提倡加班，一个半月就给我转正了，8月份离职也是十分对不起老板了，在里面做python开发学了不少东西。</p>
+<p>2022年8月份开始尝试第二次考研，介于第一次的失败我选择了换赛道，考本专业数学，目标海南大学数学专业，64，45，98，136，总343。经历了查到分的喜悦，查到排名的失落，扩招，进复试，逆袭，拟录取！！！</p>
+<p>政治纯摆烂，啥都没看啥都没做，背了肖四，做了肖八选择题就去考试了，最后64，满足了！</p>
+<p>英语纯摆烂，天天默默记单词点一点完事，一天180-&gt;200-&gt;250-&gt;300词，真题不刷，背了第一年总结的作文模板，最45，满足了！</p>
+<p>数分我选择看书，陈纪修第四版，看了做课后题，总结第一年的失败，我认为就是题刷少了所以主打刷题。刷了点点裴礼文，这书是真不错。</p>
+<p>高代<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1jR4y1M78W/?spm_id_from=333.337.search-card.all.click">北大丘维声教授清华高等代数课程1080P高清修复版(全151集)_哔哩哔哩_bilibili</a>，讲的是真不错，非常推荐。刷题就刷丘砖，完！别看我高代136，是因为考的特别简单…</p>
+<p>我花了大量大量时间在数学分析，可是也才98，我记着有一道题，考的最小二乘法，我压根没有看，写题的时候完完全全按照记忆中的吴恩达老师讲的线性回归来写的，结果发现写错了，我写成正交回归了…估计0分…</p>
+<p>复试概率论与数理统计，<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1xT4y197AX/?spm_id_from=333.1007.top_right_bar_window_default_collection.content.click&vd_source=d5841dcd7155493013ee6219ffe3adcc">【国防科技大学】概率论与数理统计-吴翊_哔哩哔哩_bilibili</a>，自认为讲的真不错。最后复试笔试成绩挺高，而且我有10分的题由于没看到所以没写…，所以基本上我写的就是对的，除了我知道有一个计算错误的OvO。</p>
+<p>面试 pass</p>
 
         </div>
 
@@ -321,7 +272,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="https://www.zoyass.site/2019/12/10/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E7%AE%97%E6%B3%95/">https://www.zoyass.site/2019/12/10/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E7%AE%97%E6%B3%95/</a></span>
+                        <span><a href="https://www.zoyass.site/2023/04/23/%E8%B0%A8%E4%BB%A5%E6%AD%A4%E7%8C%AE%E7%BB%99%E6%88%91%E8%80%83%E7%A0%94%E7%9A%84%E4%B8%A4%E5%B9%B4/">https://www.zoyass.site/2023/04/23/%E8%B0%A8%E4%BB%A5%E6%AD%A4%E7%8C%AE%E7%BB%99%E6%88%91%E8%80%83%E7%A0%94%E7%9A%84%E4%B8%A4%E5%B9%B4/</a></span>
                     </p>
                 
                 
@@ -339,10 +290,6 @@
                 <span>Tag(s):</span>
                 <span class="tag">
                     
-                    
-                        <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"># 机器学习</a>
-                    
-                        
                 </span>
             </div>
             <div>
@@ -353,10 +300,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2019/12/10/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AD%A6%E4%B9%A0%E7%9A%84Logistic%E5%9B%9E%E5%BD%92%E7%AE%97%E6%B3%95/">机器学习学习的Logistic回归算法</a>
             
-            
-            <a class="next" rel="next" href="/2018/04/18/%E6%B5%8B%E8%AF%95/">测试</a>
+            <a class="next" rel="next" href="/2023/04/08/esp32-cam%E6%9D%BF%E5%88%A9%E7%94%A8micropython%E5%BC%80%E5%8F%91%E6%99%BA%E8%83%BD%E5%B0%8F%E8%BD%A6%E7%A8%8B%E5%BA%8F/">Esp32-Cam板利用micropython开发智能小车程序</a>
             
         </section>
 
