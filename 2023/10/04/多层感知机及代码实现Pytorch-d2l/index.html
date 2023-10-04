@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-XJ388BQHX4');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="zoyass">
+
+
+    <meta name="subtitle" content="没有绝对，不用在意，好好享受一切">
+
+
+    <meta name="description" content="大家好好休息">
+
+
+    <meta name="keywords" content="BLOG">
+
+
+<title>多层感知机及代码实现Pytorch D2l | 1214</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+    
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">多层感知机及代码实现Pytorch D2l</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">zoyass</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">十月 4, 2023&nbsp;&nbsp;20:23:37</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="设计"><a href="#设计" class="headerlink" title="设计"></a>设计</h1><p><img src="/2023/10/04/%E5%A4%9A%E5%B1%82%E6%84%9F%E7%9F%A5%E6%9C%BA%E5%8F%8A%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0Pytorch-d2l/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-10-04%20202525.png" alt="框架图"><br>在线性回归模型的基础上增加了隐藏层，$input X(batchsize, n),H(batchsize, m)&#x3D;X(batchsize, n)<em>W1(n, m)+B1(1, m)$,B1采用广播机制。<br>$O(batchsize, k)&#x3D;H(batchsize, m)<em>W2(m, k)+B2(1, k)$,B2采用广播机制。<br>在隐藏层需要添加激活函数，为什么？<br>如果没有激活函数f，$O&#x3D;(X</em>W1+B1)<em>W2+B2&#x3D;X</em>W1</em>W2 + B1<em>W + B2 &#x3D; X</em>W+B$,相当于线性回归了。加入激活函数，$O&#x3D;f(X<em>W1+B1)<em>W2+B2&#x3D;X</em>W1</em>W2 + B1<em>W + B2 &#x3D; X</em>W+B$就消除了这个问题。</p>
+<h2 id="激活函数"><a href="#激活函数" class="headerlink" title="激活函数"></a>激活函数</h2><p>常见的激活函数如下：</p>
+<h3 id="ReLU"><a href="#ReLU" class="headerlink" title="ReLU"></a>ReLU</h3><p>$ReLU(x) &#x3D; max(0,x)$<br>它的作用：pass<br>变体：$pReLU(x) &#x3D; max(0,x)+\alpha min(0,x)$</p>
+<h3 id="sigmoid"><a href="#sigmoid" class="headerlink" title="sigmoid"></a>sigmoid</h3><p>$sigmoid(x) &#x3D; \frac{1}{1+exp(-x)}$</p>
+<h3 id="tanh"><a href="#tanh" class="headerlink" title="tanh"></a>tanh</h3><p>$tanh(x)&#x3D;\frac{1-exp(-2x)}{1+exp(-2x)}$</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">x = torch.arange(-<span class="number">10</span>,<span class="number">10</span>,<span class="number">0.1</span>)</span><br><span class="line">fig, axes = plt.subplots(<span class="number">1</span>,<span class="number">4</span>, figsize=(<span class="number">16</span>,<span class="number">2</span>))</span><br><span class="line">axes = axes.flatten()</span><br><span class="line">axes[<span class="number">0</span>].plot(x,torch.relu(x))</span><br><span class="line">axes[<span class="number">1</span>].plot(x,torch.sigmoid(x))</span><br><span class="line">axes[<span class="number">2</span>].plot(x,torch.tanh(x))</span><br><span class="line">axes[<span class="number">3</span>].plot(x,torch.softmax(x, dim=-<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+<p><img src="/2023/10/04/%E5%A4%9A%E5%B1%82%E6%84%9F%E7%9F%A5%E6%9C%BA%E5%8F%8A%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0Pytorch-d2l/image.png" alt="Alt text"></p>
+<h1 id="d2l"><a href="#d2l" class="headerlink" title="d2l"></a>d2l</h1><h2 id="从零实现"><a href="#从零实现" class="headerlink" title="从零实现"></a>从零实现</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torchvision</span><br><span class="line"><span class="keyword">from</span> torchvision <span class="keyword">import</span> transforms</span><br><span class="line"><span class="keyword">from</span> torch.utils <span class="keyword">import</span> data</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line"></span><br><span class="line">mnist_train = torchvision.datasets.FashionMNIST(</span><br><span class="line">    root=<span class="string">&#x27;../data&#x27;</span>, train=<span class="literal">True</span>, transform=transforms.ToTensor(), download=<span class="literal">True</span></span><br><span class="line">)</span><br><span class="line">mnist_test = torchvision.datasets.FashionMNIST(</span><br><span class="line">    root=<span class="string">&#x27;../data&#x27;</span>, train=<span class="literal">False</span>, transform=transforms.ToTensor(), download=<span class="literal">True</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 前向传播</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">softmax</span>(<span class="params">x</span>):</span><br><span class="line">    x_exp = torch.exp(x)</span><br><span class="line">    <span class="keyword">return</span> x_exp/x_exp.<span class="built_in">sum</span>(<span class="number">1</span>, keepdim=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">net</span>(<span class="params">x, w1, b1, w2, b2</span>):</span><br><span class="line">    <span class="comment"># x shape (batch_size, 28*28)</span></span><br><span class="line">    <span class="comment"># w1 (28*28, 256) w2 (256, 10)</span></span><br><span class="line">    h = torch.matmul(x.reshape((-<span class="number">1</span>, w1.shape[<span class="number">0</span>])), w1)+b1</span><br><span class="line">    <span class="comment"># h shape (batch_size, 256)</span></span><br><span class="line">    y = torch.matmul(torch.relu(h), w2)+b2</span><br><span class="line">    <span class="keyword">return</span> softmax(y)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 代价函数</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cross_entropy</span>(<span class="params">y, y_hat</span>):</span><br><span class="line">    <span class="keyword">return</span> - torch.log(y_hat[<span class="built_in">range</span>(<span class="built_in">len</span>(y_hat)), y])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># sgd</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">sgd</span>(<span class="params">params, lr, batch_size</span>):</span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        <span class="keyword">for</span> param <span class="keyword">in</span> params:</span><br><span class="line">            param -= lr*param.grad/batch_size</span><br><span class="line">            param.grad.zero_()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 准确率</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">ac</span>(<span class="params">w1, b1, w2, b2, data_iter, net</span>):</span><br><span class="line">    num_acs = []</span><br><span class="line">    <span class="keyword">for</span> x, y <span class="keyword">in</span> data_iter:</span><br><span class="line">        y_hat = net(x, w1, b1, w2, b2)</span><br><span class="line">        maxs, indexs = torch.<span class="built_in">max</span>(y_hat, dim=<span class="number">1</span>)</span><br><span class="line">        num_acs.append(y.eq(indexs).<span class="built_in">sum</span>()/indexs.shape[<span class="number">0</span>])</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">sum</span>(num_acs)/<span class="built_in">len</span>(num_acs)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 准备数据</span></span><br><span class="line">batch_size = <span class="number">256</span></span><br><span class="line">train_iter = data.DataLoader(</span><br><span class="line">    mnist_train, batch_size, shuffle=<span class="literal">True</span>, num_workers=<span class="number">4</span>)</span><br><span class="line">test_iter = data.DataLoader(mnist_test, batch_size,</span><br><span class="line">                            shuffle=<span class="literal">True</span>, num_workers=<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 超参数</span></span><br><span class="line">lr = <span class="number">0.1</span></span><br><span class="line">num_epochs = <span class="number">10</span></span><br><span class="line">net = net</span><br><span class="line">loss = cross_entropy</span><br><span class="line"></span><br><span class="line"><span class="comment"># 参数</span></span><br><span class="line">num_output = <span class="number">10</span></span><br><span class="line">num_input = <span class="number">28</span>*<span class="number">28</span></span><br><span class="line">num_hidden = <span class="number">256</span></span><br><span class="line">w1 = torch.normal(<span class="number">0</span>, <span class="number">0.1</span>, (num_input, num_hidden), requires_grad=<span class="literal">True</span>)</span><br><span class="line">b1 = torch.zeros(num_hidden, requires_grad=<span class="literal">True</span>)</span><br><span class="line">w2 = torch.normal(<span class="number">0</span>, <span class="number">0.1</span>, (num_hidden, num_output), requires_grad=<span class="literal">True</span>)</span><br><span class="line">b2 = torch.zeros(num_output, requires_grad=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    train_acs = []</span><br><span class="line">    test_acs = []</span><br><span class="line">    losss = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num_epochs):</span><br><span class="line">        <span class="keyword">for</span> x, y <span class="keyword">in</span> train_iter:</span><br><span class="line">            y_hat = net(x, w1, b1, w2, b2)</span><br><span class="line">            l = loss(y, y_hat)</span><br><span class="line">            l.<span class="built_in">sum</span>().backward()</span><br><span class="line">            sgd([w1, b1, w2, b2], lr, batch_size)</span><br><span class="line"></span><br><span class="line">        train_ac = ac(w1, b1, w2, b2, train_iter, net)</span><br><span class="line">        test_ac = ac(w1, b1, w2, b2, test_iter, net)</span><br><span class="line">        train_acs.append(train_ac)</span><br><span class="line">        test_acs.append(test_ac)</span><br><span class="line">        losss.append(l.<span class="built_in">sum</span>().detach().numpy())</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;epoch:&#123;&#125;, train iter ac:&#123;&#125;, test iter ac:&#123;&#125;&#x27;</span>.<span class="built_in">format</span>(</span><br><span class="line">            i, train_ac, test_ac))</span><br><span class="line">    fig, axes = plt.subplots(<span class="number">1</span>,<span class="number">2</span>, figsize=(<span class="number">8</span>,<span class="number">2</span>))</span><br><span class="line">    axes = axes.flatten()</span><br><span class="line">    axes[<span class="number">0</span>].plot(<span class="built_in">range</span>(<span class="number">10</span>), losss)</span><br><span class="line">    axes[<span class="number">1</span>].plot(<span class="built_in">range</span>(<span class="number">10</span>), train_acs, label=<span class="string">&#x27;train data&#x27;</span>)</span><br><span class="line">    axes[<span class="number">1</span>].plot(<span class="built_in">range</span>(<span class="number">10</span>), test_acs, label=<span class="string">&#x27;test data&#x27;</span>)</span><br><span class="line">    axes[<span class="number">1</span>].legend()</span><br></pre></td></tr></table></figure>
+<p><img src="/2023/10/04/%E5%A4%9A%E5%B1%82%E6%84%9F%E7%9F%A5%E6%9C%BA%E5%8F%8A%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0Pytorch-d2l/lossandac.png" alt="loss and ac"><br>发现准确率也不够高！</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>zoyass</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://www.zoyass.site/2023/10/04/%E5%A4%9A%E5%B1%82%E6%84%9F%E7%9F%A5%E6%9C%BA%E5%8F%8A%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0Pytorch-d2l/">https://www.zoyass.site/2023/10/04/%E5%A4%9A%E5%B1%82%E6%84%9F%E7%9F%A5%E6%9C%BA%E5%8F%8A%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0Pytorch-d2l/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Pytorch/"># Pytorch</a>
+                    
+                        <a href="/tags/d2l/"># d2l</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2023/04/23/%E8%B0%A8%E4%BB%A5%E6%AD%A4%E7%8C%AE%E7%BB%99%E6%88%91%E8%80%83%E7%A0%94%E7%9A%84%E4%B8%A4%E5%B9%B4/">谨以此献给我考研的两年</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© zoyass | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+            
+                <a href="/diary" target="_self">|鸟</a>  
+            
+        </span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
