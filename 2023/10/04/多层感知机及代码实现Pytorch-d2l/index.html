@@ -267,13 +267,8 @@
 
         <div class="post-content">
             <h1 id="部分手写解释"><a href="#部分手写解释" class="headerlink" title="部分手写解释"></a>部分手写解释</h1><iframe src="./MLP.pdf" width="80%" height="600px"></iframe>
-# 设计
-![框架图](./多层感知机及代码实现Pytorch-d2l/屏幕截图%202023-10-04%20202525.png)  
-在线性回归模型的基础上增加了隐藏层，$input X(batchsize, n),H(batchsize, m)=X(batchsize, n)*W1(n, m)+B1(1, m)$,B1采用广播机制。  
-$O(batchsize, k)=H(batchsize, m)*W2(m, k)+B2(1, k)$,B2采用广播机制。  
-在隐藏层需要添加激活函数，为什么？  
-如果没有激活函数f，$O=(X*W1+B1)*W2+B2=X*W1*W2 + B1*W + B2 = X*W+B$,相当于线性回归了。加入激活函数，$O=f(X*W1+B1)*W2+B2=X*W1*W2 + B1*W + B2 = X*W+B$就消除了这个问题。
 
+<h1 id="设计"><a href="#设计" class="headerlink" title="设计"></a>设计</h1><p><img src="/2023/10/04/%E5%A4%9A%E5%B1%82%E6%84%9F%E7%9F%A5%E6%9C%BA%E5%8F%8A%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0Pytorch-d2l/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-10-04%20202525.png" alt="框架图"><br>在线性回归模型的基础上增加了隐藏层，$input X(batchsize, n),H(batchsize, m)&#x3D;X(batchsize, n)<em>W1(n, m)+B1(1, m)$,B1采用广播机制。<br>$O(batchsize, k)&#x3D;H(batchsize, m)<em>W2(m, k)+B2(1, k)$,B2采用广播机制。<br>在隐藏层需要添加激活函数，为什么？<br>如果没有激活函数f，$O&#x3D;(X</em>W1+B1)<em>W2+B2&#x3D;X</em>W1</em>W2 + B1<em>W + B2 &#x3D; X</em>W+B$,相当于线性回归了。加入激活函数，$O&#x3D;f(X<em>W1+B1)<em>W2+B2&#x3D;X</em>W1</em>W2 + B1<em>W + B2 &#x3D; X</em>W+B$就消除了这个问题。</p>
 <h2 id="激活函数"><a href="#激活函数" class="headerlink" title="激活函数"></a>激活函数</h2><p>常见的激活函数如下：</p>
 <h3 id="ReLU"><a href="#ReLU" class="headerlink" title="ReLU"></a>ReLU</h3><p>$ReLU(x) &#x3D; max(0,x)$<br>它的作用：pass<br>变体：$pReLU(x) &#x3D; max(0,x)+\alpha min(0,x)$</p>
 <h3 id="sigmoid"><a href="#sigmoid" class="headerlink" title="sigmoid"></a>sigmoid</h3><p>$sigmoid(x) &#x3D; \frac{1}{1+exp(-x)}$</p>
