@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-XJ388BQHX4');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="zoyass">
+
+
+    <meta name="subtitle" content="没有绝对，不用在意，好好享受一切">
+
+
+    <meta name="description" content="大家好好休息">
+
+
+    <meta name="keywords" content="BLOG">
+
+
+<title>循环神经网络RNN | 1214</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+    
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">循环神经网络RNN</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">zoyass</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">十二月 8, 2023&nbsp;&nbsp;19:16:00</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="反向传播推导"><a href="#反向传播推导" class="headerlink" title="反向传播推导"></a>反向传播推导</h1><p><img src="/2023/12/08/%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/rnn%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD.jpg" alt="rnn反向传播"></p>
+<h1 id="从零实现"><a href="#从零实现" class="headerlink" title="从零实现"></a>从零实现</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> d2l <span class="keyword">import</span> torch <span class="keyword">as</span> d2l</span><br><span class="line"><span class="keyword">from</span> torch.nn <span class="keyword">import</span> functional <span class="keyword">as</span> F</span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_params</span>(<span class="params">vocab_size, num_hiddens, device</span>):</span><br><span class="line">    input_size = output_size = vocab_size</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">normal</span>(<span class="params">shape</span>):</span><br><span class="line">        <span class="keyword">return</span> torch.randn(size=shape, device=device)*<span class="number">0.01</span></span><br><span class="line"></span><br><span class="line">    w_xh = normal((input_size, num_hiddens))</span><br><span class="line">    w_hh = normal((num_hiddens, num_hiddens))</span><br><span class="line">    b_h = normal((num_hiddens, ))</span><br><span class="line">    w_ho = normal((num_hiddens, output_size))</span><br><span class="line">    b_o = normal((output_size, ))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 需要梯度</span></span><br><span class="line">    params = [w_xh, w_hh, b_h, w_ho, b_o]</span><br><span class="line">    <span class="keyword">for</span> param <span class="keyword">in</span> params:</span><br><span class="line">        param.requires_grad_(<span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">return</span> params</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">init_state</span>(<span class="params">batch_size, num_hiddens, device</span>):</span><br><span class="line">    <span class="keyword">return</span> (torch.zeros((batch_size, num_hiddens), device=device),)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 需要修改，因为初始化H只在一开始初始化即可</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">rnn</span>(<span class="params">inputs: torch.Tensor, params, state</span>)-&gt;torch.Tensor:</span><br><span class="line">    w_xh, w_hh, b_h, w_ho, b_o = params</span><br><span class="line">    <span class="comment"># inputs shape 应该是（时间步，batch size，vocab size）</span></span><br><span class="line">    <span class="comment"># 初始化隐藏层H</span></span><br><span class="line">    H, = state</span><br><span class="line"></span><br><span class="line">    outputs = []</span><br><span class="line">    <span class="keyword">for</span> X <span class="keyword">in</span> inputs:</span><br><span class="line">        <span class="comment"># 一次调用一个时间步</span></span><br><span class="line">        <span class="comment"># H = ReLu(w_xh*X+x_hh*H+b_h)</span></span><br><span class="line">        H = F.relu(torch.matmul(X, w_xh) + torch.matmul(H, w_hh) + b_h)</span><br><span class="line">        Y = torch.matmul(H, w_ho) + b_o</span><br><span class="line">        outputs.append(Y)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 这里作升维操作，容易看懂些</span></span><br><span class="line">    <span class="keyword">return</span> torch.stack(outputs, dim=<span class="number">0</span>), H</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">RNN</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, vocab_size, num_hiddens, device, init_state, get_params, forward_fn</span>):</span><br><span class="line">        self.vocab_size, self.num_hiddens = vocab_size, num_hiddens</span><br><span class="line">        self.state = init_state(batch_size, num_hiddens, device)</span><br><span class="line">        self.params = get_params(vocab_size, num_hiddens, device)</span><br><span class="line">        self.forward_fn = forward_fn</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__call__</span>(<span class="params">self, X:torch.tensor, state=<span class="literal">None</span></span>):</span><br><span class="line">        <span class="comment"># state每次call前需要detach</span></span><br><span class="line">        <span class="keyword">if</span> state <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>: self.state = state</span><br><span class="line">        <span class="keyword">for</span> s <span class="keyword">in</span> self.state:</span><br><span class="line">            s.detach_()</span><br><span class="line">        inputs = F.one_hot(X.T, <span class="built_in">len</span>(vocab)).<span class="built_in">type</span>(torch.float32)</span><br><span class="line">        outputs, H = self.forward_fn(inputs, self.params, self.state)</span><br><span class="line">        self.state = (H, )</span><br><span class="line">        <span class="keyword">return</span> outputs, self.state</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">batch_size = <span class="number">32</span></span><br><span class="line">vocab_size = <span class="number">35</span></span><br><span class="line"><span class="comment"># vocab 是基于字母的标号</span></span><br><span class="line">train_iter, vocab = d2l.load_data_time_machine(batch_size, vocab_size)</span><br><span class="line"></span><br><span class="line">num_epochs, lr = <span class="number">1000</span>, <span class="number">1</span></span><br><span class="line">device = torch.device(<span class="string">&#x27;cuda&#x27;</span>)</span><br><span class="line">net = RNN(<span class="built_in">len</span>(vocab), <span class="number">256</span>, device, init_state, get_params, rnn)</span><br><span class="line">loss = nn.CrossEntropyLoss()</span><br><span class="line"><span class="comment"># updater = lambda batch_size: d2l.sgd(net.params, lr, batch_size)</span></span><br><span class="line">updater = torch.optim.SGD(net.params, lr=lr)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">grad_clipping</span>(<span class="params">net, theta</span>):  <span class="comment">#@save</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;裁剪梯度&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">isinstance</span>(net, nn.Module):</span><br><span class="line">        params = [p <span class="keyword">for</span> p <span class="keyword">in</span> net.parameters() <span class="keyword">if</span> p.requires_grad]</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        params = net.params</span><br><span class="line">    norm = torch.sqrt(<span class="built_in">sum</span>(torch.<span class="built_in">sum</span>((p.grad ** <span class="number">2</span>)) <span class="keyword">for</span> p <span class="keyword">in</span> params))</span><br><span class="line">    <span class="keyword">if</span> norm &gt; theta:</span><br><span class="line">        <span class="keyword">for</span> param <span class="keyword">in</span> params:</span><br><span class="line">            param.grad[:] *= theta / norm</span><br><span class="line"></span><br><span class="line">metric = d2l.Accumulator(<span class="number">2</span>)</span><br><span class="line">timer = d2l.Timer()</span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(num_epochs):</span><br><span class="line">    <span class="keyword">for</span> x,y <span class="keyword">in</span> train_iter:</span><br><span class="line">        x,y = x.to(device), y.to(device)</span><br><span class="line">        y_hat,_ = net(x)</span><br><span class="line">        <span class="comment"># 为了计算loss需要展平</span></span><br><span class="line">        y = y.T.reshape(-<span class="number">1</span>)</span><br><span class="line">        y_hat = y_hat.reshape(-<span class="number">1</span>, <span class="built_in">len</span>(vocab))</span><br><span class="line">        </span><br><span class="line">        l = loss(y_hat, y.long()).mean()</span><br><span class="line">        updater.zero_grad()</span><br><span class="line">        l.backward()</span><br><span class="line">        grad_clipping(net, <span class="number">1</span>)</span><br><span class="line">        updater.step()</span><br><span class="line"><span class="comment">#         updater(batch_size=1)</span></span><br><span class="line">        metric.add(l * y.numel(), y.numel())</span><br><span class="line">    <span class="keyword">if</span> epoch%<span class="number">100</span> == <span class="number">0</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;困惑度：&#x27;</span>, math.exp(metric[<span class="number">0</span>] / metric[<span class="number">1</span>]))</span><br><span class="line">    </span><br><span class="line">math.exp(metric[<span class="number">0</span>] / metric[<span class="number">1</span>]), metric[<span class="number">1</span>] / timer.stop()</span><br><span class="line">torch.save(net, <span class="string">&#x27;./model/rnn.pth&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出</span></span><br><span class="line">困惑度： <span class="number">24.934630997035686</span></span><br><span class="line">困惑度： <span class="number">8.3297534126987</span></span><br><span class="line">困惑度： <span class="number">4.68385855178817</span></span><br><span class="line">困惑度： <span class="number">3.194267959177166</span></span><br><span class="line">困惑度： <span class="number">2.5469194289914774</span></span><br><span class="line">困惑度： <span class="number">2.194944532541399</span></span><br><span class="line">困惑度： <span class="number">1.9762917313365411</span></span><br><span class="line">困惑度： <span class="number">1.832809809645257</span></span><br><span class="line">困惑度： <span class="number">1.7284918412347725</span></span><br><span class="line">困惑度： <span class="number">1.6507796068733742</span></span><br><span class="line">(<span class="number">1.587854868672201</span>, <span class="number">100896.02240493629</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="predict"><a href="#predict" class="headerlink" title="predict"></a>predict</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">net = torch.load(<span class="string">&#x27;./model/rnn.pth&#x27;</span>)</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">predict</span>(<span class="params">prefix, num_preds, net, vocab, device</span>):</span><br><span class="line">    state = init_state(batch_size=<span class="number">1</span>, num_hiddens=<span class="number">256</span>, device=device)</span><br><span class="line">    outputs = [vocab[prefix[<span class="number">0</span>]]]</span><br><span class="line">    get_input = <span class="keyword">lambda</span>: torch.tensor([outputs[-<span class="number">1</span>]], device=device).reshape((<span class="number">1</span>, <span class="number">1</span>))</span><br><span class="line">    <span class="keyword">for</span> y <span class="keyword">in</span> prefix[<span class="number">1</span>:]:</span><br><span class="line">        _,state = net(get_input(), state)</span><br><span class="line">        outputs.append(vocab[y])</span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(num_preds): <span class="comment"># 预测num_preds步</span></span><br><span class="line">        y, _ = net(get_input())</span><br><span class="line">        outputs.append(<span class="built_in">int</span>(y.argmax(dim=<span class="number">2</span>).reshape(<span class="number">1</span>)))</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;&#x27;</span>.join([vocab.idx_to_token[i] <span class="keyword">for</span> i <span class="keyword">in</span> outputs])</span><br><span class="line"></span><br><span class="line">device = torch.device(<span class="string">&#x27;cuda&#x27;</span>)</span><br><span class="line">predict(<span class="string">&#x27;time traveller &#x27;</span>, <span class="number">100</span>, net, vocab, device)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出</span></span><br><span class="line"><span class="string">&#x27;time traveller for so it will be convenient to speak of himwas expounding a recondite matter to us his grey cyeing &#x27;</span></span><br></pre></td></tr></table></figure>
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>zoyass</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://www.zoyass.site/2023/12/08/%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/">https://www.zoyass.site/2023/12/08/%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CRNN/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Pytorch/"># Pytorch</a>
+                    
+                        <a href="/tags/d2l/"># d2l</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2023/11/10/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9CCNN-d2l/">卷积神经网络CNN-D2l</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© zoyass | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+            
+                <a href="/diary" target="_self">|鸟</a>  
+            
+        </span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
