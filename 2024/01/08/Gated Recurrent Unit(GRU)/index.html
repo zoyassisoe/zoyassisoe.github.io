@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-XJ388BQHX4');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="zoyass">
+
+
+    <meta name="subtitle" content="没有绝对，不用在意，好好享受一切">
+
+
+    <meta name="description" content="大家好好休息">
+
+
+    <meta name="keywords" content="BLOG">
+
+
+<title>门控循环单元（GRU） | 1214</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+    
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">门控循环单元（GRU）</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">zoyass</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">一月 8, 2024&nbsp;&nbsp;22:23:16</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>对比RNN，GRU隐藏层的计算方式有所变化，GRU的更新公式如下：<br>$$<br>\begin{align*}<br>z_t &amp;&#x3D; \sigma(W_{zh} \cdot h_{t-1} + W_{zx} \cdot x_t + b_z) \quad \text{(更新门)} \<br>r_t &amp;&#x3D; \sigma(W_{rh} \cdot h_{t-1} + W_{rx} \cdot x_t + b_r) \quad \text{(重置门)} \<br>\tilde{h}<em>t &amp;&#x3D; \text{tanh}(W</em>{hh} \cdot (r_t \odot h_{t-1}) + W_{hx} \cdot x_t + b_h) \quad \text{(候选隐藏状态)} \<br>h_t &amp;&#x3D; (1 - z_t) \odot h_{t-1} + z_t \odot \tilde{h}_t \quad \text{(最终隐藏状态)}<br>\end{align*}<br>$$</p>
+<h1 id="Pytorch的nn-GRU"><a href="#Pytorch的nn-GRU" class="headerlink" title="Pytorch的nn.GRU"></a>Pytorch的nn.GRU</h1><p>版本为2.1，pytorch的gru实现中$\sigma$选择的sigmoid<a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.nn.GRU.html">参考官方文档</a><br>$$ sigmoid(x) &#x3D; \frac{1}{1 + e^{-x}} $$<br><font color="red"><em>为什么是sigmoid？</em></font><br>![1](Gated Recurrent Unit(GRU)&#x2F;1.png)</p>
+<h1 id="训练模型"><a href="#训练模型" class="headerlink" title="训练模型"></a>训练模型</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line"><span class="keyword">from</span> d2l <span class="keyword">import</span> torch <span class="keyword">as</span> d2l</span><br><span class="line"><span class="keyword">from</span> torch.nn <span class="keyword">import</span> functional <span class="keyword">as</span> F</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"></span><br><span class="line">batch_size = <span class="number">32</span></span><br><span class="line">vocab_size = <span class="number">35</span></span><br><span class="line">epochs, lr = <span class="number">2000</span>, <span class="number">1</span></span><br><span class="line"></span><br><span class="line">train_iter, vocab = d2l.load_data_time_machine(batch_size, vocab_size)</span><br><span class="line">test_iter,_ = d2l.load_data_time_machine(<span class="number">1</span>, vocab_size)</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">GRU</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, *args, **kwargs</span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        <span class="built_in">super</span>().__init__(*args, **kwargs)</span><br><span class="line">        self.rnn = nn.GRU(input_size=<span class="number">28</span>, hidden_size=<span class="number">64</span>, num_layers=<span class="number">1</span>)</span><br><span class="line">        self.l = nn.Linear(<span class="number">64</span>,<span class="number">28</span>)</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x, state</span>):</span><br><span class="line">        x = F.one_hot(x.T,<span class="number">28</span>).<span class="built_in">type</span>(torch.float32)</span><br><span class="line">        h,state = self.rnn(x,state)</span><br><span class="line">        o = self.l(h.reshape(-<span class="number">1</span>,<span class="number">64</span>))</span><br><span class="line">        <span class="keyword">return</span> o, state</span><br><span class="line">net = GRU()</span><br><span class="line">loss_fn = nn.CrossEntropyLoss()</span><br><span class="line">updater = torch.optim.SGD(params=net.parameters(),lr=lr)</span><br><span class="line">state = torch.zeros((<span class="number">1</span>,<span class="number">32</span>,<span class="number">64</span>), dtype=torch.float32)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    device = torch.device(<span class="string">&#x27;cuda&#x27;</span>)</span><br><span class="line">    net.to(device)</span><br><span class="line">    state = state.to(device)</span><br><span class="line">    <span class="keyword">for</span> e <span class="keyword">in</span> <span class="built_in">range</span>(epochs):</span><br><span class="line">        <span class="keyword">for</span> x,y <span class="keyword">in</span> train_iter:</span><br><span class="line">            x,y = x.to(device), y.to(device)</span><br><span class="line">            state = state.detach()</span><br><span class="line">            y_hat,state = net(x,state)</span><br><span class="line">            <span class="comment"># 计算loss展平</span></span><br><span class="line">            y = y.T.reshape(-<span class="number">1</span>)</span><br><span class="line">            updater.zero_grad()</span><br><span class="line">            loss = loss_fn(y_hat, y.long())</span><br><span class="line">            loss.backward()</span><br><span class="line">            updater.step()</span><br><span class="line">        <span class="keyword">if</span> e%<span class="number">100</span> == <span class="number">0</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;Perplexity: &#x27;</span>, math.exp(loss.item()))</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">state = torch.zeros((<span class="number">1</span>,<span class="number">1</span>,<span class="number">64</span>), dtype=torch.float32)</span><br><span class="line">state = state.to(device)</span><br><span class="line">perplexity = <span class="number">0</span></span><br><span class="line">n = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> x,y <span class="keyword">in</span> test_iter:</span><br><span class="line">    x,y = x.to(device), y.to(device)</span><br><span class="line">    y = y.reshape(-<span class="number">1</span>)</span><br><span class="line">    y_hat, state = net(x, state)</span><br><span class="line">    loss = loss_fn(y_hat, y)</span><br><span class="line">    perplexity += math.exp(loss.item())</span><br><span class="line">    n += <span class="number">1</span></span><br><span class="line"><span class="built_in">print</span>(perplexity/n)</span><br></pre></td></tr></table></figure>
+<p>输出困惑度为2.93而之前RNN实现的困惑都输出为4.21。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>zoyass</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://www.zoyass.site/2024/01/08/Gated%20Recurrent%20Unit(GRU)/">https://www.zoyass.site/2024/01/08/Gated%20Recurrent%20Unit(GRU)/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"># 读书笔记</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2024/01/09/self-attention/">Self-Attention</a>
+            
+            
+            <a class="next" rel="next" href="/2024/01/08/RNN/">RNN</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© zoyass | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+            
+                <a href="/diary" target="_self">|鸟</a>  
+            
+        </span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

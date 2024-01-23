@@ -207,9 +207,9 @@
             <h1 id="问题：手写数字识别"><a href="#问题：手写数字识别" class="headerlink" title="问题：手写数字识别"></a>问题：手写数字识别</h1><p>识别图片所表示的数字。<br><img src="/2024/01/07/MLP/1.png"></p>
 <h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><p>MNIST数据集包含60000张训练图片和10000张测试图片，每张图片都有对应的标签，标签表示图片中的数字。训练集通常用于训练模型，而测试集用于评估模型的性能。<br>每张图片都是28x28像素的灰度图像，标签是0到9之间的数字，表示图片中的手写数字。即输入模型的数据是一个28x28的矩阵。</p>
 <h2 id="模型评估标准"><a href="#模型评估标准" class="headerlink" title="模型评估标准"></a>模型评估标准</h2><p><strong>准确率（Accuracy）</strong><br>准确率，指的是正确预测的样本数占总预测样本数的比值，其公式如下：<br>$$Accuracy&#x3D;\frac{正确预测样本数}{总预测样本数}$$</p>
-<h1 id="多层感知机模型"><a href="#多层感知机模型" class="headerlink" title="多层感知机模型"></a>多层感知机模型</h1><p><img src="/2024/01/07/MLP/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-10-04%20202525.png"><br>它由一个输入层、一个或多个隐藏层和一个输出层组成，每个层都包含多个神经元（也称为节点或单元）。<br><em>下面看一个单隐藏层的多层感知机模型：</em><br>输入层为28*28&#x3D;784维向量，用X表示输入的值<br>隐藏层为256维向量，用H表示隐藏层的值<br>输出层为10维向量，用O表示输出层的值，且O中数值最大的分量所对应的位置就是我们的最终预测类别    </p>
+<h1 id="多层感知机模型"><a href="#多层感知机模型" class="headerlink" title="多层感知机模型"></a>多层感知机模型</h1><p><img src="/2024/01/07/MLP/3.png"><br>它由一个输入层、一个或多个隐藏层和一个输出层组成，每个层都包含多个神经元（也称为节点或单元）。<br><em>下面看一个单隐藏层的多层感知机模型：</em><br>输入层为28*28&#x3D;784维向量，用X表示输入的值<br>隐藏层为256维向量，用H表示隐藏层的值<br>输出层为10维向量，用O表示输出层的值，且O中数值最大的分量所对应的位置就是我们的最终预测类别    </p>
 <p>则<br>$$<br>H &#x3D; \sigma(W_hX+b_h) \ O &#x3D; W_oH + b_o<br>$$<br>其中$\sigma$是激活函数，为什么要使用激活函数？因为如果没有激活函数那么模型就变为了:<br>$$O &#x3D; W_o(W_hX+b_h) + b_o &#x3D; (W_oW_h)X + (W_ob_h + b_o) &#x3D; WX + b$$<br>就回到了一个线性模型。</p>
-<h2 id="激活函数"><a href="#激活函数" class="headerlink" title="激活函数"></a>激活函数</h2><h3 id="ReLU"><a href="#ReLU" class="headerlink" title="ReLU"></a>ReLU</h3><p>$ReLU(x) &#x3D; max(0,x)$<br><img src="/2024/01/07/MLP/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202024-01-07%20190515.png"><br>各种各样的激活函数可以引入非线性变换，使得模型能够学习更复杂的模式。</p>
+<h2 id="激活函数"><a href="#激活函数" class="headerlink" title="激活函数"></a>激活函数</h2><h3 id="ReLU"><a href="#ReLU" class="headerlink" title="ReLU"></a>ReLU</h3><p>$ReLU(x) &#x3D; max(0,x)$<br><img src="/2024/01/07/MLP/4.png"><br>各种各样的激活函数可以引入非线性变换，使得模型能够学习更复杂的模式。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>模型定义为：<br>$$<br>H &#x3D; \sigma(W_hX+b_h) \ O &#x3D; W_oH + b_o<br>$$<br>其中需要通过优化算法来拟合参数$W_h,b_h,W_o,b_o$，<br>显然Wh可以看作一个256x784的矩阵，bh是一个256维的向量，Wo是一个10x256的矩阵，bo是一个10维的向量。</p>
 <h1 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h1><h2 id="交叉熵损失函数（Cross-Entropy-Loss）"><a href="#交叉熵损失函数（Cross-Entropy-Loss）" class="headerlink" title="交叉熵损失函数（Cross-Entropy Loss）"></a>交叉熵损失函数（Cross-Entropy Loss）</h2><p>多分类问题的损失函数通常用于衡量模型在将样本分配到多个类别中的准确程度。以下是一些常见的多分类问题的损失函数：</p>
 <p> $ \text{CrossEntropyLoss} &#x3D; -\sum_{i&#x3D;1}^{C} y_i\log(p_i) $<br>其中C是类别数，y是实际类别的one-hot编码，$y_i$就是y的第i维数值，p是模型的输出，$p_i$就是p的第i维数值<br>即在我们的问题中C&#x3D;10，由于我们有10个类别，例如类别3的one-hot编码就是$[0,0,0,1,0,0,0,0,0,0]$</p>
@@ -271,6 +271,8 @@
             </div>
         </section>
         <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2024/01/08/RNN/">RNN</a>
             
             
             <a class="next" rel="next" href="/2023/12/17/GRU/">GRU</a>

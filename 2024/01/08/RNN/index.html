@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-XJ388BQHX4');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="zoyass">
+
+
+    <meta name="subtitle" content="没有绝对，不用在意，好好享受一切">
+
+
+    <meta name="description" content="大家好好休息">
+
+
+    <meta name="keywords" content="BLOG">
+
+
+<title>RNN | 1214</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+    
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">RNN</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">zoyass</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">一月 8, 2024&nbsp;&nbsp;12:51:29</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>RNN（循环神经网络，Recurrent Neural Network）是一类用于处理序列数据的神经网络模型。与传统的前馈神经网络不同，RNN具有记忆功能，可以捕捉序列数据中的时间依赖关系。这种能力使得RNN在处理语言、音频、时间序列等任务时非常有效。</p>
+<p>RNN的关键特点是它们包含循环结构，允许信息在网络内传递。每个时间步，RNN接收输入并产生输出，同时在内部保留一个隐藏状态（hidden state）。这个隐藏状态包含了网络在之前的时间步中学到的信息，使得网络能够记忆先前的输入。</p>
+<p>然而，传统的RNN在训练长序列时存在一些问题，例如梯度消失和梯度爆炸。为了解决这些问题，出现了一些改进型的循环神经网络，如长短时记忆网络（LSTM）和门控循环单元（GRU）。<br><font color="red"><br>个人理解RNN相当于是在MLP的网络结构上添加了上一个隐藏层到当前隐藏层的参数W，而这个W相当于抽象了输入序列$X&#x3D;(x_1, x_2,…,x_n)$的位置关系，使RNN具有记忆能力。<br>1.但是由于参数只有一个W，参数量不够。当n变大时，RNN对$x_1,x_2…$的权重会相对降低，但有时候$x_1,x_2$对X而言很重要。<br>2.在做反向传播的时候，根据公式推导，RNN比较容易出现梯度消失与梯度爆炸。<br>而GRU与LSTM就改进了RNN的这些问题。<br></font></p>
+<h1 id="问题：文本生成"><a href="#问题：文本生成" class="headerlink" title="问题：文本生成"></a>问题：文本生成</h1><p>训练集为timemachine小说，下面为部分截取：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">The Time Traveller (for so it will be convenient to speak of him)</span><br><span class="line">was expounding a recondite matter to us. His grey eyes shone and</span><br><span class="line">twinkled, and his usually pale face was flushed and animated. The</span><br><span class="line">fire burned brightly, and the soft radiance of the incandescent</span><br><span class="line">lights in the lilies of silver caught the bubbles that flashed and</span><br><span class="line">passed in our glasses. Our chairs, being his patents, embraced and</span><br><span class="line">caressed us rather than submitted to be sat upon, and there was that</span><br><span class="line">luxurious after-dinner atmosphere when thought roams gracefully</span><br><span class="line">free of the trammels of precision. And he put it to us in this</span><br><span class="line">way--marking the points with a lean forefinger--as we sat and lazily</span><br><span class="line">admired his earnestness over this new paradox (as we thought it)</span><br><span class="line">and his fecundity.</span><br><span class="line"></span><br><span class="line">&#x27;You must follow me carefully. I shall have to controvert one or two</span><br><span class="line">ideas that are almost universally accepted. The geometry, for</span><br><span class="line">instance, they taught you at school is founded on a misconception.&#x27;</span><br></pre></td></tr></table></figure>
+<p>模型训练完成后，可以根据一个一段话来持续生成文本，生成文本的好坏就决定了模型拟合能力的强弱。</p>
+<h2 id="模型评估标准"><a href="#模型评估标准" class="headerlink" title="模型评估标准"></a>模型评估标准</h2><p><strong>Perplexity（ 困惑度）</strong><br>Perplexity是一种用于评估语言模型性能的指标。它主要用于衡量一个语言模型在给定数据集上的预测效果，尤其是在文本生成任务中。</p>
+<p>给定一个语言模型和一个文本序列，Perplexity的计算方式为：</p>
+<p>$$ \text{Perplexity} &#x3D; \exp\left(-\frac{1}{N} \sum_{i&#x3D;1}^{N} \log P(x_i)\right) $$</p>
+<p>其中：</p>
+<ul>
+<li>N是序列的长度。</li>
+<li>$x_i$是序列中的第i个词。</li>
+<li>$p(x_i)$是模型预测的第i个词的概率。</li>
+</ul>
+<p>$p(x_i)$计算方法在模型定义后解释。<br>当$p(x_i)趋近于1时，\left(-\frac{1}{N} \sum_{i&#x3D;1}^{N} \log P(x_i)\right)趋近于0，Perplexity就趋近于1$<br>当$p(x_i)趋近于0时，\left(-\frac{1}{N} \sum_{i&#x3D;1}^{N} \log P(x_i)\right)趋近于+\infty，Perplexity就趋近于+\infty$</p>
+<p>Perplexity越低，表示模型在给定的数据上的性能越好。一个完美的语言模型在给定数据上的Perplexity为1，因为它完全理解并能够准确地预测每个词。  </p>
+<h1 id="循环神经网络模型-RNN"><a href="#循环神经网络模型-RNN" class="headerlink" title="循环神经网络模型(RNN)"></a>循环神经网络模型(RNN)</h1><p><img src="/2024/01/08/RNN/1.jpg"><br>RNN是MLP的一个变体，简单的说，即在MLP的隐藏层上添加了输入，且输入的是上一个时间点的隐藏层数据。显然第一个时间点的隐藏层的输入是需要手动初始化的。<br><em>单隐藏层的RNN，计算公式如下：</em><br>$$<br>H^t&#x3D;\sigma(W_{xh}X+W_{hh}H^{t-1}+b_h) \\<br>O &#x3D; W_{ho}H^t+b_o<br>$$<br>需要拟合的参数为:$W_{xh},W_{hh},W_{ho},b_h,b_o$<br>例如：X是一个28维向量，H是一个64维向量，O是一个28维向量。则：  </p>
+<ul>
+<li>$W_{xh}$是一个64x28的矩阵。</li>
+<li>$W_{hh}$是一个64x64的矩阵。</li>
+<li>$W_{ho}$是一个28x64的矩阵。</li>
+<li>$b_h$是一个64维的向量。</li>
+<li>$b_o$是一个28维的向量。</li>
+</ul>
+<p>激活函数同样选择ReLU。</p>
+<h1 id="小说数据处理"><a href="#小说数据处理" class="headerlink" title="小说数据处理"></a>小说数据处理</h1><p>由于数据是文本，所以需要对它进行建模处理，简单的实现是使用one-hot编码，由于是英文小说，字母数为26，将标点符号之类归为一类，再将序列开始与结束归为一类。那么一个字母one-hot编码后是一个28维的向量。</p>
+<h1 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h1><p>模型的输出O是一个28维的向量，再将这个向量通过Softmax函数将其转化为概率分布。这样每一个分量分别表示对字母或符号的预测概率。上文中的$P(x_i)$就是这样计算。<br>这样其实就对应了一个分类问题，那么我们模型的损失函数可以使用交叉熵损失函数（Cross-Entropy Loss）<br>$$<br>\text{CrossEntropyLoss}&#x3D;-\sum_{i&#x3D;1}^{C} y_i\log(p_i)<br>$$</p>
+<h1 id="完整公式"><a href="#完整公式" class="headerlink" title="完整公式"></a>完整公式</h1><p>$$<br>计算全部损失：C &#x3D; \frac{\sum_{i&#x3D;1}^{T} c_i}{T} \\<br>计算t时间步损失：c_t &#x3D; -\sum_{i&#x3D;1}^{N} y_i\log(p_t(i)) \\<br>t时间步Softmax的输出：p_t&#x3D;\text{Softmax}(o_t) &#x3D; \frac{e^{o_t(i)}}{\sum_{j&#x3D;1}^{N} e^{o_t(j)}} \\<br>t时间步RNN的输出：o_t &#x3D; W_{ho}h_t+b_o \\<br>t时间步RNN的隐藏层：h_t&#x3D;\sigma(W_{xh}x+W_{hh}h_{t-1}+b_h) \\<br>$$</p>
+<h1 id="优化器"><a href="#优化器" class="headerlink" title="优化器"></a>优化器</h1><p>使用SGD。</p>
+<h1 id="训练模型"><a href="#训练模型" class="headerlink" title="训练模型"></a>训练模型</h1><p>注意state.detach()，否则pytorch的计算图会报错。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line"><span class="keyword">from</span> d2l <span class="keyword">import</span> torch <span class="keyword">as</span> d2l</span><br><span class="line"><span class="keyword">from</span> torch.nn <span class="keyword">import</span> functional <span class="keyword">as</span> F</span><br><span class="line"></span><br><span class="line">batch_size = <span class="number">32</span></span><br><span class="line">vocab_size = <span class="number">35</span></span><br><span class="line">epochs, lr = <span class="number">2000</span>, <span class="number">1</span></span><br><span class="line"></span><br><span class="line">train_iter, vocab = d2l.load_data_time_machine(batch_size, vocab_size)</span><br><span class="line">test_iter,_ = d2l.load_data_time_machine(<span class="number">1</span>, vocab_size)</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">RNN</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, *args, **kwargs</span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        <span class="built_in">super</span>().__init__(*args, **kwargs)</span><br><span class="line">        self.rnn = nn.RNN(input_size=<span class="number">28</span>, hidden_size=<span class="number">64</span>, num_layers=<span class="number">1</span>,nonlinearity=<span class="string">&#x27;relu&#x27;</span>)</span><br><span class="line">        self.l = nn.Linear(<span class="number">64</span>,<span class="number">28</span>)</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x, state</span>):</span><br><span class="line">        x = F.one_hot(x.T,<span class="number">28</span>).<span class="built_in">type</span>(torch.float32)</span><br><span class="line">        h,state = self.rnn(x,state)</span><br><span class="line">        o = self.l(h.reshape(-<span class="number">1</span>,<span class="number">64</span>))</span><br><span class="line">        <span class="keyword">return</span> o, state</span><br><span class="line">net = RNN()</span><br><span class="line">loss_fn = nn.CrossEntropyLoss()</span><br><span class="line">updater = torch.optim.SGD(params=net.parameters(),lr=lr)</span><br><span class="line">state = torch.zeros((<span class="number">1</span>,<span class="number">32</span>,<span class="number">64</span>), dtype=torch.float32)</span><br><span class="line"></span><br><span class="line">device = torch.device(<span class="string">&#x27;cuda&#x27;</span>)</span><br><span class="line">net.to(device)</span><br><span class="line">state = state.to(device)</span><br><span class="line"><span class="keyword">for</span> e <span class="keyword">in</span> <span class="built_in">range</span>(epochs):</span><br><span class="line">    <span class="keyword">for</span> x,y <span class="keyword">in</span> train_iter:</span><br><span class="line">        x,y = x.to(device), y.to(device)</span><br><span class="line">        state = state.detach()</span><br><span class="line">        y_hat,state = net(x,state)</span><br><span class="line">        <span class="comment"># 计算loss展平</span></span><br><span class="line">        y = y.T.reshape(-<span class="number">1</span>)</span><br><span class="line">        updater.zero_grad()</span><br><span class="line">        loss = loss_fn(y_hat, y.long())</span><br><span class="line">        loss.backward()</span><br><span class="line">        updater.step()</span><br><span class="line">    <span class="keyword">if</span> e%<span class="number">100</span> == <span class="number">0</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;Perplexity: &#x27;</span>, loss.item())</span><br><span class="line"></span><br><span class="line"><span class="comment"># Perplexity:  1.1171027421951294</span></span><br></pre></td></tr></table></figure>
+<p><strong>预测输出</strong>  </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">predict</span>(<span class="params">prefix, num_preds, net, vocab, device</span>):</span><br><span class="line">    state = torch.zeros((<span class="number">1</span>,<span class="number">1</span>,<span class="number">64</span>), dtype=torch.float32).to(device)</span><br><span class="line">    outputs = [vocab[prefix[<span class="number">0</span>]]]</span><br><span class="line">    get_input = <span class="keyword">lambda</span>: torch.tensor([outputs[-<span class="number">1</span>]], device=device).reshape((<span class="number">1</span>, <span class="number">1</span>))</span><br><span class="line">    <span class="keyword">for</span> y <span class="keyword">in</span> prefix[<span class="number">1</span>:]:</span><br><span class="line">        _,state = net(get_input(), state)</span><br><span class="line">        outputs.append(vocab[y])</span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(num_preds): <span class="comment"># 预测num_preds步</span></span><br><span class="line">        y, state = net(get_input(), state)</span><br><span class="line">        outputs.append(<span class="built_in">int</span>(y.argmax(dim=<span class="number">1</span>).reshape(<span class="number">1</span>)))</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;&#x27;</span>.join([vocab.idx_to_token[i] <span class="keyword">for</span> i <span class="keyword">in</span> outputs])</span><br><span class="line"></span><br><span class="line">predict(<span class="string">&#x27;time traveller&#x27;</span>, <span class="number">100</span>, net, vocab, device)</span><br><span class="line"></span><br><span class="line"><span class="comment"># &#x27;time traveller and and the moment with a contere and the modelter dine they they that said the medical mant over a&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>其实RNN模型是有一定的背书能力的！</p>
+<h1 id="GRU的改进"><a href="#GRU的改进" class="headerlink" title="GRU的改进"></a>GRU的改进</h1><p>对比RNN，GRU隐藏层的计算方式有所变化，GRU的更新公式如下：<br><img src="/2024/01/08/RNN/3.png"><br><img src="/2024/01/08/RNN/2.png"><br><font color="red"><br>GRU先生成了两个特征，$z_t$和$r_t$这两个特征都是与隐藏层$h$同维度的向量。这两个特征的输入都是相同的但参数不同，相当于说GRU从输入中学到了两个不同的特征，对输入序列$X&#x3D;(x_1, x_2,…,x_n)$而言，特征$r_t$表示来自过去的信息$x_{1},x_{2},…x_{t-1}$对$x_{t}$的重要程度，特征$z_t$表示当前步输入对序列的重要性。<br></font></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>zoyass</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://www.zoyass.site/2024/01/08/RNN/">https://www.zoyass.site/2024/01/08/RNN/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"># 读书笔记</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2024/01/08/Gated%20Recurrent%20Unit(GRU)/">门控循环单元（GRU）</a>
+            
+            
+            <a class="next" rel="next" href="/2024/01/07/MLP/">MLP-读书笔记1</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© zoyass | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+            
+                <a href="/diary" target="_self">|鸟</a>  
+            
+        </span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
