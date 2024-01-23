@@ -3,7 +3,7 @@
 
 <head>
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script>
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script> -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -88,8 +88,11 @@
     });
 </script>
 <!-- 通过连接CDN加载MathJax的js代码 -->
-<script type="text/javascript" async
+<!-- <script type="text/javascript" async
         src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script> -->
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>
 
 
@@ -211,27 +214,26 @@
         </header>
 
         <div class="post-content">
-            <h1 id="Bitbucket"><a href="#Bitbucket" class="headerlink" title="Bitbucket"></a>Bitbucket</h1><p>参考链接  </p>
+            <h1 id="bitbucket">Bitbucket</h1>
+<p>参考链接<br>
+- <a target="_blank" rel="noopener" href="http://www.codebaoku.com/git/git-init.html">codebaoku</a></p>
+<h2 id="ssh-密钥连接">SSH 密钥连接</h2>
 <ul>
-<li><a target="_blank" rel="noopener" href="http://www.codebaoku.com/git/git-init.html">codebaoku</a></li>
-</ul>
-<h2 id="SSH-密钥连接"><a href="#SSH-密钥连接" class="headerlink" title="SSH 密钥连接"></a>SSH 密钥连接</h2><ul>
 <li>先在本地生成ssh密钥</li>
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># windows</span><br><span class="line">ssh-keygen</span><br></pre></td></tr></table></figure>
 <ul>
-<li>密钥绑定bitbucket<ul>
+<li>密钥绑定bitbucket
+<ul>
 <li>account&gt;manage account&gt;产品&gt;Bitbucket 设置&gt;SSH密钥</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h2 id="Clone"><a href="#Clone" class="headerlink" title="Clone"></a>Clone</h2><p>克隆远程项目到本地</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># eg.</span><br><span class="line">git clone git@bitbucket.org:rechitech/xin-zi-guan-li-xi-tong.git</span><br></pre></td></tr></table></figure>
-
-<h2 id="Push"><a href="#Push" class="headerlink" title="Push"></a>Push</h2><p>本地对项目做一些修改，或上传一些新建的文件</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># eg.</span><br><span class="line"></span><br><span class="line"># &#x27;.&#x27; 指的是添加当前目录下的所有文件到暂存区</span><br><span class="line">git add .</span><br><span class="line"></span><br><span class="line"># 将暂存区内容添加到本地仓库中m即message</span><br><span class="line">git commit -m &quot;此次提交的简介&quot;</span><br><span class="line"></span><br><span class="line"># 默认推送到master分支</span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
-<h2 id="Pull"><a href="#Pull" class="headerlink" title="Pull"></a>Pull</h2><p><a target="_blank" rel="noopener" href="http://www.codebaoku.com/git/git-pull.html">抓取分支</a></p>
-<h2 id="关于分支"><a href="#关于分支" class="headerlink" title="关于分支"></a>关于分支</h2><ul>
+<h2 id="clone">Clone</h2>
+<p>克隆远程项目到本地 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># eg.</span><br><span class="line">git clone git@bitbucket.org:rechitech/xin-zi-guan-li-xi-tong.git</span><br></pre></td></tr></table></figure></p>
+<h2 id="push">Push</h2>
+<p>本地对项目做一些修改，或上传一些新建的文件 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># eg.</span><br><span class="line"></span><br><span class="line"># &#x27;.&#x27; 指的是添加当前目录下的所有文件到暂存区</span><br><span class="line">git add .</span><br><span class="line"></span><br><span class="line"># 将暂存区内容添加到本地仓库中m即message</span><br><span class="line">git commit -m &quot;此次提交的简介&quot;</span><br><span class="line"></span><br><span class="line"># 默认推送到master分支</span><br><span class="line">git push</span><br></pre></td></tr></table></figure> ## Pull <a target="_blank" rel="noopener" href="http://www.codebaoku.com/git/git-pull.html">抓取分支</a></p>
+<h2 id="关于分支">关于分支</h2>
+<ul>
 <li>新建分支</li>
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># eg.</span><br><span class="line"></span><br><span class="line"># 切换分支</span><br><span class="line">git checkout v1.0.0</span><br><span class="line"></span><br><span class="line"># 创建并切换到新分支</span><br><span class="line">git checkout -b v1.0.1</span><br></pre></td></tr></table></figure>
@@ -239,23 +241,23 @@
 <li>push到远程分支</li>
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># eg.</span><br><span class="line"></span><br><span class="line"># 将本地的master分支推送到origin主机的v1.0.0分支</span><br><span class="line">git push origin v1.0.0</span><br></pre></td></tr></table></figure>
-
 <ul>
 <li>设置默认Push分支</li>
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 初始git push默认分支为master</span><br><span class="line"># 修改默认推送分支</span><br><span class="line">git push --set-upstream origin v1.0.0</span><br></pre></td></tr></table></figure>
-
-<h1 id="Merge"><a href="#Merge" class="headerlink" title="Merge"></a>Merge</h1><ul>
+<h1 id="merge">Merge</h1>
+<ul>
 <li>合并分支不冲突的情况</li>
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># eg.</span><br><span class="line"></span><br><span class="line"># 把v1.0.0分支合并到当前分支</span><br><span class="line">git merge v1.0.0</span><br></pre></td></tr></table></figure>
 <ul>
-<li>合并分支会冲突的情况<ul>
+<li>合并分支会冲突的情况
+<ul>
 <li>pass</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h1 id="gitignore-文件"><a href="#gitignore-文件" class="headerlink" title=".gitignore 文件"></a>.gitignore 文件</h1><p>忽略文件</p>
+<h1 id="gitignore-文件">.gitignore 文件</h1>
+<p>忽略文件</p>
 
         </div>
 

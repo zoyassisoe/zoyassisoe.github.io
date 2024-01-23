@@ -3,7 +3,7 @@
 
 <head>
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script>
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script> -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -88,8 +88,11 @@
     });
 </script>
 <!-- 通过连接CDN加载MathJax的js代码 -->
-<script type="text/javascript" async
+<!-- <script type="text/javascript" async
         src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script> -->
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>
 
 
@@ -211,15 +214,28 @@
         </header>
 
         <div class="post-content">
-            <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>@<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90">维基百科</a></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在多元统计分析中，主成分分析（英语：Principal components analysis，PCA）是一种统计分析、简化数据集的方法。它利用正交变换来对一系列可能相关的变量的观测值进行线性变换，从而投影为一系列线性不相关变量的值，这些不相关变量称为主成分（Principal Components）。具体地，主成分可以看做一个线性方程，其包含一系列线性系数来指示投影方向。PCA对原始数据的正则化或预处理敏感（相对缩放）。</span><br></pre></td></tr></table></figure>
-<p>本文内容皆源自<a target="_blank" rel="noopener" href="https://www.coursera.org/learn/machine-learning/home/welcome">Andrew Ng</a></p>
-<h1 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h1><p>1.实现数据压缩<br>2.实现数据在2D或3D中可视化</p>
-<h1 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h1><p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90">PCA(主成分分析)</a></p>
-<h1 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h1><h2 id="1-数据预处理"><a href="#1-数据预处理" class="headerlink" title="1.数据预处理"></a>1.数据预处理</h2><p>采用归一化方法，是的均值为0，方差为1。<br>步骤，1.均值为0<br><img src="/2020/02/08/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%95%B0%E6%8D%AE%E9%99%8D%E7%BB%B4PCA/1.png" alt="均值为0"><br>2.方差为1<br>$x_j^{(i)}&#x3D;\frac{x_j-\mu}{s_j}$s_{j}为标准差即为样本中第j维数据的标准差</p>
-<h2 id="2-协方差矩阵"><a href="#2-协方差矩阵" class="headerlink" title="2.协方差矩阵"></a>2.协方差矩阵</h2><p>@<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%8D%8F%E6%96%B9%E5%B7%AE%E7%9F%A9%E9%98%B5">维基百科</a><br><img src="/2020/02/08/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%95%B0%E6%8D%AE%E9%99%8D%E7%BB%B4PCA/2.png" alt="1"><br><img src="/2020/02/08/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%95%B0%E6%8D%AE%E9%99%8D%E7%BB%B4PCA/3.png" alt="2"><br>z即使PCA特征缩放后的结果。</p>
-<h2 id="3-选择适当的参数K"><a href="#3-选择适当的参数K" class="headerlink" title="3.选择适当的参数K"></a>3.选择适当的参数K</h2><p><img src="/2020/02/08/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%95%B0%E6%8D%AE%E9%99%8D%E7%BB%B4PCA/4.png" alt="1"><br>其中$x_apporx^{(i)}$为$x^{(i)}$在压缩向量上的投影。<br><img src="/2020/02/08/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%95%B0%E6%8D%AE%E9%99%8D%E7%BB%B4PCA/5.png" alt="2"><br>S：对角矩阵，对角元素是Sigma的奇异值，非负且按降序排列。</p>
-<h1 id="建议"><a href="#建议" class="headerlink" title="建议"></a>建议</h1><p>一般在机器学习中，先判断PCA处理可以给你的学习带来什么，做决定。<br>一般先在原数据上做学习处理，若学习速度太慢，再考虑使用PCA。<br>一般防止过拟合不采用PCA，而是加上正则化项。</p>
+            <h1 id="简介">简介</h1>
+<p>@<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90">维基百科</a>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在多元统计分析中，主成分分析（英语：Principal components analysis，PCA）是一种统计分析、简化数据集的方法。它利用正交变换来对一系列可能相关的变量的观测值进行线性变换，从而投影为一系列线性不相关变量的值，这些不相关变量称为主成分（Principal Components）。具体地，主成分可以看做一个线性方程，其包含一系列线性系数来指示投影方向。PCA对原始数据的正则化或预处理敏感（相对缩放）。</span><br></pre></td></tr></table></figure> 本文内容皆源自<a target="_blank" rel="noopener" href="https://www.coursera.org/learn/machine-learning/home/welcome">Andrew
+Ng</a></p>
+<h1 id="目的">目的</h1>
+<p>1.实现数据压缩 2.实现数据在2D或3D中可视化</p>
+<h1 id="算法">算法</h1>
+<p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90">PCA(主成分分析)</a></p>
+<h1 id="步骤">步骤</h1>
+<h2 id="数据预处理">1.数据预处理</h2>
+<p>采用归一化方法，是的均值为0，方差为1。 步骤，1.均值为0 <img src="/2020/02/08/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%95%B0%E6%8D%AE%E9%99%8D%E7%BB%B4PCA/1.png" alt="均值为0"> 2.方差为1 <span class="math inline">\(x_j^{(i)}=\frac{x_j-\mu}{s_j}\)</span>s_{j}为标准差即为样本中第j维数据的标准差</p>
+<h2 id="协方差矩阵">2.协方差矩阵</h2>
+<p>@<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%8D%8F%E6%96%B9%E5%B7%AE%E7%9F%A9%E9%98%B5">维基百科</a>
+<img src="/2020/02/08/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%95%B0%E6%8D%AE%E9%99%8D%E7%BB%B4PCA/2.png" alt="1"> <img src="/2020/02/08/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%95%B0%E6%8D%AE%E9%99%8D%E7%BB%B4PCA/3.png" alt="2">
+z即使PCA特征缩放后的结果。</p>
+<h2 id="选择适当的参数k">3.选择适当的参数K</h2>
+<p><img src="/2020/02/08/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%95%B0%E6%8D%AE%E9%99%8D%E7%BB%B4PCA/4.png" alt="1"> 其中<span class="math inline">\(x_apporx^{(i)}\)</span>为<span class="math inline">\(x^{(i)}\)</span>在压缩向量上的投影。 <img src="/2020/02/08/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%95%B0%E6%8D%AE%E9%99%8D%E7%BB%B4PCA/5.png" alt="2">
+S：对角矩阵，对角元素是Sigma的奇异值，非负且按降序排列。</p>
+<h1 id="建议">建议</h1>
+<p>一般在机器学习中，先判断PCA处理可以给你的学习带来什么，做决定。
+一般先在原数据上做学习处理，若学习速度太慢，再考虑使用PCA。
+一般防止过拟合不采用PCA，而是加上正则化项。</p>
 
         </div>
 

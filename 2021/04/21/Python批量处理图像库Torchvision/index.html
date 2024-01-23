@@ -3,7 +3,7 @@
 
 <head>
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script>
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script> -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -88,8 +88,11 @@
     });
 </script>
 <!-- 通过连接CDN加载MathJax的js代码 -->
-<script type="text/javascript" async
+<!-- <script type="text/javascript" async
         src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script> -->
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>
 
 
@@ -211,43 +214,74 @@
         </header>
 
         <div class="post-content">
-            <h1 id="torch-预处理图形数据"><a href="#torch-预处理图形数据" class="headerlink" title="torch 预处理图形数据"></a>torch 预处理图形数据</h1><ul>
+            <h1 id="torch-预处理图形数据">torch 预处理图形数据</h1>
+<ul>
 <li>torchvision</li>
 <li>torch.utils.data 对象构建</li>
 </ul>
-<h1 id="torchvision"><a href="#torchvision" class="headerlink" title="torchvision"></a>torchvision</h1><h2 id="torchvision-transform"><a href="#torchvision-transform" class="headerlink" title="torchvision-transform"></a>torchvision-transform</h2><p><a target="_blank" rel="noopener" href="https://pytorch-cn.readthedocs.io/zh/latest/torchvision/torchvision-transform/">torchvision-transform 中文文档</a></p>
-<h3 id="对PIL-Image进行变换"><a href="#对PIL-Image进行变换" class="headerlink" title="对PIL.Image进行变换"></a>对PIL.Image进行变换</h3><h4 id="class-torchvision-transforms-Compose-transforms"><a href="#class-torchvision-transforms-Compose-transforms" class="headerlink" title="class torchvision.transforms.Compose(transforms)"></a>class torchvision.transforms.Compose(transforms)</h4><p>将多个transform组合起来使用。<br>参数transforms是由transform构成的列表。<br>exp:</p>
+<h1 id="torchvision">torchvision</h1>
+<h2 id="torchvision-transform">torchvision-transform</h2>
+<p><a target="_blank" rel="noopener" href="https://pytorch-cn.readthedocs.io/zh/latest/torchvision/torchvision-transform/">torchvision-transform
+中文文档</a></p>
+<h3 id="对pil.image进行变换">对PIL.Image进行变换</h3>
+<h4 id="class-torchvision.transforms.composetransforms">class
+torchvision.transforms.Compose(transforms)</h4>
+<p>将多个transform组合起来使用。 参数transforms是由transform构成的列表。
+exp:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> torchvision <span class="keyword">import</span> transforms</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"></span><br><span class="line">image = Image.<span class="built_in">open</span>(<span class="string">&#x27;test.png&#x27;</span>)</span><br><span class="line">crop = transforms.Compose([transforms.CenterCrop(<span class="number">50</span>),transforms.ToTensor()])</span><br><span class="line">train_data = crop(image)</span><br></pre></td></tr></table></figure>
-
 <p>exp中transforms.CenterCrop(50)等列表元素均是torchvision.transforms中的方法，是对图片做处理的方法。</p>
-<h4 id="class-torchvision-transforms-CenterCrop-size"><a href="#class-torchvision-transforms-CenterCrop-size" class="headerlink" title="class torchvision.transforms.CenterCrop(size)"></a>class torchvision.transforms.CenterCrop(size)</h4><p>pass</p>
-<h4 id="class-torchvision-transforms-RandomCrop-size-padding-x3D-0"><a href="#class-torchvision-transforms-RandomCrop-size-padding-x3D-0" class="headerlink" title="class torchvision.transforms.RandomCrop(size, padding&#x3D;0)"></a>class torchvision.transforms.RandomCrop(size, padding&#x3D;0)</h4><p>pass</p>
-<h4 id="class-torchvision-transforms-RandomHorizontalFlip"><a href="#class-torchvision-transforms-RandomHorizontalFlip" class="headerlink" title="class torchvision.transforms.RandomHorizontalFlip"></a>class torchvision.transforms.RandomHorizontalFlip</h4><p>pass</p>
-<h4 id="class-torchvision-transforms-RandomSizedCrop-size-interpolation-x3D-2"><a href="#class-torchvision-transforms-RandomSizedCrop-size-interpolation-x3D-2" class="headerlink" title="class torchvision.transforms.RandomSizedCrop(size, interpolation&#x3D;2)"></a>class torchvision.transforms.RandomSizedCrop(size, interpolation&#x3D;2)</h4><p>pass</p>
-<h4 id="class-torchvision-transforms-Pad-padding-fill-x3D-0"><a href="#class-torchvision-transforms-Pad-padding-fill-x3D-0" class="headerlink" title="class torchvision.transforms.Pad(padding, fill&#x3D;0)"></a>class torchvision.transforms.Pad(padding, fill&#x3D;0)</h4><p>pass</p>
-<h3 id="对Tensor进行变换"><a href="#对Tensor进行变换" class="headerlink" title="对Tensor进行变换"></a>对Tensor进行变换</h3><h4 id="class-torchvision-transforms-ToTensor"><a href="#class-torchvision-transforms-ToTensor" class="headerlink" title="class torchvision.transforms.ToTensor"></a>class torchvision.transforms.ToTensor</h4><p>pass</p>
-<h4 id="class-torchvision-transforms-ToPILImage"><a href="#class-torchvision-transforms-ToPILImage" class="headerlink" title="class torchvision.transforms.ToPILImage"></a>class torchvision.transforms.ToPILImage</h4><p>pass</p>
-<h3 id="在我目前的项目超分辨率中需要做的预处理代码"><a href="#在我目前的项目超分辨率中需要做的预处理代码" class="headerlink" title="在我目前的项目超分辨率中需要做的预处理代码"></a>在我目前的项目超分辨率中需要做的预处理代码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crop = transforms.Compose([transforms.RandomCrop(<span class="number">100</span>),transforms.ToTensor()])</span><br></pre></td></tr></table></figure>
-
-<h2 id="torchvision-datasets"><a href="#torchvision-datasets" class="headerlink" title="torchvision.datasets"></a>torchvision.datasets</h2><p>只做读取图片文件夹的解释，其他参考<a target="_blank" rel="noopener" href="https://pytorch-cn.readthedocs.io/zh/latest/torchvision/torchvision-datasets/">torchvision-datasets 中文文档</a></p>
-<h3 id="class-torchvision-datasets-ImageFolder"><a href="#class-torchvision-datasets-ImageFolder" class="headerlink" title="class torchvision.datasets.ImageFolder"></a>class torchvision.datasets.ImageFolder</h3><p><strong>原型</strong></p>
+<h4 id="class-torchvision.transforms.centercropsize">class
+torchvision.transforms.CenterCrop(size)</h4>
+<p>pass</p>
+<h4 id="class-torchvision.transforms.randomcropsize-padding0">class
+torchvision.transforms.RandomCrop(size, padding=0)</h4>
+<p>pass</p>
+<h4 id="class-torchvision.transforms.randomhorizontalflip">class
+torchvision.transforms.RandomHorizontalFlip</h4>
+<p>pass</p>
+<h4 id="class-torchvision.transforms.randomsizedcropsize-interpolation2">class
+torchvision.transforms.RandomSizedCrop(size, interpolation=2)</h4>
+<p>pass</p>
+<h4 id="class-torchvision.transforms.padpadding-fill0">class
+torchvision.transforms.Pad(padding, fill=0)</h4>
+<p>pass</p>
+<h3 id="对tensor进行变换">对Tensor进行变换</h3>
+<h4 id="class-torchvision.transforms.totensor">class
+torchvision.transforms.ToTensor</h4>
+<p>pass</p>
+<h4 id="class-torchvision.transforms.topilimage">class
+torchvision.transforms.ToPILImage</h4>
+<p>pass</p>
+<h3 id="在我目前的项目超分辨率中需要做的预处理代码">在我目前的项目超分辨率中需要做的预处理代码</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crop = transforms.Compose([transforms.RandomCrop(<span class="number">100</span>),transforms.ToTensor()])</span><br></pre></td></tr></table></figure>
+<h2 id="torchvision.datasets">torchvision.datasets</h2>
+<p>只做读取图片文件夹的解释，其他参考<a target="_blank" rel="noopener" href="https://pytorch-cn.readthedocs.io/zh/latest/torchvision/torchvision-datasets/">torchvision-datasets
+中文文档</a></p>
+<h3 id="class-torchvision.datasets.imagefolder">class
+torchvision.datasets.ImageFolder</h3>
+<p><strong>原型</strong></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">dataset=torchvision.datasets.ImageFolder(</span><br><span class="line">                       root, transform=<span class="literal">None</span>, </span><br><span class="line">                       target_transform=<span class="literal">None</span>, </span><br><span class="line">                       loader=&lt;function default_loader&gt;, </span><br><span class="line">                       is_valid_file=<span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
-
 <p><strong>参数解释</strong></p>
 <ul>
 <li>root 图片存储的根目录，即各类别文件夹所在目录的上一级目录。</li>
-<li>transform 对图片进行预处理的操作（函数），原始图片作为输入，返回一个转换后的图片。对应torchvision-transform。</li>
-<li>target_transform 对图片类别进行预处理的操作，输入为target，输出对其的转换。</li>
+<li>transform
+对图片进行预处理的操作（函数），原始图片作为输入，返回一个转换后的图片。对应torchvision-transform。</li>
+<li>target_transform
+对图片类别进行预处理的操作，输入为target，输出对其的转换。</li>
 <li>loader：表示数据集加载方式，通常默认加载方式即可。</li>
-<li>is_valid_file：获取图像文件的路径并检查该文件是否为有效文件的函数(用于检查损坏文件)<br><strong>返回的dataset的三种属性</strong></li>
+<li>is_valid_file：获取图像文件的路径并检查该文件是否为有效文件的函数(用于检查损坏文件)
+<strong>返回的dataset的三种属性</strong></li>
 <li>self.classes：用一个list保存类别名称</li>
 <li>self.class_to_idx：类别对应的索引，与不做任何转换返回的target对应</li>
-<li>self.imgs：保存(img-path, class)tuple的list<br>exp:</li>
+<li>self.imgs：保存(img-path, class)tuple的list exp:</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torchvision.datasets <span class="keyword">as</span> dset</span><br><span class="line"></span><br><span class="line">data = dset.ImageFolder(<span class="string">&#x27;image/&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(data.classes, data.class_to_idx)</span><br><span class="line"><span class="built_in">print</span>(data.imgs[<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行结果</span></span><br><span class="line">[<span class="string">&#x27;target&#x27;</span>, <span class="string">&#x27;train&#x27;</span>] &#123;<span class="string">&#x27;target&#x27;</span>: <span class="number">0</span>, <span class="string">&#x27;train&#x27;</span>: <span class="number">1</span>&#125;</span><br><span class="line">(<span class="string">&#x27;image/target\\100075.jpg&#x27;</span>, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># image/ 文件夹结构</span></span><br><span class="line">- image</span><br><span class="line"> - train</span><br><span class="line">  - <span class="number">8049.j</span>pg</span><br><span class="line">  - <span class="number">8143.j</span>pg</span><br><span class="line">  - ...</span><br><span class="line"> - target</span><br><span class="line">  - <span class="number">8049.j</span>pg</span><br><span class="line">  - <span class="number">8143.j</span>pg</span><br><span class="line">  - ...</span><br></pre></td></tr></table></figure>
-
-<h2 id="torch-utils-data"><a href="#torch-utils-data" class="headerlink" title="torch.utils.data"></a>torch.utils.data</h2><p><a target="_blank" rel="noopener" href="https://pytorch-cn.readthedocs.io/zh/latest/package_references/data/">torch.utils.data 中文文档</a></p>
-<h3 id="lass-torch-utils-data-DataLoader"><a href="#lass-torch-utils-data-DataLoader" class="headerlink" title="lass torch.utils.data.DataLoader"></a>lass torch.utils.data.DataLoader</h3><p><strong>函数原型</strong></p>
+<h2 id="torch.utils.data">torch.utils.data</h2>
+<p><a target="_blank" rel="noopener" href="https://pytorch-cn.readthedocs.io/zh/latest/package_references/data/">torch.utils.data
+中文文档</a></p>
+<h3 id="lass-torch.utils.data.dataloader">lass
+torch.utils.data.DataLoader</h3>
+<p><strong>函数原型</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">lass torch.utils.data.DataLoader(</span><br><span class="line">                        dataset, </span><br><span class="line">                        batch_size=1, </span><br><span class="line">                        shuffle=False, </span><br><span class="line">                        sampler=None, </span><br><span class="line">                        num_workers=0, </span><br><span class="line">                        collate_fn=&lt;function default_collate&gt;, </span><br><span class="line">                        pin_memory=False, drop_last=False)</span><br></pre></td></tr></table></figure>
 
         </div>

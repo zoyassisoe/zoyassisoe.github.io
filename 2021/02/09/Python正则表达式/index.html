@@ -3,7 +3,7 @@
 
 <head>
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script>
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script> -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -88,8 +88,11 @@
     });
 </script>
 <!-- 通过连接CDN加载MathJax的js代码 -->
-<script type="text/javascript" async
+<!-- <script type="text/javascript" async
         src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script> -->
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>
 
 
@@ -211,11 +214,40 @@
         </header>
 
         <div class="post-content">
-            <h1 id="网站工具"><a href="#网站工具" class="headerlink" title="网站工具"></a>网站工具</h1><p><em>推荐参考下列链接内容，本文只做简单记录。</em><br><a target="_blank" rel="noopener" href="https://regex101.com/">正则验证</a><br><a target="_blank" rel="noopener" href="http://www.python3.vip/tut/py/extra/regex/">优质教学文章</a><br><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1q4411y7Zh">优质教学视频</a><br><em>感谢@<a target="_blank" rel="noopener" href="http://www.python3.vip/">白月黑羽</a></em></p>
-<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><code>.</code> 表示要匹配除了换行符之外的任何单个字符。<br><code>*</code> 表示匹配前面的子表达式任意次，包括0次。<br><code>+</code> 表示匹配前面的子表达式一次或多次，不包括0次。<br><code>?</code> 表示匹配前面的子表达式0次或1次。<br><code>&#123;&#125;</code> 花括号表示前面的字符匹配指定的次数。<br><code>[]</code> 方括号表示要匹配指定的几个字符之一 。<br><code>()</code> 括号称之为正则表达式的组选择。<br><code>|</code> 匹配其中之一。<br><code>^</code> 表示匹配文本的开头位置。<br><code>$</code> 表示匹配文本的结尾位置。</p>
-<h2 id="元字符的转义"><a href="#元字符的转义" class="headerlink" title="元字符的转义"></a>元字符的转义</h2><p><code>\d</code> 匹配0-9之间任意一个数字字符，等价于表达式 [0-9]。<br><code>\D</code> 匹配任意一个不是0-9之间的数字字符，等价于表达式 [^0-9]。<br><code>\s</code> 匹配任意一个空白字符，包括 空格、tab、换行符等，等价于表达式 [\t\n\r\f\v]。<br><code>\S</code> 匹配任意一个非空白字符，等价于表达式 [^ \t\n\r\f\v]。<br><code>\w</code> 匹配任意一个文字字符，包括大小写字母、数字、下划线，等价于表达式 [a-zA-Z0-9_]，缺省情况也包括 Unicode文字字符，如果指定 ASCII 码标记，则只包括ASCII字母。<br><code>\W</code> 匹配任意一个非文字字符，等价于表达式 [^a-zA-Z0-9_]。  </p>
-<h2 id="匹配模式"><a href="#匹配模式" class="headerlink" title="匹配模式"></a>匹配模式</h2><p><strong>贪婪模式和非贪婪模式</strong><br>在正则表达式中， <code>*</code>, <code>+</code>, <code>?</code> 都是贪婪地，使用他们时，会尽可能多的匹配内容，解决这个问题，就需要使用非贪婪模式，也就是在其后面加上 <code>?</code><br><strong>单行、多行模式</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">re.compile(r&#x27;str&#x27;, re.M)</span><br></pre></td></tr></table></figure>
+            <h1 id="网站工具">网站工具</h1>
+<p><em>推荐参考下列链接内容，本文只做简单记录。</em><br>
+<a target="_blank" rel="noopener" href="https://regex101.com/">正则验证</a><br>
+<a target="_blank" rel="noopener" href="http://www.python3.vip/tut/py/extra/regex/">优质教学文章</a><br>
+<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1q4411y7Zh">优质教学视频</a><br>
+<em>感谢@<a target="_blank" rel="noopener" href="http://www.python3.vip/">白月黑羽</a></em></p>
+<h1 id="简介">简介</h1>
+<p><code>.</code> 表示要匹配除了换行符之外的任何单个字符。<br>
+<code>*</code> 表示匹配前面的子表达式任意次，包括0次。<br>
+<code>+</code> 表示匹配前面的子表达式一次或多次，不包括0次。<br>
+<code>?</code> 表示匹配前面的子表达式0次或1次。<br>
+<code>&#123;&#125;</code> 花括号表示前面的字符匹配指定的次数。<br>
+<code>[]</code> 方括号表示要匹配指定的几个字符之一 。<br>
+<code>()</code> 括号称之为正则表达式的组选择。<br>
+<code>|</code> 匹配其中之一。<br>
+<code>^</code> 表示匹配文本的开头位置。 <code>$</code>
+表示匹配文本的结尾位置。 ## 元字符的转义 <code>\d</code>
+匹配0-9之间任意一个数字字符，等价于表达式 [0-9]。<br>
+<code>\D</code> 匹配任意一个不是0-9之间的数字字符，等价于表达式
+[^0-9]。<br>
+<code>\s</code> 匹配任意一个空白字符，包括
+空格、tab、换行符等，等价于表达式 [。<br>
+<code>\S</code> 匹配任意一个非空白字符，等价于表达式 [^ 。<br>
+<code>\w</code>
+匹配任意一个文字字符，包括大小写字母、数字、下划线，等价于表达式
+[a-zA-Z0-9_]，缺省情况也包括 Unicode文字字符，如果指定 ASCII
+码标记，则只包括ASCII字母。<br>
+<code>\W</code> 匹配任意一个非文字字符，等价于表达式 [^a-zA-Z0-9_]。</p>
+<h2 id="匹配模式">匹配模式</h2>
+<p><strong>贪婪模式和非贪婪模式</strong> 在正则表达式中，
+<code>*</code>, <code>+</code>, <code>?</code>
+都是贪婪地，使用他们时，会尽可能多的匹配内容，解决这个问题，就需要使用非贪婪模式，也就是在其后面加上
+<code>?</code><br>
+<strong>单行、多行模式</strong> <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">re.compile(r&#x27;str&#x27;, re.M)</span><br></pre></td></tr></table></figure></p>
 
         </div>
 

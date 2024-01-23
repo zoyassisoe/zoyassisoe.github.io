@@ -3,7 +3,7 @@
 
 <head>
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script>
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script> -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -88,8 +88,11 @@
     });
 </script>
 <!-- 通过连接CDN加载MathJax的js代码 -->
-<script type="text/javascript" async
+<!-- <script type="text/javascript" async
         src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script> -->
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>
 
 
@@ -211,49 +214,114 @@
         </header>
 
         <div class="post-content">
-            <p><img src="https://img-blog.csdnimg.cn/20191112131128429.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODQ3Njc3,size_16,color_FFFFFF,t_70" alt="线性回归图"></p>
-<h2 id="假设-基于二维"><a href="#假设-基于二维" class="headerlink" title="假设(基于二维)"></a>假设(基于二维)</h2><p><strong>训练集</strong></p>
-<p>$$<br>\begin{bmatrix}<br>1&amp;x_{11}&amp;{\cdots}&amp;x_{1n}\<br>1&amp;x_{21}&amp;{\cdots}&amp;x_{2n}\<br>{\vdots}&amp;{\vdots}&amp;{\ddots}&amp;{\vdots}\<br>1&amp;x_{m1}&amp;{\cdots}&amp;x_{mn}\<br>\end{bmatrix}*<br>\begin{bmatrix}<br>\theta_{0}\<br>\theta_{1}\<br>{\vdots}\<br>\theta_{n}\<br>\end{bmatrix}&#x3D;<br>\begin{bmatrix}<br>y_{1}\<br>y_{2}\<br>{\vdots}\<br>y_{n}\<br>\end{bmatrix}<br>$$</p>
+            <figure>
+<img src="https://img-blog.csdnimg.cn/20191112131128429.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODQ3Njc3,size_16,color_FFFFFF,t_70" alt="线性回归图">
+<figcaption aria-hidden="true">线性回归图</figcaption>
+</figure>
+<h2 id="假设基于二维">假设(基于二维)</h2>
+<p><strong>训练集</strong></p>
+<p><span class="math display">\[
+\begin{bmatrix}
+1&amp;x_{11}&amp;{\cdots}&amp;x_{1n}\\
+1&amp;x_{21}&amp;{\cdots}&amp;x_{2n}\\
+{\vdots}&amp;{\vdots}&amp;{\ddots}&amp;{\vdots}\\
+1&amp;x_{m1}&amp;{\cdots}&amp;x_{mn}\\
+\end{bmatrix}*
+\begin{bmatrix}
+\theta_{0}\\
+\theta_{1}\\
+{\vdots}\\
+\theta_{n}\\
+\end{bmatrix}=
+\begin{bmatrix}
+y_{1}\\
+y_{2}\\
+{\vdots}\\
+y_{n}\\
+\end{bmatrix}
+\]</span></p>
 <p><strong>表达式</strong></p>
-<p>$$<br>h_\theta(x)&#x3D;\theta_0+\theta_1x_1+…+\theta_nx_n…x为向量<br>$$</p>
-<h2 id="定义代价函数"><a href="#定义代价函数" class="headerlink" title="定义代价函数"></a>定义代价函数</h2><p>$$<br>J_\theta(\theta_0,\theta_1,\theta_2,…,\theta_n)&#x3D;\frac{1}{2m}\sum_{i&#x3D;1}^{m}({h_\theta(x^i)-y(x^i)})^2<br>$$</p>
-<h2 id="梯度下降法"><a href="#梯度下降法" class="headerlink" title="梯度下降法"></a>梯度下降法</h2><p>$$<br>min_{\theta_0…\theta_n}J(\theta_0,\theta_1,\theta_2,…,\theta_n)<br>$$</p>
-<p>$$<br>\theta_j&#x3D;\theta_j-\alpha\frac{\partial}{\partial\theta_j}J(\theta_0,\theta_1,\theta_2,…,\theta_n)…\alpha为学习率<br>$$</p>
+<p><span class="math display">\[
+h_\theta(x)=\theta_0+\theta_1x_1+...+\theta_nx_n...x为向量
+\]</span></p>
+<h2 id="定义代价函数">定义代价函数</h2>
+<p><span class="math display">\[
+J_\theta(\theta_0,\theta_1,\theta_2,...,\theta_n)=\frac{1}{2m}\sum_{i=1}^{m}({h_\theta(x^i)-y(x^i)})^2
+\]</span></p>
+<h2 id="梯度下降法">梯度下降法</h2>
+<p><span class="math display">\[
+min_{\theta_0...\theta_n}J(\theta_0,\theta_1,\theta_2,...,\theta_n)
+\]</span></p>
+<p><span class="math display">\[
+\theta_j=\theta_j-\alpha\frac{\partial}{\partial\theta_j}J(\theta_0,\theta_1,\theta_2,...,\theta_n)...\alpha为学习率
+\]</span></p>
 <p>故</p>
-<p>$$<br>\frac{\partial}{\partial\theta_j}J(\theta_0,\theta_1,\theta_2,…,\theta_n)&#x3D;\frac{1}{m}\sum_{i&#x3D;1}^{m}({h_\theta(x^i)-y(x^i)})x^i<br>$$</p>
+<p><span class="math display">\[
+\frac{\partial}{\partial\theta_j}J(\theta_0,\theta_1,\theta_2,...,\theta_n)=\frac{1}{m}\sum_{i=1}^{m}({h_\theta(x^i)-y(x^i)})x^i
+\]</span></p>
 <p>带入得</p>
-<p>$$<br>\theta_j&#x3D;\theta_j-\alpha\frac{1}{m}\sum_{i&#x3D;1}^{m}({h_\theta(x^i)-y(x^i)})x^{ij}<br>$$</p>
-<h2 id="梯度下降法实现"><a href="#梯度下降法实现" class="headerlink" title="梯度下降法实现"></a>梯度下降法实现</h2><p> <strong>定义精度为P</strong></p>
-<p> $$<br> 当\theta_j^n-\theta_j^{n-1}&lt;&#x3D;P时递归停止<br> $$</p>
-<p> <strong>初始化</strong></p>
-<p> $$<br> (\theta_0,\theta_1,\theta_2,…,\theta_n)为(0,0,0,…,0)或者其他<br> $$</p>
-<p> <strong>执行递归</strong></p>
-<p> $$<br> \theta_j一步一步变化直到达到J(\theta)最小值<br> $$</p>
-<p> <strong>为什么可以实现？</strong></p>
-<p> <img src="https://img-blog.csdnimg.cn/20191112151736273.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODQ3Njc3,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<p> 该图为取$(\theta_0…\theta_{j-1},\theta_{j+1}…\theta_n)$为固定值时$J(\theta)$的切片<br> 当</p>
-<p> $$<br> \theta_j&#x3D;x_1时\frac{\partial}{\partial\theta_j}J(\theta)&lt;0故\theta_j增加逐渐靠近h，同时精度P决定递归是否停止<br> $$</p>
-<p>  当$\theta_j&#x3D;x_2$时同理</p>
-<h3 id="学习率-alpha"><a href="#学习率-alpha" class="headerlink" title="学习率$\alpha$"></a>学习率$\alpha$</h3><p> 过大导致可能不收敛</p>
-<p> <img src="https://img-blog.csdnimg.cn/20191112153836226.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODQ3Njc3,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<p> 过小导致收敛太慢<br> 故多次实验，取合适的$\alpha$</p>
-<p> $$<br> \alpha&#x3D;\begin{bmatrix}0.001&amp;0.01&amp;0.1&amp;1&amp;10\\end{bmatrix}<br> $$</p>
-<h3 id="特征缩放"><a href="#特征缩放" class="headerlink" title="特征缩放"></a>特征缩放</h3><p>  $$<br>  \begin{bmatrix}x_{1i}\x_{2i}\{\vdots}\x_{ni}\\end{bmatrix}&#x3D;\begin{bmatrix}1000\1001\{\vdots}\1020\\end{bmatrix}-&gt;1000*\begin{bmatrix}1.000\1.001\{\vdots}\1.020\\end{bmatrix}<br>  $$</p>
-<h2 id="若-h-theta-x3D-theta-0-theta-1x-1-2-theta-1x-2-3-…"><a href="#若-h-theta-x3D-theta-0-theta-1x-1-2-theta-1x-2-3-…" class="headerlink" title="若$h_\theta&#x3D;\theta_0+\theta_1x_1^2+\theta_1x_2^3+…$"></a>若$h_\theta&#x3D;\theta_0+\theta_1x_1^2+\theta_1x_2^3+…$</h2><p> 可令</p>
-<p> $$<br> x_1^2&#x3D;t_1,x_2^3&#x3D;t_2…<br> $$ </p>
-<p> 即可实现</p>
-<h2 id="正则方程实现"><a href="#正则方程实现" class="headerlink" title="正则方程实现"></a>正则方程实现</h2><p>$$<br>\theta&#x3D;(X^TX)^{-1}X^TY…(X^T为X的转置，X^{-1}为X的逆)<br>$$</p>
-<h1 id="d2l-从零实现"><a href="#d2l-从零实现" class="headerlink" title="d2l 从零实现"></a>d2l 从零实现</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成数据</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">normal_data</span>(<span class="params">w, b, n</span>):</span><br><span class="line">    x = torch.normal(<span class="number">0</span>, <span class="number">1</span>, (n, <span class="built_in">len</span>(w)))</span><br><span class="line">    y = torch.matmul(x, w) + b</span><br><span class="line">    y += torch.normal(<span class="number">0</span>, <span class="number">0.01</span>, y.shape)</span><br><span class="line">    <span class="keyword">return</span> x, y.reshape((-<span class="number">1</span>, <span class="number">1</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 批数据</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">batch_data</span>(<span class="params">x, y, batch_size</span>):</span><br><span class="line">    n = <span class="built_in">len</span>(x)</span><br><span class="line">    indexs = <span class="built_in">list</span>(<span class="built_in">range</span>(n))</span><br><span class="line">    random.shuffle(indexs)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, n, batch_size):</span><br><span class="line">        batch_indexs = torch.tensor(</span><br><span class="line">            indexs[i: <span class="built_in">min</span>(i+batch_size, n)]</span><br><span class="line">        )</span><br><span class="line">        <span class="keyword">yield</span> x[batch_indexs], y[batch_indexs]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义模型</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">linreg</span>(<span class="params">w, b, x</span>):</span><br><span class="line">    <span class="keyword">return</span> torch.matmul(x, w) +b</span><br><span class="line"></span><br><span class="line"><span class="comment"># 损失函数</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">squared_loss</span>(<span class="params">y, y_hat</span>):</span><br><span class="line">    <span class="keyword">return</span> (y.reshape(y_hat.shape)-y_hat)**<span class="number">2</span>/<span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># sgd</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">sgd</span>(<span class="params">params, lr, batch_size</span>):</span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        <span class="keyword">for</span> param <span class="keyword">in</span> params:</span><br><span class="line">            param -= lr*param.grad/batch_size</span><br><span class="line">            param.grad.zero_()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成数据</span></span><br><span class="line">n = <span class="number">1000</span></span><br><span class="line">w = torch.tensor([<span class="number">4.5</span>, <span class="number">6</span>])</span><br><span class="line">b = torch.tensor([<span class="number">1.7</span>])</span><br><span class="line">x,y = normal_data(w,b,n)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 超参数</span></span><br><span class="line">lr = <span class="number">0.03</span></span><br><span class="line">num_epochs = <span class="number">10</span></span><br><span class="line">net = linreg</span><br><span class="line">loss = squared_loss</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化</span></span><br><span class="line">batch_size = <span class="number">50</span></span><br><span class="line">w = torch.normal(<span class="number">0</span>, <span class="number">1</span>, [<span class="number">2</span>, <span class="number">1</span>], requires_grad=<span class="literal">True</span>)</span><br><span class="line">b = torch.tensor([<span class="number">0.0</span>], requires_grad=<span class="literal">True</span>)</span><br><span class="line">trainer = torch.optim.SGD([w,b], lr=lr)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 训练</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num_epochs):</span><br><span class="line">    <span class="keyword">for</span> x_batch, y_batch <span class="keyword">in</span> batch_data(x, y, batch_size):</span><br><span class="line">        l = loss(y_batch, net(w, b, x_batch))</span><br><span class="line">        l.<span class="built_in">sum</span>().backward()</span><br><span class="line">        sgd([w, b], lr, batch_size)</span><br><span class="line">        </span><br><span class="line">    l = loss(y, net(w ,b, x))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;epoch:&#123;&#125;,loss:&#123;&#125;&#x27;</span>.<span class="built_in">format</span>(i, l.mean()))</span><br></pre></td></tr></table></figure>
-
+<p><span class="math display">\[
+\theta_j=\theta_j-\alpha\frac{1}{m}\sum_{i=1}^{m}({h_\theta(x^i)-y(x^i)})x^{ij}
+\]</span></p>
+<h2 id="梯度下降法实现">梯度下降法实现</h2>
+<p><strong>定义精度为P</strong></p>
+<p><span class="math display">\[
+当\theta_j^n-\theta_j^{n-1}&lt;=P时递归停止
+\]</span></p>
+<p><strong>初始化</strong></p>
+<p><span class="math display">\[
+(\theta_0,\theta_1,\theta_2,...,\theta_n)为(0,0,0,...,0)或者其他
+\]</span></p>
+<p><strong>执行递归</strong></p>
+<p><span class="math display">\[
+\theta_j一步一步变化直到达到J(\theta)最小值
+\]</span></p>
+<p><strong>为什么可以实现？</strong></p>
+<figure>
+<img src="https://img-blog.csdnimg.cn/20191112151736273.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODQ3Njc3,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述">
+<figcaption aria-hidden="true">在这里插入图片描述</figcaption>
+</figure>
+<p>该图为取<span class="math inline">\((\theta_0...\theta_{j-1},\theta_{j+1}...\theta_n)\)</span>为固定值时<span class="math inline">\(J(\theta)\)</span>的切片 当</p>
+<p><span class="math display">\[
+\theta_j=x_1时\frac{\partial}{\partial\theta_j}J(\theta)&lt;0故\theta_j增加逐渐靠近h，同时精度P决定递归是否停止
+\]</span></p>
+<p>当<span class="math inline">\(\theta_j=x_2\)</span>时同理</p>
+<h3 id="学习率alpha">学习率<span class="math inline">\(\alpha\)</span></h3>
+<p>过大导致可能不收敛</p>
+<figure>
+<img src="https://img-blog.csdnimg.cn/20191112153836226.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODQ3Njc3,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述">
+<figcaption aria-hidden="true">在这里插入图片描述</figcaption>
+</figure>
+<p>过小导致收敛太慢 故多次实验，取合适的<span class="math inline">\(\alpha\)</span></p>
+<p><span class="math display">\[
+\alpha=\begin{bmatrix}0.001&amp;0.01&amp;0.1&amp;1&amp;10\\\end{bmatrix}
+\]</span></p>
+<p>### 特征缩放</p>
+<p><span class="math display">\[
+  \begin{bmatrix}x_{1i}\\x_{2i}\\{\vdots}\\x_{ni}\\\end{bmatrix}=\begin{bmatrix}1000\\1001\\{\vdots}\\1020\\\end{bmatrix}-&gt;1000*\begin{bmatrix}1.000\\1.001\\{\vdots}\\1.020\\\end{bmatrix}
+  \]</span></p>
+<h2 id="若h_thetatheta_0theta_1x_12theta_1x_23...">若<span class="math inline">\(h_\theta=\theta_0+\theta_1x_1^2+\theta_1x_2^3+...\)</span></h2>
+<p>可令</p>
+<p><span class="math display">\[
+x_1^2=t_1,x_2^3=t_2...
+\]</span></p>
+<p>即可实现</p>
+<h2 id="正则方程实现">正则方程实现</h2>
+<p><span class="math display">\[
+\theta=(X^TX)^{-1}X^TY...(X^T为X的转置，X^{-1}为X的逆)
+\]</span></p>
+<h1 id="d2l-从零实现">d2l 从零实现</h1>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成数据</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">normal_data</span>(<span class="params">w, b, n</span>):</span><br><span class="line">    x = torch.normal(<span class="number">0</span>, <span class="number">1</span>, (n, <span class="built_in">len</span>(w)))</span><br><span class="line">    y = torch.matmul(x, w) + b</span><br><span class="line">    y += torch.normal(<span class="number">0</span>, <span class="number">0.01</span>, y.shape)</span><br><span class="line">    <span class="keyword">return</span> x, y.reshape((-<span class="number">1</span>, <span class="number">1</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 批数据</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">batch_data</span>(<span class="params">x, y, batch_size</span>):</span><br><span class="line">    n = <span class="built_in">len</span>(x)</span><br><span class="line">    indexs = <span class="built_in">list</span>(<span class="built_in">range</span>(n))</span><br><span class="line">    random.shuffle(indexs)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, n, batch_size):</span><br><span class="line">        batch_indexs = torch.tensor(</span><br><span class="line">            indexs[i: <span class="built_in">min</span>(i+batch_size, n)]</span><br><span class="line">        )</span><br><span class="line">        <span class="keyword">yield</span> x[batch_indexs], y[batch_indexs]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义模型</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">linreg</span>(<span class="params">w, b, x</span>):</span><br><span class="line">    <span class="keyword">return</span> torch.matmul(x, w) +b</span><br><span class="line"></span><br><span class="line"><span class="comment"># 损失函数</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">squared_loss</span>(<span class="params">y, y_hat</span>):</span><br><span class="line">    <span class="keyword">return</span> (y.reshape(y_hat.shape)-y_hat)**<span class="number">2</span>/<span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># sgd</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">sgd</span>(<span class="params">params, lr, batch_size</span>):</span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        <span class="keyword">for</span> param <span class="keyword">in</span> params:</span><br><span class="line">            param -= lr*param.grad/batch_size</span><br><span class="line">            param.grad.zero_()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成数据</span></span><br><span class="line">n = <span class="number">1000</span></span><br><span class="line">w = torch.tensor([<span class="number">4.5</span>, <span class="number">6</span>])</span><br><span class="line">b = torch.tensor([<span class="number">1.7</span>])</span><br><span class="line">x,y = normal_data(w,b,n)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 超参数</span></span><br><span class="line">lr = <span class="number">0.03</span></span><br><span class="line">num_epochs = <span class="number">10</span></span><br><span class="line">net = linreg</span><br><span class="line">loss = squared_loss</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化</span></span><br><span class="line">batch_size = <span class="number">50</span></span><br><span class="line">w = torch.normal(<span class="number">0</span>, <span class="number">1</span>, [<span class="number">2</span>, <span class="number">1</span>], requires_grad=<span class="literal">True</span>)</span><br><span class="line">b = torch.tensor([<span class="number">0.0</span>], requires_grad=<span class="literal">True</span>)</span><br><span class="line">trainer = torch.optim.SGD([w,b], lr=lr)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 训练</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num_epochs):</span><br><span class="line">    <span class="keyword">for</span> x_batch, y_batch <span class="keyword">in</span> batch_data(x, y, batch_size):</span><br><span class="line">        l = loss(y_batch, net(w, b, x_batch))</span><br><span class="line">        l.<span class="built_in">sum</span>().backward()</span><br><span class="line">        sgd([w, b], lr, batch_size)</span><br><span class="line">        </span><br><span class="line">    l = loss(y, net(w ,b, x))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;epoch:&#123;&#125;,loss:&#123;&#125;&#x27;</span>.<span class="built_in">format</span>(i, l.mean()))</span><br></pre></td></tr></table></figure>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">epoch:0,loss:5.008117198944092</span><br><span class="line">epoch:1,loss:1.4251900911331177</span><br><span class="line">epoch:2,loss:0.4058946669101715</span><br><span class="line">epoch:3,loss:0.11567537486553192</span><br><span class="line">epoch:4,loss:0.0330023355782032 </span><br><span class="line">epoch:5,loss:0.009440700523555279</span><br><span class="line">epoch:6,loss:0.0027248619589954615</span><br><span class="line">epoch:7,loss:0.0008111481438390911</span><br><span class="line">epoch:8,loss:0.0002640637394506484</span><br><span class="line">epoch:9,loss:0.0001081191876437515</span><br><span class="line">w,b:</span><br><span class="line">(tensor([[4.4979], [5.9894]], requires_grad=True), </span><br><span class="line">tensor([1.6971], requires_grad=True))</span><br></pre></td></tr></table></figure>
-
-<h2 id="QA"><a href="#QA" class="headerlink" title="QA"></a>QA</h2><ol>
-<li>sgd处为什么-&#x3D;可以而&#x3D;不行？</li>
+<h2 id="qa">QA</h2>
+<ol type="1">
+<li>sgd处为什么-=可以而=不行？
+-=与zero_()(结尾带下划线的函数)是pytorch的原地操作，不会改变变量的地址
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">a = torch.arange(<span class="number">5</span>, dtype=torch.float32, requires_grad=<span class="literal">True</span>)</span><br><span class="line">b = a*a</span><br><span class="line">b.<span class="built_in">sum</span>().backward()</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(a))</span><br><span class="line">a.data -= a.grad</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(a))</span><br><span class="line"></span><br><span class="line">a.grad.zero_()</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(a))</span><br><span class="line"></span><br><span class="line"><span class="number">2076247332328</span></span><br><span class="line"><span class="number">2076247332328</span></span><br><span class="line"><span class="number">2076247332328</span></span><br></pre></td></tr></table></figure></li>
 </ol>
-<p>-&#x3D;与zero_()(结尾带下划线的函数)是pytorch的原地操作，不会改变变量的地址</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">a = torch.arange(<span class="number">5</span>, dtype=torch.float32, requires_grad=<span class="literal">True</span>)</span><br><span class="line">b = a*a</span><br><span class="line">b.<span class="built_in">sum</span>().backward()</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(a))</span><br><span class="line">a.data -= a.grad</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(a))</span><br><span class="line"></span><br><span class="line">a.grad.zero_()</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(a))</span><br><span class="line"></span><br><span class="line"><span class="number">2076247332328</span></span><br><span class="line"><span class="number">2076247332328</span></span><br><span class="line"><span class="number">2076247332328</span></span><br></pre></td></tr></table></figure>
+<h2 id="git取消代理">git取消代理</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global --unset http.proxy  </span><br><span class="line">git config --global --unset https.proxy</span><br></pre></td></tr></table></figure>
 
-<h2 id="git取消代理"><a href="#git取消代理" class="headerlink" title="git取消代理"></a>git取消代理</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global --unset http.proxy  </span><br><span class="line">git config --global --unset https.proxy</span><br></pre></td></tr></table></figure>
         </div>
 
         
@@ -299,10 +367,10 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2019/12/10/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AD%A6%E4%B9%A0%E7%9A%84Logistic%E5%9B%9E%E5%BD%92%E7%AE%97%E6%B3%95/">机器学习学习的Logistic回归算法</a>
+                <a class="prev" rel="prev" href="/2019/12/10/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%AD%A3%E5%88%99%E5%8C%96/">机器学习算法正则化</a>
             
             
-            <a class="next" rel="next" href="/2019/12/10/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%AD%A3%E5%88%99%E5%8C%96/">机器学习算法正则化</a>
+            <a class="next" rel="next" href="/2018/04/18/%E6%B5%8B%E8%AF%95/">测试</a>
             
         </section>
 

@@ -3,7 +3,7 @@
 
 <head>
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script>
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script> -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -88,8 +88,11 @@
     });
 </script>
 <!-- 通过连接CDN加载MathJax的js代码 -->
-<script type="text/javascript" async
+<!-- <script type="text/javascript" async
         src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script> -->
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>
 
 
@@ -211,20 +214,35 @@
         </header>
 
         <div class="post-content">
-            <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>@<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/K-%E5%B9%B3%E5%9D%87%E7%AE%97%E6%B3%95">维基百科</a></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">K-平均算法（英文：k-means clustering）源于信号处理中的一种向量量化方法，现在则更多地作为一种聚类分析方</span><br><span class="line">法流行于数据挖掘领域。k-平均聚类的目的是：把n个点（可以是样本的一次观察或一个实例）划分到k个聚类中，使得</span><br><span class="line">每个点都属于离他最近的均值（此即聚类中心）对应的聚类，以之作为聚类的标准。这个问题将归结为一个把数据空间</span><br><span class="line">划分为Voronoi cells的问题。</span><br><span class="line"></span><br><span class="line">这个问题在计算上是NP困难的，不过存在高效的启发式算法。一般情况下，都使用效率比较高的启发式算法，它们能够</span><br><span class="line">快速收敛于一个局部最优解。这些算法通常类似于通过迭代优化方法处理高斯混合分布的最大期望算法（EM算法）。而</span><br><span class="line">且，它们都使用聚类中心来为数据建模；然而k-平均聚类倾向于在可比较的空间范围内寻找聚类，期望-最大化技术却允</span><br><span class="line">许聚类有不同的形状。</span><br></pre></td></tr></table></figure>
-<p>此外K-means算法（k-平均聚类）与<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/K-%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95">KNN算法（K-近邻算法）</a>没有任何关系。<br>本文内容皆源自<a target="_blank" rel="noopener" href="https://www.coursera.org/learn/machine-learning/home/welcome">Andrew Ng</a></p>
-<h1 id="K-means算法思想"><a href="#K-means算法思想" class="headerlink" title="K-means算法思想"></a>K-means算法思想</h1><p>输入：<br>    1.训练集，即需要进行聚类的数据，只有X没有标记Y。<br>    2.K即聚类族的个数。</p>
+            <h1 id="简介">简介</h1>
+<p>@<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/K-%E5%B9%B3%E5%9D%87%E7%AE%97%E6%B3%95">维基百科</a>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">K-平均算法（英文：k-means clustering）源于信号处理中的一种向量量化方法，现在则更多地作为一种聚类分析方</span><br><span class="line">法流行于数据挖掘领域。k-平均聚类的目的是：把n个点（可以是样本的一次观察或一个实例）划分到k个聚类中，使得</span><br><span class="line">每个点都属于离他最近的均值（此即聚类中心）对应的聚类，以之作为聚类的标准。这个问题将归结为一个把数据空间</span><br><span class="line">划分为Voronoi cells的问题。</span><br><span class="line"></span><br><span class="line">这个问题在计算上是NP困难的，不过存在高效的启发式算法。一般情况下，都使用效率比较高的启发式算法，它们能够</span><br><span class="line">快速收敛于一个局部最优解。这些算法通常类似于通过迭代优化方法处理高斯混合分布的最大期望算法（EM算法）。而</span><br><span class="line">且，它们都使用聚类中心来为数据建模；然而k-平均聚类倾向于在可比较的空间范围内寻找聚类，期望-最大化技术却允</span><br><span class="line">许聚类有不同的形状。</span><br></pre></td></tr></table></figure> 此外K-means算法（k-平均聚类）与<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/K-%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95">KNN算法（K-近邻算法）</a>没有任何关系。
+本文内容皆源自<a target="_blank" rel="noopener" href="https://www.coursera.org/learn/machine-learning/home/welcome">Andrew
+Ng</a></p>
+<h1 id="k-means算法思想">K-means算法思想</h1>
+<p>输入： 1.训练集，即需要进行聚类的数据，只有X没有标记Y。
+2.K即聚类族的个数。</p>
 <p>根据K随机初始化K个聚类中心。</p>
 <p>族分配。</p>
 <p>移动聚类中心。</p>
-<p>例如下图所示：<br><img src="/2020/02/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AD%A6%E4%B9%A0Kmeans%E7%AE%97%E6%B3%95/2.png" alt="1"><br><img src="/2020/02/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AD%A6%E4%B9%A0Kmeans%E7%AE%97%E6%B3%95/1.png" alt="2"></p>
-<h1 id="优化函数"><a href="#优化函数" class="headerlink" title="优化函数"></a>优化函数</h1><p><img src="/2020/02/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AD%A6%E4%B9%A0Kmeans%E7%AE%97%E6%B3%95/3.png" alt="优化函数"></p>
-<h1 id="初始聚类中心的方式"><a href="#初始聚类中心的方式" class="headerlink" title="初始聚类中心的方式"></a>初始聚类中心的方式</h1><p>随机选择K个输入点的坐标作为聚类中心，然后执行150-1000次循环，计算其代价函数，选择其最小的结果。例如</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">for _ in range(100):</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+<p>例如下图所示： <img src="/2020/02/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AD%A6%E4%B9%A0Kmeans%E7%AE%97%E6%B3%95/2.png" alt="1">
+<img src="/2020/02/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AD%A6%E4%B9%A0Kmeans%E7%AE%97%E6%B3%95/1.png" alt="2"></p>
+<h1 id="优化函数">优化函数</h1>
+<figure>
+<img src="/2020/02/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AD%A6%E4%B9%A0Kmeans%E7%AE%97%E6%B3%95/3.png" alt="优化函数">
+<figcaption aria-hidden="true">优化函数</figcaption>
+</figure>
+<h1 id="初始聚类中心的方式">初始聚类中心的方式</h1>
+<p>随机选择K个输入点的坐标作为聚类中心，然后执行150-1000次循环，计算其代价函数，选择其最小的结果。例如
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">for _ in range(100):</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure></p>
+<h1 id="选择k的大小">选择K的大小</h1>
+<h2 id="肘部法则">肘部法则</h2>
+<figure>
+<img src="/2020/02/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AD%A6%E4%B9%A0Kmeans%E7%AE%97%E6%B3%95/4.png" alt="肘部法则">
+<figcaption aria-hidden="true">肘部法则</figcaption>
+</figure>
+<h2 id="根据实际应用选择">根据实际应用选择</h2>
 
-<h1 id="选择K的大小"><a href="#选择K的大小" class="headerlink" title="选择K的大小"></a>选择K的大小</h1><h2 id="肘部法则"><a href="#肘部法则" class="headerlink" title="肘部法则"></a>肘部法则</h2><p><img src="/2020/02/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AD%A6%E4%B9%A0Kmeans%E7%AE%97%E6%B3%95/4.png" alt="肘部法则"></p>
-<h2 id="根据实际应用选择"><a href="#根据实际应用选择" class="headerlink" title="根据实际应用选择"></a>根据实际应用选择</h2>
         </div>
 
         

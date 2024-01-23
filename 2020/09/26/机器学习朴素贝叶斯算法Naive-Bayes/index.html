@@ -3,7 +3,7 @@
 
 <head>
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script>
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script> -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -88,8 +88,11 @@
     });
 </script>
 <!-- 通过连接CDN加载MathJax的js代码 -->
-<script type="text/javascript" async
+<!-- <script type="text/javascript" async
         src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script> -->
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>
 
 
@@ -211,32 +214,71 @@
         </header>
 
         <div class="post-content">
-            <p>本文所阐述的定义，若无特殊表明出处则皆源自于《概率论与数理统计（第四版）》</p>
-<h1 id="回顾"><a href="#回顾" class="headerlink" title="回顾"></a>回顾</h1><p><strong>样本空间</strong>：我们将随机试验E的所以可能的结果组成的集合成为E的样本的样本空间，记为$S$.<br><strong>随机事件</strong>：一般，我们称试验E的样本空间S的子集为E的随机事件.<br><strong>随机变量</strong>：表示随机试验各种结果的实值单值函数[百度百科].设随机试验的样本空间为$S&#x3D;{e}$.$X&#x3D;X(e)$是定义在样本空间S上的实值单值函数.称$X&#x3D;X(e)$为随机变量.</p>
-<p><strong>乘法定理</strong>：设$P(A)&gt;0$ 则有：  </p>
-<p>$$<br>p(AB)&#x3D;p(B|A)P(A).<br>$$  </p>
-<p><strong>全概率公式</strong>：设试验E的样本空间为S，A为E的事件，$B_1,B_2,…,B_n$为S的一个划分，且$P(B_i)&gt;0 (i&#x3D;0,1,2,3,…,n)$，则</p>
-<p>$$<br>P(A)&#x3D;P(A|B_1)P(B_1)+P(A|B_2)P(B_2)+…+P(A|B_n)P(B_n).<br>$$</p>
-<p><strong>贝叶斯公式</strong>：设试验E的样本空间为S，A为E的事件，$B_1,B_2,…,B_n$为S的一个划分，且$P(A)&gt;0$，$P(B_i)&gt;0 (i&#x3D;0,1,2,3,…,n)$，则</p>
-<p>$$<br>\frac{P(B_i|A)&#x3D;P(A|B_i)P(B_i)}{\sum_{j&#x3D;1}^nP(A|B_i)P(B_i)},i&#x3D;1,2,3,…,n.<br>$$</p>
-<h1 id="数据集定义"><a href="#数据集定义" class="headerlink" title="数据集定义"></a>数据集定义</h1><p>设输入空间$\chi \subseteq R^n$为$n$维向量的集合，输出空间为类标记集合$\Upsilon&#x3D;{ c_1,c_2,…,c_k}$，输入为特征向量$x \subseteq \chi$，输出为类标记$y \subseteq \Upsilon$，X是定义在输入空间上的随机变量，Y是定义在输出空间的随机变量。$P(X,Y)$是X和Y的联合分布概率。训练数据集</p>
-<p>$$<br>T&#x3D;{ (x_1,y_1),(x_2,y_2),…,(x_N,y_N)}<br>$$</p>
-<p>$$<br>x_n&#x3D;(x_n^{(1)},x_n^{(2)},…,x_n^{(n)})<br>$$</p>
-<p>由$P(X,Y)$独立同分布产生。</p>
-<h1 id="基本方法"><a href="#基本方法" class="headerlink" title="基本方法"></a>基本方法</h1><p>朴素贝叶斯通过训练数据集学习联合概率分布$P(X,Y)$.具体地，学习先验概率分布及条件概率分布。</p>
+            <p>本文所阐述的定义，若无特殊表明出处则皆源自于《概率论与数理统计（第四版）》
+# 回顾</p>
+<p><strong>样本空间</strong>：我们将随机试验E的所以可能的结果组成的集合成为E的样本的样本空间，记为<span class="math inline">\(S\)</span>.<br>
+<strong>随机事件</strong>：一般，我们称试验E的样本空间S的子集为E的随机事件.<br>
+<strong>随机变量</strong>：表示随机试验各种结果的实值单值函数[百度百科].设随机试验的样本空间为<span class="math inline">\(S={e}\)</span>.<span class="math inline">\(X=X(e)\)</span>是定义在样本空间S上的实值单值函数.称<span class="math inline">\(X=X(e)\)</span>为随机变量.</p>
+<p><strong>乘法定理</strong>：设<span class="math inline">\(P(A)&gt;0\)</span> 则有：</p>
+<p><span class="math display">\[
+p(AB)=p(B|A)P(A).
+\]</span></p>
+<p><strong>全概率公式</strong>：设试验E的样本空间为S，A为E的事件，<span class="math inline">\(B_1,B_2,...,B_n\)</span>为S的一个划分，且<span class="math inline">\(P(B_i)&gt;0 (i=0,1,2,3,...,n)\)</span>，则</p>
+<p><span class="math display">\[
+P(A)=P(A|B_1)P(B_1)+P(A|B_2)P(B_2)+...+P(A|B_n)P(B_n).
+\]</span></p>
+<p><strong>贝叶斯公式</strong>：设试验E的样本空间为S，A为E的事件，<span class="math inline">\(B_1,B_2,...,B_n\)</span>为S的一个划分，且<span class="math inline">\(P(A)&gt;0\)</span>，<span class="math inline">\(P(B_i)&gt;0 (i=0,1,2,3,...,n)\)</span>，则</p>
+<p><span class="math display">\[
+\frac{P(B_i|A)=P(A|B_i)P(B_i)}{\sum_{j=1}^nP(A|B_i)P(B_i)},i=1,2,3,...,n.
+\]</span></p>
+<h1 id="数据集定义">数据集定义</h1>
+<p>设输入空间<span class="math inline">\(\chi \subseteq
+R^n\)</span>为<span class="math inline">\(n\)</span>维向量的集合，输出空间为类标记集合<span class="math inline">\(\Upsilon=\{
+c_1,c_2,...,c_k\}\)</span>，输入为特征向量<span class="math inline">\(x
+\subseteq \chi\)</span>，输出为类标记<span class="math inline">\(y
+\subseteq
+\Upsilon\)</span>，X是定义在输入空间上的随机变量，Y是定义在输出空间的随机变量。<span class="math inline">\(P(X,Y)\)</span>是X和Y的联合分布概率。训练数据集</p>
+<p><span class="math display">\[
+T=\{ (x_1,y_1),(x_2,y_2),...,(x_N,y_N)\}
+\]</span></p>
+<p><span class="math display">\[
+x_n=(x_n^{(1)},x_n^{(2)},...,x_n^{(n)})
+\]</span></p>
+<p>由<span class="math inline">\(P(X,Y)\)</span>独立同分布产生。 #
+基本方法 朴素贝叶斯通过训练数据集学习联合概率分布<span class="math inline">\(P(X,Y)\)</span>.具体地，学习先验概率分布及条件概率分布。</p>
 <p><em>先验概率分布</em></p>
-<p>$$<br>P(Y&#x3D;c_k),k&#x3D;1,2,3,…,K<br>$$</p>
+<p><span class="math display">\[
+P(Y=c_k),k=1,2,3,...,K
+\]</span></p>
 <p><em>条件概率分布</em></p>
-<p>$$<br>P(X&#x3D;x|Y&#x3D;c_k)&#x3D;P(X^{(1)}&#x3D;x^{(1)},X^{(2)}&#x3D;x^{(2)},…,X^{(n)}&#x3D;x^{(n)}|Y&#x3D;c_k),k&#x3D;1,2,3,…,K<br>$$</p>
-<p>注意：这里$c_k\epsilon set(lable).$<br>朴素贝叶斯法对条件概率分布作了条件独立性的假设。具体地，条件独立性假设是</p>
-<p>$$<br>P(X&#x3D;x|Y&#x3D;c_k)&#x3D;\prod_{j&#x3D;1}^nP(X^{(j)}&#x3D;x^{(j)}|Y&#x3D;c_k)<br>$$</p>
+<p><span class="math display">\[
+P(X=x|Y=c_k)=P(X^{(1)}=x^{(1)},X^{(2)}=x^{(2)},...,X^{(n)}=x^{(n)}|Y=c_k),k=1,2,3,...,K
+\]</span></p>
+<p>注意：这里<span class="math inline">\(c_k\epsilon
+set(lable).\)</span><br>
+朴素贝叶斯法对条件概率分布作了条件独立性的假设。具体地，条件独立性假设是</p>
+<p><span class="math display">\[
+P(X=x|Y=c_k)=\prod_{j=1}^nP(X^{(j)}=x^{(j)}|Y=c_k)
+\]</span></p>
 <p>那么，根据贝叶斯定理</p>
-<p>$$<br>P(Y&#x3D;c_k|X&#x3D;x)&#x3D;\frac{P(Y&#x3D;c_k) \prod_{j&#x3D;1}P(X^{(j)}&#x3D;x^{(j)}|Y&#x3D;c_k)}{\sum P(Y&#x3D;c_k) \prod_{j&#x3D;1}P(X^{(j)}&#x3D;x^{(j)}|Y&#x3D;c_k)},k&#x3D;1,2,3,…,K.<br>$$</p>
+<p><span class="math display">\[
+P(Y=c_k|X=x)=\frac{P(Y=c_k) \prod_{j=1}P(X^{(j)}=x^{(j)}|Y=c_k)}{\sum
+P(Y=c_k) \prod_{j=1}P(X^{(j)}=x^{(j)}|Y=c_k)},k=1,2,3,...,K.
+\]</span></p>
 <p>故</p>
-<p>$$<br>y&#x3D;f(x)&#x3D;arg max_{c_k}\frac{P(Y&#x3D;c_k) \prod_{j&#x3D;1}P(X^{(j)}&#x3D;x^{(j)}|Y&#x3D;c_k)}{\sum P(Y&#x3D;c_k) \prod_{j&#x3D;1}P(X^{(j)}&#x3D;x^{(j)}|Y&#x3D;c_k)}<br>$$</p>
+<p><span class="math display">\[
+y=f(x)=arg max_{c_k}\frac{P(Y=c_k)
+\prod_{j=1}P(X^{(j)}=x^{(j)}|Y=c_k)}{\sum P(Y=c_k)
+\prod_{j=1}P(X^{(j)}=x^{(j)}|Y=c_k)}
+\]</span></p>
 <p>注意到，分母为1，故</p>
-<p>$$<br>y&#x3D;arg max_{c_k}P(Y&#x3D;c_k) \prod_{j&#x3D;1}P(X^{(j)}&#x3D;x^{(j)}|Y&#x3D;c_k)<br>$$</p>
-<h1 id="进阶"><a href="#进阶" class="headerlink" title="进阶"></a>进阶</h1><h2 id="高斯朴素贝叶斯"><a href="#高斯朴素贝叶斯" class="headerlink" title="高斯朴素贝叶斯"></a>高斯朴素贝叶斯</h2><p>高斯朴素贝叶斯(Gaussian Naive Bayes),高斯朴素贝叶斯算法假设所有特征都具有高斯分布(正态&#x2F;钟形曲线)。这适用于连续数据，例如日温度，高度。</p>
+<p><span class="math display">\[
+y=arg max_{c_k}P(Y=c_k) \prod_{j=1}P(X^{(j)}=x^{(j)}|Y=c_k)
+\]</span></p>
+<h1 id="进阶">进阶</h1>
+<h2 id="高斯朴素贝叶斯">高斯朴素贝叶斯</h2>
+<p>高斯朴素贝叶斯(Gaussian Naive
+Bayes),高斯朴素贝叶斯算法假设所有特征都具有高斯分布(正态/钟形曲线)。这适用于连续数据，例如日温度，高度。</p>
 
         </div>
 

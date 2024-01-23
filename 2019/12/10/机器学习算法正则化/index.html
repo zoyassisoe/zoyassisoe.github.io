@@ -3,7 +3,7 @@
 
 <head>
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script>
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script> -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -88,8 +88,11 @@
     });
 </script>
 <!-- 通过连接CDN加载MathJax的js代码 -->
-<script type="text/javascript" async
+<!-- <script type="text/javascript" async
         src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script> -->
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>
 
 
@@ -211,21 +214,57 @@
         </header>
 
         <div class="post-content">
-            <h2 id="过拟合问题"><a href="#过拟合问题" class="headerlink" title="过拟合问题"></a>过拟合问题</h2><p><img src="https://img-blog.csdnimg.cn/20191116155152496.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODQ3Njc3,size_16,color_FFFFFF,t_70" alt="1"></p>
+            <h2 id="过拟合问题">过拟合问题</h2>
+<figure>
+<img src="https://img-blog.csdnimg.cn/20191116155152496.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODQ3Njc3,size_16,color_FFFFFF,t_70" alt="1">
+<figcaption aria-hidden="true">1</figcaption>
+</figure>
 <p>导致结果不正确。</p>
-<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p>使$\theta$的取值尽量小，已达到曲线平滑。<br>但当$\theta$取值过小会导致<strong>欠拟合</strong><br><strong>改变代价函数</strong><br><strong>线性回归：</strong></p>
-<p>$$<br>J(\theta)&#x3D;\frac{1}{2m}(\sum_{i&#x3D;1}^{m}({h_\theta(x^i)-y(x^i)})^2+\lambda\sum_{j&#x3D;1}^n\theta_j^2)<br>$$</p>
+<h2 id="解决办法">解决办法</h2>
+<p>使<span class="math inline">\(\theta\)</span>的取值尽量小，已达到曲线平滑。
+但当<span class="math inline">\(\theta\)</span>取值过小会导致<strong>欠拟合</strong>
+<strong>改变代价函数</strong> <strong>线性回归：</strong></p>
+<p><span class="math display">\[
+J(\theta)=\frac{1}{2m}(\sum_{i=1}^{m}({h_\theta(x^i)-y(x^i)})^2+\lambda\sum_{j=1}^n\theta_j^2)
+\]</span></p>
 <p><strong>使用梯度下降迭代</strong></p>
-<p>$$<br>\theta_0&#x3D;\theta_0-\alpha\frac1m(h_\theta(x^{(i)})-y^{(i)})x_0^{(i)}<br>$$</p>
-<p>$$<br>\theta_j&#x3D;\theta_j-\alpha[\frac1m(h_\theta(x^{(i)})-y^{(i)})x_j^{(i)}+\frac\lambda m\theta_j]<br>$$</p>
-<p>$\theta_j变形$</p>
-<p>$$<br>\theta_j&#x3D;\theta_j(1-\frac\lambda m\theta_j)-\alpha\frac1m(h_\theta(x^{(i)})-y^{(i)})x_j^{(i)}<br>$$</p>
+<p><span class="math display">\[
+\theta_0=\theta_0-\alpha\frac1m(h_\theta(x^{(i)})-y^{(i)})x_0^{(i)}
+\]</span></p>
+<p><span class="math display">\[
+\theta_j=\theta_j-\alpha[\frac1m(h_\theta(x^{(i)})-y^{(i)})x_j^{(i)}+\frac\lambda
+m\theta_j]
+\]</span></p>
+<p><span class="math inline">\(\theta_j变形\)</span></p>
+<p><span class="math display">\[
+\theta_j=\theta_j(1-\frac\lambda
+m\theta_j)-\alpha\frac1m(h_\theta(x^{(i)})-y^{(i)})x_j^{(i)}
+\]</span></p>
 <p><strong>使用正则化公式</strong></p>
-<p>$$<br>\theta&#x3D;\left(X^TX+\lambda<br>    \left[<br>      \begin{matrix}<br>      0 &amp; &amp; &amp;  \<br>      &amp; 1 &amp; &amp;  \<br>      &amp; &amp; 1 &amp;  \<br>      &amp; &amp; &amp; \ddots  \<br>      &amp; &amp; &amp; 1<br>      \end{matrix}<br>    \right]<br>\right)^{-1}X^Ty<br>$$</p>
+<p><span class="math display">\[
+\theta=\left(X^TX+\lambda
+    \left[
+      \begin{matrix}
+      0 &amp; &amp; &amp;  \\  
+      &amp; 1 &amp; &amp;  \\
+      &amp; &amp; 1 &amp;  \\
+      &amp; &amp; &amp; \ddots  \\
+      &amp; &amp; &amp; 1
+      \end{matrix}
+    \right]
+\right)^{-1}X^Ty
+\]</span></p>
 <p>其中</p>
-<p>$$<br>X&#x3D;\begin{bmatrix}<br>x(1)^{T} \ x(2)^{T} \ \vdots \ x(m)^{T} \end{bmatrix} ,<br>y&#x3D;\begin{bmatrix}<br>y(1) \ y(2) \ \vdots \ y(m) \end{bmatrix}<br>$$</p>
-<p>$$<br>X为m*(n+1)的矩阵，y为m维向量<br>$$</p>
-<p><strong>logistic回归：</strong><br>与线性回归相同，但是$h_\theta(X)$定义不同。</p>
+<p><span class="math display">\[
+X=\begin{bmatrix}
+x(1)^{T} \\ x(2)^{T} \\ \vdots \\ x(m)^{T} \end{bmatrix} ,
+y=\begin{bmatrix}
+y(1) \\ y(2) \\ \vdots \\ y(m) \end{bmatrix}
+\]</span></p>
+<p><span class="math display">\[
+X为m*(n+1)的矩阵，y为m维向量
+\]</span></p>
+<p><strong>logistic回归：</strong> 与线性回归相同，但是<span class="math inline">\(h_\theta(X)\)</span>定义不同。</p>
 
         </div>
 
@@ -272,10 +311,10 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2019/12/10/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E7%AE%97%E6%B3%95/">机器学习线性回归算法</a>
+                <a class="prev" rel="prev" href="/2019/12/10/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AD%A6%E4%B9%A0%E7%9A%84Logistic%E5%9B%9E%E5%BD%92%E7%AE%97%E6%B3%95/">机器学习学习的Logistic回归算法</a>
             
             
-            <a class="next" rel="next" href="/2018/04/18/%E6%B5%8B%E8%AF%95/">测试</a>
+            <a class="next" rel="next" href="/2019/12/10/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E7%AE%97%E6%B3%95/">机器学习线性回归算法</a>
             
         </section>
 

@@ -3,7 +3,7 @@
 
 <head>
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script>
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script> -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -88,8 +88,11 @@
     });
 </script>
 <!-- 通过连接CDN加载MathJax的js代码 -->
-<script type="text/javascript" async
+<!-- <script type="text/javascript" async
         src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script> -->
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>
 
 
@@ -204,29 +207,64 @@
         </header>
 
         <div class="post-content">
-            <h1 id="问题：手写数字识别"><a href="#问题：手写数字识别" class="headerlink" title="问题：手写数字识别"></a>问题：手写数字识别</h1><p>识别图片所表示的数字。<br><img src="/2024/01/07/MLP/1.png"></p>
-<h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><p>MNIST数据集包含60000张训练图片和10000张测试图片，每张图片都有对应的标签，标签表示图片中的数字。训练集通常用于训练模型，而测试集用于评估模型的性能。<br>每张图片都是28x28像素的灰度图像，标签是0到9之间的数字，表示图片中的手写数字。即输入模型的数据是一个28x28的矩阵。</p>
-<h2 id="模型评估标准"><a href="#模型评估标准" class="headerlink" title="模型评估标准"></a>模型评估标准</h2><p><strong>准确率（Accuracy）</strong><br>准确率，指的是正确预测的样本数占总预测样本数的比值，其公式如下：<br>$$Accuracy&#x3D;\frac{正确预测样本数}{总预测样本数}$$</p>
-<h1 id="多层感知机模型"><a href="#多层感知机模型" class="headerlink" title="多层感知机模型"></a>多层感知机模型</h1><p><img src="/2024/01/07/MLP/3.png"><br>它由一个输入层、一个或多个隐藏层和一个输出层组成，每个层都包含多个神经元（也称为节点或单元）。<br><em>下面看一个单隐藏层的多层感知机模型：</em><br>输入层为28*28&#x3D;784维向量，用X表示输入的值<br>隐藏层为256维向量，用H表示隐藏层的值<br>输出层为10维向量，用O表示输出层的值，且O中数值最大的分量所对应的位置就是我们的最终预测类别    </p>
-<p>则<br>$$<br>H &#x3D; \sigma(W_hX+b_h) \ O &#x3D; W_oH + b_o<br>$$<br>其中$\sigma$是激活函数，为什么要使用激活函数？因为如果没有激活函数那么模型就变为了:<br>$$O &#x3D; W_o(W_hX+b_h) + b_o &#x3D; (W_oW_h)X + (W_ob_h + b_o) &#x3D; WX + b$$<br>就回到了一个线性模型。</p>
-<h2 id="激活函数"><a href="#激活函数" class="headerlink" title="激活函数"></a>激活函数</h2><h3 id="ReLU"><a href="#ReLU" class="headerlink" title="ReLU"></a>ReLU</h3><p>$ReLU(x) &#x3D; max(0,x)$<br><img src="/2024/01/07/MLP/4.png"><br>各种各样的激活函数可以引入非线性变换，使得模型能够学习更复杂的模式。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>模型定义为：<br>$$<br>H &#x3D; \sigma(W_hX+b_h) \ O &#x3D; W_oH + b_o<br>$$<br>其中需要通过优化算法来拟合参数$W_h,b_h,W_o,b_o$，<br>显然Wh可以看作一个256x784的矩阵，bh是一个256维的向量，Wo是一个10x256的矩阵，bo是一个10维的向量。</p>
-<h1 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h1><h2 id="交叉熵损失函数（Cross-Entropy-Loss）"><a href="#交叉熵损失函数（Cross-Entropy-Loss）" class="headerlink" title="交叉熵损失函数（Cross-Entropy Loss）"></a>交叉熵损失函数（Cross-Entropy Loss）</h2><p>多分类问题的损失函数通常用于衡量模型在将样本分配到多个类别中的准确程度。以下是一些常见的多分类问题的损失函数：</p>
-<p> $ \text{CrossEntropyLoss} &#x3D; -\sum_{i&#x3D;1}^{C} y_i\log(p_i) $<br>其中C是类别数，y是实际类别的one-hot编码，$y_i$就是y的第i维数值，p是模型的输出，$p_i$就是p的第i维数值<br>即在我们的问题中C&#x3D;10，由于我们有10个类别，例如类别3的one-hot编码就是$[0,0,0,1,0,0,0,0,0,0]$</p>
-<h1 id="优化算法"><a href="#优化算法" class="headerlink" title="优化算法"></a>优化算法</h1><h2 id="SGD"><a href="#SGD" class="headerlink" title="SGD"></a>SGD</h2><p>它是梯度下降的一种变体，SGD每次只使用一个样本（或一个小批量样本）来更新模型参数。</p>
-<p>SGD（Stochastic Gradient Descent）的更新规则可以用以下的数学公式表示：</p>
-<p>给定目标函数 $ J(\theta) $，其中 $ \theta $ 表示模型的参数，SGD的参数更新规则如下：</p>
-<p>$ \theta_{t+1} &#x3D; \theta_t - \eta \nabla J(\theta_t; x^{(i)}, y^{(i)}) $</p>
+            <h1 id="问题手写数字识别">问题：手写数字识别</h1>
+<p>识别图片所表示的数字。 <img src="/2024/01/07/MLP/1.png"> ## 数据集
+MNIST数据集包含60000张训练图片和10000张测试图片，每张图片都有对应的标签，标签表示图片中的数字。训练集通常用于训练模型，而测试集用于评估模型的性能。<br>
+每张图片都是28x28像素的灰度图像，标签是0到9之间的数字，表示图片中的手写数字。即输入模型的数据是一个28x28的矩阵。</p>
+<h2 id="模型评估标准">模型评估标准</h2>
+<p><strong>准确率（Accuracy）</strong>
+准确率，指的是正确预测的样本数占总预测样本数的比值，其公式如下： <span class="math display">\[Accuracy=\frac{正确预测样本数}{总预测样本数}\]</span></p>
+<h1 id="多层感知机模型">多层感知机模型</h1>
+<p><img src="/2024/01/07/MLP/3.png">
+它由一个输入层、一个或多个隐藏层和一个输出层组成，每个层都包含多个神经元（也称为节点或单元）。<br>
+<em>下面看一个单隐藏层的多层感知机模型：</em><br>
+输入层为28*28=784维向量，用X表示输入的值<br>
+隐藏层为256维向量，用H表示隐藏层的值<br>
+输出层为10维向量，用O表示输出层的值，且O中数值最大的分量所对应的位置就是我们的最终预测类别</p>
+<p>则 <span class="math display">\[
+H = \sigma(W_hX+b_h) \\ O = W_oH + b_o
+\]</span> 其中<span class="math inline">\(\sigma\)</span>是激活函数，为什么要使用激活函数？因为如果没有激活函数那么模型就变为了:
+<span class="math display">\[O = W_o(W_hX+b_h) + b_o = (W_oW_h)X +
+(W_ob_h + b_o) = WX + b\]</span> 就回到了一个线性模型。</p>
+<h2 id="激活函数">激活函数</h2>
+<h3 id="relu">ReLU</h3>
+<p><span class="math inline">\(ReLU(x) = max(0,x)\)</span><br>
+<img src="/2024/01/07/MLP/4.png">
+各种各样的激活函数可以引入非线性变换，使得模型能够学习更复杂的模式。</p>
+<h2 id="总结">总结</h2>
+<p>模型定义为： <span class="math display">\[
+H = \sigma(W_hX+b_h) \\ O = W_oH + b_o
+\]</span> 其中需要通过优化算法来拟合参数<span class="math inline">\(W_h,b_h,W_o,b_o\)</span>，
+显然Wh可以看作一个256x784的矩阵，bh是一个256维的向量，Wo是一个10x256的矩阵，bo是一个10维的向量。</p>
+<h1 id="损失函数">损失函数</h1>
+<h2 id="交叉熵损失函数cross-entropy-loss">交叉熵损失函数（Cross-Entropy
+Loss）</h2>
+<p>多分类问题的损失函数通常用于衡量模型在将样本分配到多个类别中的准确程度。以下是一些常见的多分类问题的损失函数：</p>
+<p>$ = -_{i=1}^{C} y_i(p_i) $<br>
+其中C是类别数，y是实际类别的one-hot编码，<span class="math inline">\(y_i\)</span>就是y的第i维数值，p是模型的输出，<span class="math inline">\(p_i\)</span>就是p的第i维数值
+即在我们的问题中C=10，由于我们有10个类别，例如类别3的one-hot编码就是<span class="math inline">\([0,0,0,1,0,0,0,0,0,0]\)</span></p>
+<h1 id="优化算法">优化算法</h1>
+<h2 id="sgd">SGD</h2>
+<p>它是梯度下降的一种变体，SGD每次只使用一个样本（或一个小批量样本）来更新模型参数。</p>
+<p>SGD（Stochastic Gradient
+Descent）的更新规则可以用以下的数学公式表示：</p>
+<p>给定目标函数 $ J() $，其中 $ $
+表示模型的参数，SGD的参数更新规则如下：</p>
+<p>$ _{t+1} = _t - J(_t; x^{(i)}, y^{(i)}) $</p>
 <p>在这个公式中：</p>
 <ul>
-<li>$ \theta_{t+1} $ 是更新后的参数。</li>
-<li>$ \theta_t $ 是当前的参数。</li>
-<li>$ \eta $ 是学习率（learning rate），用于控制每次更新的步长。</li>
-<li>$ \nabla J(\theta_t; x^{(i)}, y^{(i)}) $ 是目标函数关于参数 $ \theta_t $ 在样本 $ (x^{(i)}, y^{(i)}) $ 上的梯度。</li>
+<li>$ _{t+1} $ 是更新后的参数。</li>
+<li>$ _t $ 是当前的参数。</li>
+<li>$ $ 是学习率（learning rate），用于控制每次更新的步长。</li>
+<li>$ J(_t; x^{(i)}, y^{(i)}) $ 是目标函数关于参数 $ _t $ 在样本 $
+(x^{(i)}, y^{(i)}) $ 上的梯度。</li>
 </ul>
-<p>$ (x^{(i)}, y^{(i)}) $ 表示从训练集中随机选择的一个样本。这就是“随机”（Stochastic）梯度下降的来源，因为每次迭代都只使用一个样本来进行参数更新。</p>
-<h1 id="训练模型"><a href="#训练模型" class="headerlink" title="训练模型"></a>训练模型</h1><p>最后模型精确率为97.79</p>
+<p>$ (x^{(i)}, y^{(i)}) $
+表示从训练集中随机选择的一个样本。这就是“随机”（Stochastic）梯度下降的来源，因为每次迭代都只使用一个样本来进行参数更新。</p>
+<h1 id="训练模型">训练模型</h1>
+<p>最后模型精确率为97.79</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line"><span class="keyword">from</span> torch.utils <span class="keyword">import</span> data</span><br><span class="line"><span class="keyword">from</span> torchvision <span class="keyword">import</span> datasets, transforms</span><br><span class="line"></span><br><span class="line">batch_size = <span class="number">64</span></span><br><span class="line">epochs = <span class="number">10</span></span><br><span class="line">lr = <span class="number">0.5</span></span><br><span class="line"></span><br><span class="line">transform = transforms.Compose([transforms.Resize((<span class="number">28</span>,<span class="number">28</span>)) ,transforms.ToTensor()])</span><br><span class="line">train_data = datasets.MNIST(<span class="string">&#x27;./data/minst&#x27;</span>, train=<span class="literal">True</span>, transform=transform, download=<span class="literal">True</span>)</span><br><span class="line">train_iter = data.DataLoader(train_data, batch_size=batch_size, num_workers=<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Net</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, *args, **kwargs</span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        <span class="built_in">super</span>().__init__(*args, **kwargs)</span><br><span class="line"></span><br><span class="line">        self.f = nn.Flatten()</span><br><span class="line">        self.l = nn.Sequential(nn.Linear(<span class="number">28</span>*<span class="number">28</span>, <span class="number">256</span>), nn.ReLU(), nn.Linear(<span class="number">256</span>, <span class="number">10</span>))</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        x = self.f(x)</span><br><span class="line">        x = x.reshape((-<span class="number">1</span>,<span class="number">28</span>*<span class="number">28</span>))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> self.l(x)</span><br><span class="line"></span><br><span class="line">net = Net()</span><br><span class="line">loss_fn = nn.CrossEntropyLoss()</span><br><span class="line">updater = torch.optim.SGD(net.parameters(), lr=lr)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">device = torch.device(<span class="string">&#x27;cuda&#x27;</span>)</span><br><span class="line">net = net.to(device)</span><br><span class="line"><span class="keyword">for</span> e <span class="keyword">in</span> <span class="built_in">range</span>(epochs):</span><br><span class="line">    <span class="keyword">for</span> x,y <span class="keyword">in</span> train_iter:</span><br><span class="line">        x,y = x.to(device), y.to(device)</span><br><span class="line">        y_hat = net(x)</span><br><span class="line">        loss = loss_fn(y_hat, y)</span><br><span class="line">        updater.zero_grad()</span><br><span class="line">        loss.backward()</span><br><span class="line">        updater.step()</span><br><span class="line">        </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;loss: &#x27;</span>, loss.item())</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">test_data = datasets.MNIST(<span class="string">&#x27;./data/minst&#x27;</span>, train=<span class="literal">False</span>, transform=transform, download=<span class="literal">True</span>)</span><br><span class="line">test_iter = data.DataLoader(test_data, batch_size=<span class="number">1</span>, num_workers=<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">accuracy</span>(<span class="params">net, data_iter</span>):</span><br><span class="line">    count = <span class="number">0</span></span><br><span class="line">    <span class="built_in">all</span> = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> x,y <span class="keyword">in</span> data_iter:</span><br><span class="line">        x,y = x.to(device), y.to(device)</span><br><span class="line">        y_hat = net(x)</span><br><span class="line">        maxs, indexs = torch.<span class="built_in">max</span>(y_hat, dim=<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">if</span> indexs==y: count+=<span class="number">1</span></span><br><span class="line">        <span class="built_in">all</span> += <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">all</span>, count</span><br><span class="line"></span><br><span class="line">accuracy(net, test_iter)</span><br><span class="line"><span class="comment"># 输出 (10000, 9779)</span></span><br></pre></td></tr></table></figure>
+
         </div>
 
         

@@ -3,7 +3,7 @@
 
 <head>
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script>
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script> -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -88,8 +88,11 @@
     });
 </script>
 <!-- 通过连接CDN加载MathJax的js代码 -->
-<script type="text/javascript" async
+<!-- <script type="text/javascript" async
         src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script> -->
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>
 
 
@@ -211,19 +214,23 @@
         </header>
 
         <div class="post-content">
-            <h1 id="MESSAGE-ID"><a href="#MESSAGE-ID" class="headerlink" title="MESSAGE ID"></a>MESSAGE ID</h1><p><img src="/2022/07/02/OCPP%E5%8D%8F%E8%AE%AE%E4%BC%9A%E8%AF%9D%E6%B5%81%E7%A8%8B/message.png" alt="message文档中的解释"></p>
+            <h1 id="message-id">MESSAGE ID</h1>
+<p><img src="/2022/07/02/OCPP%E5%8D%8F%E8%AE%AE%E4%BC%9A%E8%AF%9D%E6%B5%81%E7%A8%8B/message.png" alt="message文档中的解释">
+- 消息id是一个websocket连接中每次CALL与CALL_RESULT相同 -
+每次的CALL的消息id是不同</p>
+<h1 id="start-stop-充电流程">Start Stop 充电流程</h1>
+<p><em>目前ocpp
+server与充电桩远程开始充电与远程结束充电的整套流程是：</em>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">Client call BootNotification</span><br><span class="line">Server call_result BootNotification Success!</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Server call RemoteStartTransaction</span><br><span class="line">Client call_result accepted</span><br><span class="line"></span><br><span class="line">Client call StartTranscation</span><br><span class="line">Server call_result accepted</span><br><span class="line"></span><br><span class="line">Client call StatusNotification (<span class="string">&quot;status&quot;</span>:<span class="string">&quot;Preparing&quot;</span> <span class="keyword">or</span> <span class="string">&quot;Charging&quot;</span> <span class="keyword">or</span> <span class="string">&quot;Finishing&quot;</span> <span class="keyword">or</span> …)</span><br><span class="line">Server call_result <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">Client 重复 call&#123;</span><br><span class="line">    Client call MeterValues</span><br><span class="line">    Server call_result <span class="literal">None</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Server call RemoteStopTransaction</span><br><span class="line">Client call_result Accepted</span><br><span class="line"></span><br><span class="line">Client call StopTransaction</span><br><span class="line">Server call_result Accepted</span><br><span class="line"></span><br><span class="line">Client call StatusNotification</span><br><span class="line">Server call_result <span class="literal">None</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="功能">功能</h1>
 <ul>
-<li>消息id是一个websocket连接中每次CALL与CALL_RESULT相同</li>
-<li>每次的CALL的消息id是不同</li>
-</ul>
-<h1 id="Start-Stop-充电流程"><a href="#Start-Stop-充电流程" class="headerlink" title="Start Stop 充电流程"></a>Start Stop 充电流程</h1><p> <em>目前ocpp server与充电桩远程开始充电与远程结束充电的整套流程是：</em></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">Client call BootNotification</span><br><span class="line">Server call_result BootNotification Success!</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Server call RemoteStartTransaction</span><br><span class="line">Client call_result accepted</span><br><span class="line"></span><br><span class="line">Client call StartTranscation</span><br><span class="line">Server call_result accepted</span><br><span class="line"></span><br><span class="line">Client call StatusNotification (<span class="string">&quot;status&quot;</span>:<span class="string">&quot;Preparing&quot;</span> <span class="keyword">or</span> <span class="string">&quot;Charging&quot;</span> <span class="keyword">or</span> <span class="string">&quot;Finishing&quot;</span> <span class="keyword">or</span> …)</span><br><span class="line">Server call_result <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">Client 重复 call&#123;</span><br><span class="line">    Client call MeterValues</span><br><span class="line">    Server call_result <span class="literal">None</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Server call RemoteStopTransaction</span><br><span class="line">Client call_result Accepted</span><br><span class="line"></span><br><span class="line">Client call StopTransaction</span><br><span class="line">Server call_result Accepted</span><br><span class="line"></span><br><span class="line">Client call StatusNotification</span><br><span class="line">Server call_result <span class="literal">None</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h1><ul>
 <li>BOOT NOTIFICATION</li>
 <li>HEARTBEAT</li>
 </ul>
-<p><img src="/2022/07/02/OCPP%E5%8D%8F%E8%AE%AE%E4%BC%9A%E8%AF%9D%E6%B5%81%E7%A8%8B/2.png" alt="运行图"></p>
+<figure>
+<img src="/2022/07/02/OCPP%E5%8D%8F%E8%AE%AE%E4%BC%9A%E8%AF%9D%E6%B5%81%E7%A8%8B/2.png" alt="运行图">
+<figcaption aria-hidden="true">运行图</figcaption>
+</figure>
 
         </div>
 
