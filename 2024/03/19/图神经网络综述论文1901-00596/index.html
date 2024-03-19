@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script> -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-XJ388BQHX4');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="zoyass">
+
+
+    <meta name="subtitle" content="没有绝对，不用在意，好好享受一切">
+
+
+    <meta name="description" content="大家好好休息">
+
+
+    <meta name="keywords" content="BLOG">
+
+
+<title>A Comprehensive Survey on Graph Neural Networks | 1214</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<!-- <script type="text/javascript" async
+        src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script> -->
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">A Comprehensive Survey on Graph Neural Networks</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">zoyass</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">三月 19, 2024&nbsp;&nbsp;11:49:55</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>论文：https://arxiv.org/abs/1901.00596<br>
+知乎翻译：https://zhuanlan.zhihu.com/p/538914712<br>
+https://web.stanford.edu/class/cs224w/index.html</p>
+<h1 id="论文">论文</h1>
+<ul>
+<li><p>recurrent graph neural networks</p></li>
+<li><p>convolutional graph neural networks</p></li>
+<li><p>graph autoencoders</p></li>
+<li><p>spatial-temporal graph neural networks 时空图神经网络</p></li>
+</ul>
+<p>第二节 背景</p>
+<p>第三节 分类</p>
+<p>第四-七节 概述模型</p>
+<p>第八节 应用</p>
+<p>第九节 未来</p>
+<h1 id="图的不同处理方式">图的不同处理方式：</h1>
+<ul>
+<li><p>graph kernel methods</p>
+<p>处理图分类时，通过核方法（kernel）测量图对的相似性。然后支持向量机就可以起到作用了。</p>
+<p>These methods employ a kernel function to measure the similarity
+between pairs of graphs so that kernel-based algorithms like support
+vector machines can be used for supervised learning on graphs.</p>
+<p>graph
+kernel同样是将nodes映射到向量空间。但是这个映射函数是确定的。</p></li>
+<li><p>Graph neural networks</p></li>
+</ul>
+<h1 id="define">define</h1>
+<ul>
+<li>Spatial-Temporal Graph</li>
+</ul>
+<p>A spatial-temporal graph is an attributed graph where the node
+attributes change dynamically over time. The spatial-temporal graph is
+defined as G(t) = (V, E,X(t)) with X(t) ∈ Rn×d.
+节点属性随时间变化的图</p>
+<h1 id="模型分类">模型分类</h1>
+<h2 id="taxonomy-of-graph-neural-networks">Taxonomy of Graph Neural
+Networks</h2>
+<ul>
+<li>recurrent graph neural networks</li>
+</ul>
+<p>在GNN里面加入GRU等RNN模型来传递基于时间的消息。</p>
+<ul>
+<li>convolutional graph neural networks</li>
+</ul>
+<p>分为基础图谱理论的卷积（GCN）和空间卷积（GAT不确定）</p>
+<ul>
+<li>graph autoencoders GAE</li>
+</ul>
+<p>encode nodes/graphs into a latent vector space and reconstruct graph
+data from the encoded information.</p>
+<p>encode nodes/graphs
+到潜在的向量空间（有没有可能能称为特征空间），然后根据encode的信息来重构图数据。</p>
+<p>这是一个unsupervised learning的模型，可以实现图聚类等任务</p>
+<p><img src="/2024/03/19/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%BB%BC%E8%BF%B0%E8%AE%BA%E6%96%871901-00596/image-20240316202419200.png"></p>
+<ul>
+<li>spatial-temporal graph neural networks STGNN 时空图神经网络</li>
+</ul>
+<p>完成人类动作识别(human action
+recognition)等任务，处理的是spatial-temporal graphs（时空图）</p>
+<p>The key idea of STGNNs is to consider spatial dependency and temporal
+dependency at the same time.</p>
+<p>STGNNs 同时考虑空间和时间</p>
+<p>Many current approaches integrate graph convolutions to capture
+spatial dependency with <strong>RNNs or CNNs</strong> to model the
+temporal dependency.</p>
+<p>integrate 合并；成为一体</p>
+<p><img src="/2024/03/19/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%BB%BC%E8%BF%B0%E8%AE%BA%E6%96%871901-00596/image-20240316203114603.png"></p>
+<h2 id="frameworks">Frameworks</h2>
+<ul>
+<li>outputs relate to node regression and node classification
+tasks.</li>
+<li>outputs relate to the edge classification and link prediction
+tasks.</li>
+<li>outputs relate to the graph classification task.</li>
+</ul>
+<p><strong>Training Frameworks</strong></p>
+<ul>
+<li>Semi-supervised learning for node-level classification
+半监督学习的node-level分类（GCN）比如Cora数据集。</li>
+<li>Supervised learning for graph-level classification
+监督学习的图分类</li>
+<li>Unsupervised learning for graph embedding 无监督学习的图嵌入</li>
+</ul>
+<p>只有边信息没有点信息时，看的很模糊</p>
+<h1 id="recurrent-graph-neural-networks-recgnns">RECURRENT GRAPH NEURAL
+NETWORKS RecGNNs</h1>
+<p><strong>Readout</strong></p>
+<p>Readout函数是用来将节点的特征聚合起来</p>
+<p>They apply the same set of parameters recurrently over nodes in a
+graph to extract high-level node representations.</p>
+<p>对图的每个节点使用相同的一组参数来抽取节点特征。</p>
+<p><img src="/2024/03/19/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%BB%BC%E8%BF%B0%E8%AE%BA%E6%96%871901-00596/image-20240316214523465.png"></p>
+<h2 id="ggnn">GGNN</h2>
+<p><img src="/2024/03/19/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%BB%BC%E8%BF%B0%E8%AE%BA%E6%96%871901-00596/image-20240316222935556.png"></p>
+<p>这里注意是使用的循环而不是时序。定义 <span class="math display">\[
+h_v^0=x_v
+\]</span> 但是在使用时间反向传播（BPTT）时不好处理。</p>
+<p>下图是原论文中The basic recurrence of the propagation model is</p>
+<p><img src="/2024/03/19/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%BB%BC%E8%BF%B0%E8%AE%BA%E6%96%871901-00596/image-20240316224336220.png"></p>
+<p>未完成</p>
+<h1 id="convolutional-graph-neural-networks-gcn">CONVOLUTIONAL GRAPH
+NEURAL NETWORKS GCN</h1>
+<h2 id="spectral-based-convgnns">Spectral-based ConvGNNs</h2>
+<p>normalized graph Laplacian matrix是一个实对称半正定矩阵 <span class="math display">\[
+L = I_n-D^{-1/2}AD^{-1/2} \\
+分解为 L=UΛU^T,U=[u_0,u_1,....,u_{n-1}] \\
+且UU^T=I \\
+定义graph\ Fourier\ transform:f(X)=U^TX \\
+inverse graph Fourier transform: f^{-1}(\hat X)=U\hat X
+\]</span> The graph Fourier transform projects the input graph signal to
+the orthonormal space where the basis is formed by eigenvectors of the
+normalized graph Laplacian.</p>
+<p>orthonormal space 正交空间</p>
+<p>Elements of the transformed signal x hat are the coordinates of the
+graph signal in the new space so that the input signal can be
+represented as <span class="math display">\[
+x  =\sum_{i}{\hat x_iu_i}
+\]</span></p>
+<p>which is exactly the inverse graph Fourier transform.</p>
+<p>即x hat 是x在正交空间的坐标。为什么x hat的在正交基下的坐标为 <span class="math display">\[
+\hat x = [u_0^Tx, u_1^Tx,...,u_{n-1}^Tx]\\
+\]</span> <img src="/2024/03/19/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%BB%BC%E8%BF%B0%E8%AE%BA%E6%96%871901-00596/6d6cbb88cc20d6cadde8791aaaaeae7.jpg"></p>
+<p><img src="/2024/03/19/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%BB%BC%E8%BF%B0%E8%AE%BA%E6%96%871901-00596/image-20240317132333194.png"></p>
+<p>上图解释了谱域卷积的定义，不同的模型对应不同的gθ.</p>
+<p><img src="/2024/03/19/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%BB%BC%E8%BF%B0%E8%AE%BA%E6%96%871901-00596/image-20240317134039899.png"></p>
+<p>隐藏层的传递如上图。相当于是在做特征融合。和MLP类似。这样定义的θ将会是一个三维张量。第一个维度代表它的channels</p>
+<p>原文：θ(i,j) is a diagonal matrix filled with learnable
+parameters.即是一个对角矩阵</p>
+<p>在GCN中θ(i,j)会是一个标量。</p>
+<h3 id="gcn">GCN</h3>
+<p><img src="/2024/03/19/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%BB%BC%E8%BF%B0%E8%AE%BA%E6%96%871901-00596/a68ed611d51074db0049a2c0eccfdb4.jpg"></p>
+<p>上图有一些错误：</p>
+<p><img src="/2024/03/19/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%BB%BC%E8%BF%B0%E8%AE%BA%E6%96%871901-00596/image-20240317161839406.png"></p>
+<p>应该是： <span class="math display">\[
+=\sum_{k=o}^Kθ_k^，T_k(\hat L) \\
+当取K=1是，依然是与上图相同的结果
+\]</span></p>
+<p>观察GCN的θ(i,j)=θΛ，参数减少了很多。这里也是一个有意思的点！</p>
+<p>缺点：</p>
+<p>Due to the eigen-decomposition of the Laplacian matrix, Spectral CNN
+faces three limitations. First, any perturbation to a graph results in a
+change of eigenbasis. Second, the learned filters are domain dependent,
+meaning they cannot be applied to a graph with a different
+structure.</p>
+<ul>
+<li>图的结构变动会导致基的变化</li>
+<li>不能用于具有不同图结构的数据集</li>
+</ul>
+<h3 id="dgcn">DGCN</h3>
+<h2 id="spatial-based-convgnns">Spatial-based ConvGNNs</h2>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>zoyass</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://www.zoyass.site/2024/03/19/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%BB%BC%E8%BF%B0%E8%AE%BA%E6%96%871901-00596/">https://www.zoyass.site/2024/03/19/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%BB%BC%E8%BF%B0%E8%AE%BA%E6%96%871901-00596/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Pytorch/"># Pytorch</a>
+                    
+                        <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"># 读书笔记</a>
+                    
+                        <a href="/tags/%E8%AE%BA%E6%96%87/"># 论文</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2024/03/10/Graph-Convolutional-Networks-GCN/">Graph Convolutional Networks(GCN)</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© zoyass | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+            
+                <a href="/diary" target="_self">|鸟</a>  
+            
+        </span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
