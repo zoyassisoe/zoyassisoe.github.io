@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script> -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-XJ388BQHX4');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="zoyass">
+
+
+    <meta name="subtitle" content="没有绝对，不用在意，好好享受一切">
+
+
+    <meta name="description" content="大家好好休息">
+
+
+    <meta name="keywords" content="BLOG">
+
+
+<title>ChebNet实现(pytorch) | 1214</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<!-- <script type="text/javascript" async
+        src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script> -->
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">ChebNet实现(pytorch)</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">zoyass</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">三月 22, 2024&nbsp;&nbsp;14:50:00</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>论文地址：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1606.09375.pdf">1606.09375</a><br>
+<img src="/2024/03/22/ChebNet%E5%AE%9E%E7%8E%B0-pytorch/2.png"></p>
+<h1 id="踩坑">踩坑</h1>
+<ul>
+<li>参数的初始化
+开始的时候我使用的参数初始化方式为nn.init.normal_(self.kernels)，结果测试集精确度一直保持在0.4左右，改为pytorch默认的初始化方法精确度提高到了0.77左右。</li>
+</ul>
+<h1 id="加载数据">加载数据</h1>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> scipy.sparse <span class="keyword">as</span> sp</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">sparse_mx_to_torch_sparse_tensor</span>(<span class="params">sparse_mx</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Convert a scipy sparse matrix to a torch sparse tensor.&quot;&quot;&quot;</span></span><br><span class="line">    sparse_mx = sparse_mx.tocoo().astype(np.float32)</span><br><span class="line">    indices = torch.from_numpy(</span><br><span class="line">        np.vstack((sparse_mx.row, sparse_mx.col)).astype(np.int64))</span><br><span class="line">    values = torch.from_numpy(sparse_mx.data)</span><br><span class="line">    shape = torch.Size(sparse_mx.shape)</span><br><span class="line">    <span class="keyword">return</span> torch.sparse_coo_tensor(indices, values, shape)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">load_cora</span>(<span class="params">adj_path, node_path</span>):</span><br><span class="line">    nodes = np.genfromtxt(node_path, dtype=<span class="built_in">str</span>)</span><br><span class="line">    <span class="comment"># 节点特征向量</span></span><br><span class="line">    features = sp.csr_matrix(nodes[:,<span class="number">1</span>:-<span class="number">1</span>], dtype=np.float64)</span><br><span class="line">    <span class="comment"># 节点编号</span></span><br><span class="line">    idx = np.array(nodes[:,<span class="number">0</span>], dtype=np.int32)</span><br><span class="line">    idx_map = &#123;j:i <span class="keyword">for</span> i,j <span class="keyword">in</span> <span class="built_in">enumerate</span>(idx)&#125;</span><br><span class="line">    <span class="comment"># 标签</span></span><br><span class="line">    labels = nodes[:,-<span class="number">1</span>]</span><br><span class="line">    classes = <span class="built_in">set</span>(<span class="built_in">list</span>(labels))</span><br><span class="line">    classes_map = &#123;c:i <span class="keyword">for</span> i,c <span class="keyword">in</span> <span class="built_in">enumerate</span>(classes)&#125;</span><br><span class="line">    labels = np.array(<span class="built_in">list</span>(<span class="built_in">map</span>(classes_map.get, labels)))</span><br><span class="line"></span><br><span class="line">    edges = np.genfromtxt(adj_path, dtype=np.int32)</span><br><span class="line">    <span class="comment"># 将论文索引与顶点编号对应，然后使用稀疏矩阵</span></span><br><span class="line">    adj = np.array(<span class="built_in">list</span>(<span class="built_in">map</span>(idx_map.get, edges.flatten()))).reshape(edges.shape)</span><br><span class="line">    <span class="comment"># 此时构造的矩阵是一个上三角矩阵，因为论文编号小的论文是不会引用比它编号大的论文</span></span><br><span class="line">    coo_adj = sp.coo_matrix((np.ones(adj.shape[<span class="number">0</span>]), (adj[:,<span class="number">0</span>], adj[:,<span class="number">1</span>])), </span><br><span class="line">                         shape=(idx.shape[<span class="number">0</span>], idx.shape[<span class="number">0</span>]), dtype=np.int32)</span><br><span class="line">    <span class="comment"># 对称邻接矩阵</span></span><br><span class="line">    A = coo_adj+coo_adj.T</span><br><span class="line"></span><br><span class="line">    A, features = [sparse_mx_to_torch_sparse_tensor(e) <span class="keyword">for</span> e <span class="keyword">in</span> [A, features]]</span><br><span class="line">    labels = torch.LongTensor(labels)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> A, features, labels, idx_map, classes_map</span><br></pre></td></tr></table></figure>
+<h1 id="chebnet">ChebNet</h1>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ChebConv</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, in_channels, out_channels, k, normalize</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        self.normalize = normalize</span><br><span class="line">        self.kernels = nn.Parameter(torch.FloatTensor(k+<span class="number">1</span>, in_channels, out_channels))</span><br><span class="line">        <span class="comment"># self.reset_parameter()</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># def reset_parameter(self):</span></span><br><span class="line">    <span class="comment">#     nn.init.normal_(self.kernels)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, X, A</span>):</span><br><span class="line">        L = ChebConv.get_laplacian(A, self.normalize)</span><br><span class="line">        <span class="comment"># return L@X@self.kernels</span></span><br><span class="line">        o = []</span><br><span class="line">        <span class="keyword">for</span> i,w <span class="keyword">in</span> <span class="built_in">enumerate</span>(self.kernels):</span><br><span class="line">            o.append(self.chebyshev_polynomials(L,i)@X@w)</span><br><span class="line">        <span class="keyword">return</span> torch.stack(o, dim=<span class="number">0</span>).<span class="built_in">sum</span>(dim=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">chebyshev_polynomials</span>(<span class="params">self, L, k</span>):</span><br><span class="line">        <span class="keyword">if</span> k == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> torch.eye(L.shape[<span class="number">0</span>]).to(L.device)</span><br><span class="line">        <span class="keyword">elif</span> k == <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> L</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">2</span>*L@self.chebyshev_polynomials(L,k-<span class="number">1</span>)-self.chebyshev_polynomials(L,k-<span class="number">2</span>)</span><br><span class="line">    </span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get_laplacian</span>(<span class="params">A, normalize</span>):</span><br><span class="line">        <span class="keyword">if</span> normalize:</span><br><span class="line">            <span class="comment"># I = torch.eye(A.shape[0], dtype=A.dtype).to(A.device)</span></span><br><span class="line">            <span class="comment"># A = A + I</span></span><br><span class="line">            D = torch.diag(torch.<span class="built_in">sum</span>(A, dim=<span class="number">0</span>)**(-<span class="number">1</span>/<span class="number">2</span>))</span><br><span class="line">            L = -D@A@D</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            D = torch.diag(A.<span class="built_in">sum</span>(<span class="number">1</span>))</span><br><span class="line">            L = D - A</span><br><span class="line">        <span class="keyword">return</span> L</span><br><span class="line">    </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ChebNet</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, C, H, F, k, normalize, dropout_p</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        self.conv1 = ChebConv(C, H, k, normalize)</span><br><span class="line">        self.conv2 = ChebConv(H, F, k, normalize)</span><br><span class="line">        self.dropout = nn.Dropout(p=dropout_p)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, X, A</span>):</span><br><span class="line">        h = F.relu(self.conv1(X, A))</span><br><span class="line">        <span class="keyword">if</span> self.training:</span><br><span class="line">            h = self.dropout(h)</span><br><span class="line">        o = self.conv2(h, A)</span><br><span class="line">        <span class="keyword">return</span> o</span><br></pre></td></tr></table></figure>
+<h1 id="train">Train</h1>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">test_accuracy</span>(<span class="params">net, X, Y, A</span>):</span><br><span class="line">    net.<span class="built_in">eval</span>()</span><br><span class="line">    outs = net(X, A).argmax(dim=<span class="number">1</span>)</span><br><span class="line">    train_outs, test_outs = outs[:<span class="number">140</span>], outs[<span class="number">500</span>:<span class="number">1500</span>]</span><br><span class="line">    train_labels, test_labels = Y[:<span class="number">140</span>], Y[<span class="number">500</span>:<span class="number">1500</span>]</span><br><span class="line">    train_score = train_outs[train_outs==train_labels].shape[<span class="number">0</span>]/train_outs.shape[<span class="number">0</span>]</span><br><span class="line">    test_score = test_outs[test_outs==test_labels].shape[<span class="number">0</span>]/test_outs.shape[<span class="number">0</span>]</span><br><span class="line">    <span class="keyword">return</span> train_score, test_score</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    <span class="keyword">from</span> utils <span class="keyword">import</span> load_cora</span><br><span class="line">    adj_path = <span class="string">&#x27;Graph/data/Cora/cora.cites&#x27;</span></span><br><span class="line">    node_path = <span class="string">&#x27;Graph/data/Cora/cora.content&#x27;</span></span><br><span class="line">    A, X, Y, idx_map, classes_map = load_cora(adj_path, node_path)</span><br><span class="line"></span><br><span class="line">    device = torch.device(<span class="string">&#x27;cuda&#x27;</span>)</span><br><span class="line">    A, X, Y = [e.to(device) <span class="keyword">for</span> e <span class="keyword">in</span> [A.to_dense(), X, Y]]</span><br><span class="line">    epochs, lr, weight_decay =<span class="number">200</span>, <span class="number">0.01</span>, <span class="number">5e-4</span></span><br><span class="line"></span><br><span class="line">    net = ChebNet(X.shape[<span class="number">1</span>], <span class="number">32</span>, <span class="built_in">len</span>(classes_map), <span class="number">2</span>, <span class="literal">True</span>, <span class="number">0.2</span>).to(device)</span><br><span class="line">    optimizer = torch.optim.Adam(net.parameters(), lr=lr, weight_decay=weight_decay)</span><br><span class="line">    loss_fn = torch.nn.CrossEntropyLoss()</span><br><span class="line"></span><br><span class="line">    loss_list = []</span><br><span class="line">    t_total = time.time()</span><br><span class="line">    <span class="keyword">for</span> e <span class="keyword">in</span> <span class="built_in">range</span>(epochs):</span><br><span class="line">        y_hat = net(X, A)</span><br><span class="line">        optimizer.zero_grad()</span><br><span class="line">        loss = loss_fn(y_hat[<span class="built_in">range</span>(<span class="number">140</span>)], Y[<span class="built_in">range</span>(<span class="number">140</span>)])</span><br><span class="line">        loss.backward()</span><br><span class="line">        optimizer.step()</span><br><span class="line">        </span><br><span class="line">        loss_list.append(loss.item())</span><br><span class="line">        <span class="keyword">if</span> e%<span class="number">10</span>==<span class="number">0</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&#x27;epoch:<span class="subst">&#123;e&#125;</span>, loss:<span class="subst">&#123;loss.item()&#125;</span>&#x27;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Total time elapsed: &#123;:.4f&#125;s&quot;</span>.<span class="built_in">format</span>(time.time() - t_total))</span><br><span class="line">    <span class="built_in">print</span>(test_accuracy(net, X, Y, A))</span><br><span class="line">    plt.plot(loss_list)</span><br><span class="line">    plt.show()</span><br></pre></td></tr></table></figure>
+<p>输出精度为(1.0, 0.767)</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>zoyass</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://www.zoyass.site/2024/03/22/ChebNet%E5%AE%9E%E7%8E%B0-pytorch/">https://www.zoyass.site/2024/03/22/ChebNet%E5%AE%9E%E7%8E%B0-pytorch/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Pytorch/"># Pytorch</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2024/03/19/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%BB%BC%E8%BF%B0%E8%AE%BA%E6%96%871901-00596/">A Comprehensive Survey on Graph Neural Networks</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© zoyass | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+            
+                <a href="/diary" target="_self">|鸟</a>  
+            
+        </span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
