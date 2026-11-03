@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ388BQHX4"></script> -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-XJ388BQHX4');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="zoyass">
+
+
+    <meta name="subtitle" content="没有绝对，不用在意，好好享受一切">
+
+
+    <meta name="description" content="机械臂 TCP、眼在手上、眼在手外标定的坐标关系，以及 D405、D435 深度相机的数据与验收记录。">
+
+
+    <meta name="keywords" content="BLOG">
+
+
+<title>机械臂标定记录：TCP、手眼和眼在手外 | 1214</title>
+<link rel="canonical" href="https://zoyassisoe.github.io/2026/11/03/robot-arm-calibration/">
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<!-- <script type="text/javascript" async
+        src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script> -->
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">机械臂标定记录：TCP、手眼和眼在手外</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">zoyass</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="/archives/2026/11/"><time datetime="2026-11-03">十一月 3, 2026</time></a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+<p>目前用的相机是 D405 和 D435，简单整理下机械臂标定里的几个坐标关系。先从 TCP 开始，再看眼在手上、眼在手外，最后记录下深度相机的数据怎么接到机械臂上。</p>
+<h2 id="坐标怎么记">坐标怎么记</h2>
+<p>先统一记号，不然后面很容易把矩阵乘反。</p>
+<ul>
+<li><code>b</code>：机械臂基座 base。</li>
+<li><code>f</code>：法兰 flange。</li>
+<li><code>c</code>：相机 camera，具体是哪一路图像对应的光学坐标系，要写清楚。</li>
+<li><code>t</code>：标定板 target。</li>
+<li><code>tcp</code>：工具实际使用的工作坐标系。</li>
+</ul>
+<p>这里用 <span class="math inline">\({}^{a}T_b\)</span> 表示把 <strong>b 系的坐标转换到 a 系</strong>：</p>
+<p><span class="math display">\[
+p_a={}^{a}T_b p_b
+\]</span></p>
+<p>所以连续变换可以直接把中间的坐标系消掉：</p>
+<p><span class="math display">\[
+{}^{a}T_c={}^{a}T_b\,{}^{b}T_c
+\]</span></p>
+<p>齐次矩阵的逆为：</p>
+<p><span class="math display">\[
+T=\begin{bmatrix}R&amp;t\\0&amp;1\end{bmatrix},\qquad
+T^{-1}=\begin{bmatrix}R^T&amp;-R^Tt\\0&amp;1\end{bmatrix}
+\]</span></p>
+<p>注意平移部分是 <span class="math inline">\(-R^Tt\)</span>，不是直接把 <span class="math inline">\(t\)</span> 取负。</p>
+<h2 id="tcp">TCP</h2>
+<p>TCP 标定求的是工具相对于法兰的变换 <span class="math inline">\({}^{f}T_{tcp}\)</span>。比如探针的尖端，或者夹爪实际夹持中心。</p>
+<p>常见的固定点法，就是让工具尖端从不同姿态接触同一个参考点。第 <span class="math inline">\(i\)</span> 次记录到的法兰位姿为 <span class="math inline">\((R_i,t_i)\)</span>，工具尖端在法兰系的位置为 <span class="math inline">\(p_f\)</span>，固定点在基座系的位置为 <span class="math inline">\(q_b\)</span>，那么：</p>
+<p><span class="math display">\[
+R_i p_f+t_i=q_b
+\]</span></p>
+<p>整理一下：</p>
+<p><span class="math display">\[
+\begin{bmatrix}R_i&amp;-I\end{bmatrix}
+\begin{bmatrix}p_f\\q_b\end{bmatrix}=-t_i
+\]</span></p>
+<p>把多次记录堆叠起来，就可以用最小二乘解出 <span class="math inline">\(p_f\)</span> 和 <span class="math inline">\(q_b\)</span>。</p>
+<p>这里主要求出的是 TCP 的<strong>位置</strong>。工具坐标系的方向还要单独定义，比如夹爪朝前的方向、开合方向，不能因为尖端位置算出来了，就认为完整 TCP 已经确定。</p>
+<p>示教姿态要有明显的角度变化。反复采集差不多的姿态，数据虽然多，提供的约束却没有增加多少。求完以后，换几组没有参与计算的姿态，检查尖端能否继续对准参考点。具体示教方式和点数以机器人厂商为准，可以参考 <a href="https://www.universal-robots.com/manuals/EN/HTML/SW5_19/Content/prod-usr-man/software/PolyScope/content/installation_g5/teaching_TCP_position.htm">UR 的 TCP 示教说明</a>。</p>
+<h2 id="眼在手上">眼在手上</h2>
+<p>眼在手上就是相机装在末端，标定板固定不动。要求的是相机到法兰的变换：</p>
+<p><span class="math display">\[
+X={}^{f}T_c
+\]</span></p>
+<p>设第 <span class="math inline">\(i\)</span> 次法兰位姿为 <span class="math inline">\(G_i={}^{b}T_{f,i}\)</span>，PnP 算出的标定板位姿为 <span class="math inline">\(C_i={}^{c}T_{t,i}\)</span>。因为标定板相对于基座不动：</p>
+<p><span class="math display">\[
+G_iXC_i=G_jXC_j
+\]</span></p>
+<p>整理成：</p>
+<p><span class="math display">\[
+(G_j^{-1}G_i)X=X(C_jC_i^{-1})
+\]</span></p>
+<p>也就是常见的 <span class="math inline">\(AX=XB\)</span>。</p>
+<p>求出 <span class="math inline">\(X\)</span> 后，相机里的点转换到基座，需要使用拍摄这一帧时的机械臂位姿：</p>
+<p><span class="math display">\[
+p_b={}^{b}T_f\,{}^{f}T_c\,p_c
+\]</span></p>
+<p>相机跟着末端运动，<span class="math inline">\({}^{b}T_f\)</span> 就不能一直拿某个固定姿态的值。</p>
+<h2 id="眼在手外">眼在手外</h2>
+<p>眼在手外是相机固定，标定板跟着末端走。要求的是：</p>
+<p><span class="math display">\[
+X={}^{b}T_c
+\]</span></p>
+<p>仍然记 <span class="math inline">\(G_i={}^{b}T_{f,i}\)</span>、<span class="math inline">\(C_i={}^{c}T_{t,i}\)</span>。标定板相对于法兰的变换虽然不知道，但固定不变，记为 <span class="math inline">\(Y={}^{f}T_t\)</span>：</p>
+<p><span class="math display">\[
+G_iY=XC_i
+\]</span></p>
+<p>左右两条路径表达的是同一件事：把标定板坐标转换到基座。</p>
+<p>消去 <span class="math inline">\(Y\)</span> 后：</p>
+<p><span class="math display">\[
+(G_jG_i^{-1})X=X(C_jC_i^{-1})
+\]</span></p>
+<p>眼在手外同样能整理成 <span class="math inline">\(AX=XB\)</span>，但机器人侧的变换方向和眼在手上不同。</p>
+<p>用 OpenCV 的 <code>calibrateHandEye</code> 时，如果保存的是 <span class="math inline">\({}^{b}T_f\)</span>，眼在手外需要先取逆，输入 <span class="math inline">\({}^{f}T_b\)</span>；相机侧输入 <span class="math inline">\({}^{c}T_t\)</span>，输出按这里的坐标定义解释为 <span class="math inline">\({}^{b}T_c\)</span>。函数参数名是按眼在手上的情况起的，不能只看名字就直接传数据。<a href="https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html">OpenCV 文档</a></p>
+<p>另外，手眼求解不一定要先标定 TCP。如果标定板固定在法兰上，机器人侧一直使用法兰位姿就能建立上面的约束。不过后面要让实际工具到达目标，TCP 还是要校准。</p>
+<h2 id="数据怎么采">数据怎么采</h2>
+<p>先按眼在手外记录一套流程：</p>
+<ol type="1">
+<li>固定相机和标定板，确认支架、连接件不会在采集时松动。</li>
+<li>读取实际使用图像流的内参、畸变、分辨率，测量并确认标定板尺寸。</li>
+<li>机械臂停稳，保存图像和对应的实际法兰位姿。</li>
+<li>检测标定板角点，用 PnP 得到 <span class="math inline">\({}^{c}T_t\)</span>。</li>
+<li>采集不同位置、距离、倾角的数据，剔除检测错误的图像，再求解手眼关系。</li>
+<li>留出一部分姿态，单独验证，不全部拿去拟合。</li>
+</ol>
+<p>可以先从十几组姿态开始，但不能把组数当成质量保证。只做平移，或者始终绕同一个轴旋转，都会缺少有效约束。OpenCV 对可解性的要求涉及绕非平行轴的相对旋转，实际使用时也建议采集更多姿态。</p>
+<p>PnP 用的是标定板上已知的几何尺寸和图像角点，未必需要深度图参与。因此手眼关系看起来正常，深度抓取仍然偏，也不矛盾：深度测量是后面另外一段误差来源。</p>
+<p>采集时最好顺便保存设备序列号、图像流配置、时间戳、单位和位姿表示方式。机器人返回的是法兰还是 TCP、角度是欧拉角还是旋转向量，都要确认。图像和位姿对应错了，后面换求解方法通常也救不回来。</p>
+<h2 id="d405d435-要注意什么">D405、D435 要注意什么</h2>
+<p>官方给 D405 的理想工作范围是 7～50 cm，D435 的比较页面列出 0.3～3 m。这些是工作范围参考，不能当成整个范围内都能达到同一精度的承诺，具体还要看分辨率、模式、材质和现场环境。<a href="https://www.realsenseai.com/product-family/d405-series/">D405 产品资料</a>；<a href="https://www.realsenseai.com/compare-all-cameras/">型号比较</a></p>
+<p>D405 的 RGB 来自左侧深度成像器，经 ISP 输出，没有独立 RGB 相机。这和 D435 的彩色、深度成像结构不同，不能把两款的数据处理流程当成完全一样。无论用哪一款，内参和图像流之间的关系都应该从当前配置读取，而不是写死一套参数。</p>
+<p>如果手眼标定使用的是彩色图像，最后反投影得到的点却在深度坐标系中，还需要把这两个坐标系接起来：</p>
+<p><span class="math display">\[
+p_b={}^{b}T_{c_{rgb}}\,
+{}^{c_{rgb}}T_{c_{depth}}\,p_{c_{depth}}
+\]</span></p>
+<p>不能把深度坐标系里的点直接乘“彩色相机到基座”的矩阵。</p>
+<p>RealSense 这里还有几个小地方：</p>
+<ul>
+<li>原始 Z16 数值要乘运行时读取的 <code>depth_scale</code>；<code>get_distance(u, v)</code> 已经返回米，不要再乘一次。</li>
+<li>深度为 0 表示没有有效深度，不能当成正常测量。</li>
+<li>像素坐标是 <code>(u, v)</code>，数组通常按 <code>[v, u]</code> 索引。</li>
+<li>彩色像素不能直接索引未对齐的深度图。要用 SDK 的投影、反投影和流间外参建立对应关系。</li>
+<li>用实际深度帧对应的内参与畸变模型反投影，不能随手拿另一种分辨率的参数。</li>
+</ul>
+<p>这些约定可以直接对照 <a href="https://dev.realsenseai.com/docs/projection-in-realsense-sdk-2-0/">RealSense 的投影说明</a>。</p>
+<p>取深度时，也尽量不要只读目标轮廓边缘的一个像素。边缘、遮挡和无效深度都会影响结果，可以在确认属于目标的区域里做有效值统计或几何拟合。滤波后的图更完整，并不代表每个补出来的深度都是真实观测。</p>
+<h2 id="接到机械臂上">接到机械臂上</h2>
+<p>眼在手外得到物体位姿 <span class="math inline">\({}^{c}T_o\)</span> 后：</p>
+<p><span class="math display">\[
+{}^{b}T_o={}^{b}T_c\,{}^{c}T_o
+\]</span></p>
+<p>再根据抓取策略定义物体到期望 TCP 的关系：</p>
+<p><span class="math display">\[
+{}^{b}T_{tcp}^{*}
+={}^{b}T_c\,{}^{c}T_o\,{}^{o}T_{tcp}^{*}
+\]</span></p>
+<p>如果机器人接口要求的是法兰位姿，再转换：</p>
+<p><span class="math display">\[
+{}^{b}T_f^{*}
+={}^{b}T_{tcp}^{*}({}^{f}T_{tcp})^{-1}
+\]</span></p>
+<p>如果接口本来就是按当前 TCP 接收目标，就不要再手动扣一遍工具长度，否则会重复补偿。</p>
+<p>还有一点，像素加深度只确定一个三维点，不会自动得到完整的六自由度抓取位姿。夹爪朝哪个方向、是否需要沿物体边缘对齐，还需要目标几何或抓取规则。</p>
+<h2 id="怎么验收">怎么验收</h2>
+<p>标定软件显示成功，只能说明它算出了结果。验收可以拆成三层。</p>
+<p><strong>图像层</strong>：标定板尺寸是否正确，角点是否稳定，重投影误差是否合理。</p>
+<p><strong>几何层</strong>：用没有参与求解的姿态检查坐标链。眼在手外时计算：</p>
+<p><span class="math display">\[
+Y_i=G_i^{-1}XC_i
+\]</span></p>
+<p>标定板相对于法兰固定，所以这些 <span class="math inline">\(Y_i\)</span> 应该接近同一个变换。位置和角度误差分开统计，不要把两者混成一个没有单位说明的分数。</p>
+<p><strong>任务层</strong>：用独立参考，在不同位置、距离和画面区域检查 TCP 实际落点。先确认变换方向与工作空间，在安全距离、低速和既有防护措施下逐步接近，不要把第一次验证直接变成自动碰触。</p>
+<p>角度误差也不能忽略。小角度下，距离为 <span class="math inline">\(L\)</span> 时的横向误差大约是 <span class="math inline">\(L\delta\theta\)</span>。例如 0.1° 在 500 mm 距离上，大约对应 0.87 mm 偏差。这只是几何估算，不是相机或机械臂的精度指标。</p>
+<p>总结一下就是：先把坐标方向和单位弄清楚，再看采集数据是否有足够变化，最后用独立数据和实际任务验证。相机的标称精度、手眼残差、机械臂重复定位精度、最终抓取误差是几件不同的事，不能拿其中一个直接代替其他几个。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>zoyass</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://zoyassisoe.github.io/2026/11/03/robot-arm-calibration/">https://zoyassisoe.github.io/2026/11/03/robot-arm-calibration/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2026 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+<a href="/tags/%E6%9C%BA%E5%99%A8%E4%BA%BA/"># 机器人</a>
+<a href="/tags/%E6%A0%87%E5%AE%9A/"># 标定</a>
+<a href="/tags/RealSense/"># RealSense</a>
+</span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            <a class="next" rel="next" href="/2026/11/03/hello-dot/">接管成功：你好，我是 dot</a>
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© zoyass | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+            
+                <a href="/diary" target="_self">|鸟</a>  
+            
+        </span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

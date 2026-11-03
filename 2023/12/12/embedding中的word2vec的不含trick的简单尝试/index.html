@@ -29,6 +29,7 @@
 
 
 <title>Word Embedding中的word2vec的不含trick的简单尝试 | 1214</title>
+<link rel="canonical" href="https://zoyassisoe.github.io/2023/12/12/embedding%E4%B8%AD%E7%9A%84word2vec%E7%9A%84%E4%B8%8D%E5%90%ABtrick%E7%9A%84%E7%AE%80%E5%8D%95%E5%B0%9D%E8%AF%95/">
 
 
 
@@ -202,13 +203,167 @@
                         </span>
                     
                     
+                <span class="post-time">Updated: <time datetime="2026-11-03">十一月 3, 2026</time></span>
                 </div>
             
         </header>
 
         <div class="post-content">
-            <h1 id="skip-gram">Skip-gram</h1>
-<h1 id="cbow">CBOW</h1>
+<p>先从最普通的版本看起。这里的“不含trick”指不使用负采样、层次softmax和高频词下采样，直接对整个词表做softmax。这样训练大语料会比较慢，但输入、输出和loss的关系比较清楚。</p>
+<p>word2vec主要有两种结构：Skip-gram用中心词预测上下文，CBOW用上下文预测中心词。<a href="https://arxiv.org/abs/1301.3781">原论文</a>中介绍了这两个模型。下面只保留基本的预测任务，不复现论文里完整的训练方案。</p>
+<p>先记一下符号。词表大小为<span class="math inline">\(V\)</span>，词向量维度为<span class="math inline">\(d\)</span>。每个词有两套参数：作为输入时的向量<span class="math inline">\(v_w\in\mathbb{R}^d\)</span>，以及作为输出时的向量<span class="math inline">\(u_w\in\mathbb{R}^d\)</span>。</p>
+<p>为什么有两套？可以先按两层线性变换理解：第一层把词编号映射成<span class="math inline">\(d\)</span>维向量，第二层把这个向量映射成<span class="math inline">\(V\)</span>个词的分数。两层的参数都需要训练。</p>
+<h2 id="skip-gram">Skip-gram</h2>
+<p>例如一句话：</p>
+<figure class="highlight "><table><tr><td class="code"><pre>小猫 喜欢 吃 鱼</pre></td></tr></table></figure>
+<p>窗口大小设为1。中心词为“喜欢”时，上下文为“小猫”和“吃”，可以拆成两个训练样本：</p>
+<figure class="highlight "><table><tr><td class="code"><pre>喜欢 -&gt; 小猫
+喜欢 -&gt; 吃</pre></td></tr></table></figure>
+<p>输入中心词<span class="math inline">\(c\)</span>，输出词<span class="math inline">\(o\)</span>的概率写成：</p>
+<p><span class="math display">\[
+P(o\mid c)=\frac{\exp(u_o^T v_c)}{\sum_{w\in\mathcal{V}}\exp(u_w^T v_c)}
+\]</span></p>
+<p>也就是先计算中心词向量和每个输出向量的内积，再经过softmax。对于一个中心词和它的上下文集合<span class="math inline">\(C_t\)</span>，loss为：</p>
+<p><span class="math display">\[
+L_t=-\sum_{o\in C_t}\log P(o\mid c_t)
+\]</span></p>
+<p>实现时把这些词对放在一起，求平均交叉熵就可以了。模型一次预测一个上下文词，不需要给“左边第一个词”“右边第一个词”各做一个分类头。</p>
+<p>如果把输入写成one-hot向量<span class="math inline">\(x_c\)</span>，第一步其实是<span class="math inline">\(x_cE\)</span>，其中<span class="math inline">\(E\in\mathbb{R}^{V\times d}\)</span>。由于<span class="math inline">\(x_c\)</span>只有一个位置为1，这次矩阵乘法就是取出<span class="math inline">\(E\)</span>的第<span class="math inline">\(c\)</span>行。<code>nn.Embedding</code>做的就是这个查表操作，不需要真的创建one-hot向量。</p>
+<h2 id="cbow">CBOW</h2>
+<p>CBOW把输入和目标换了一下。同样是上面这个窗口：</p>
+<figure class="highlight "><table><tr><td class="code"><pre>[小猫, 吃] -&gt; 喜欢</pre></td></tr></table></figure>
+<p>先取出上下文词向量，再求平均：</p>
+<p><span class="math display">\[
+h_t=\frac{1}{|C_t|}\sum_{w\in C_t}v_w
+\]</span></p>
+<p>然后用<span class="math inline">\(h_t\)</span>预测中心词：</p>
+<p><span class="math display">\[
+P(c_t\mid C_t)=\frac{\exp(u_{c_t}^T h_t)}{\sum_{w\in\mathcal{V}}\exp(u_w^T h_t)},\qquad
+L_t=-\log P(c_t\mid C_t)
+\]</span></p>
+<p>这里求平均以后，上下文词的顺序就丢掉了，所以叫Bag-of-Words。交换“小猫”和“吃”的位置，得到的<span class="math inline">\(h_t\)</span>不变。Skip-gram上面的写法也没有单独编码相对位置。</p>
+<h3 id="pytorch实现">Pytorch实现</h3>
+<p>用几句已经分好词的话把流程接起来。每个中心词的左右最多各取一个词：Skip-gram在句子边界保留实际存在的上下文；CBOW为了避免处理padding，只取左右上下文都完整的位置。不同句子分别构造样本，不把一句话的结尾和下一句的开头连起来。</p>
+<p>这只是演示数据，主要看张量形状和训练流程，不能靠这几句话判断词向量的语义效果。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre>import torch
+from torch import nn
+from torch.nn import functional as F
+
+
+sentences = [
+    &quot;小猫 喜欢 吃 鱼&quot;.split(),
+    &quot;小狗 喜欢 吃 肉&quot;.split(),
+    &quot;小猫 喜欢 喝 水&quot;.split(),
+    &quot;小狗 喜欢 喝 水&quot;.split(),
+    &quot;小鸟 喜欢 吃 虫子&quot;.split(),
+    &quot;小鸟 喜欢 喝 水&quot;.split(),
+]
+
+idx_to_token = sorted({w for sentence in sentences for w in sentence})
+token_to_idx = {w: i for i, w in enumerate(idx_to_token)}
+vocab_size = len(idx_to_token)
+window_size = 1
+
+skip_inputs, skip_targets = [], []
+cbow_inputs, cbow_targets = [], []
+
+for sentence in sentences:
+    ids = [token_to_idx[w] for w in sentence]
+    for i in range(len(ids)):
+        context = (
+            ids[max(0, i - window_size):i]
+            + ids[i + 1:i + window_size + 1]
+        )
+        if len(context) == 2 * window_size:
+            cbow_inputs.append(context)
+            cbow_targets.append(ids[i])
+        for neighbor in context:
+            skip_inputs.append(ids[i])
+            skip_targets.append(neighbor)
+
+datasets = {
+    &quot;skip-gram&quot;: (
+        torch.tensor(skip_inputs, dtype=torch.long),
+        torch.tensor(skip_targets, dtype=torch.long),
+    ),
+    &quot;cbow&quot;: (
+        torch.tensor(cbow_inputs, dtype=torch.long),
+        torch.tensor(cbow_targets, dtype=torch.long),
+    ),
+}
+
+
+class Word2Vec(nn.Module):
+    def __init__(self, vocab_size, embed_dim, mode):
+        super().__init__()
+        self.mode = mode
+        self.embedding = nn.Embedding(vocab_size, embed_dim)
+        # output.weight的每一行对应一个输出词向量u_w
+        self.output = nn.Linear(embed_dim, vocab_size, bias=False)
+
+    def forward(self, x):
+        h = self.embedding(x)
+        if self.mode == &quot;cbow&quot;:
+            h = h.mean(dim=1)
+        return self.output(h)  # [batch_size, vocab_size]
+
+
+def train(mode, epochs=400):
+    torch.manual_seed(7)
+    model = Word2Vec(vocab_size, embed_dim=16, mode=mode)
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.2)
+    x, y = datasets[mode]
+
+    for epoch in range(epochs):
+        model.train()
+        optimizer.zero_grad()
+        logits = model(x)
+        loss = F.cross_entropy(logits, y)
+        loss.backward()
+        optimizer.step()
+        if epoch % 100 == 0 or epoch == epochs - 1:
+            print(mode, epoch + 1, float(loss.detach()))
+
+    return model
+
+
+skip_model = train(&quot;skip-gram&quot;)
+cbow_model = train(&quot;cbow&quot;)
+
+
+@torch.no_grad()
+def nearest_words(model, word, k=3):
+    model.eval()
+    vectors = F.normalize(model.embedding.weight, p=2, dim=1)
+    index = token_to_idx[word]
+    scores = vectors @ vectors[index]
+    scores[index] = -float(&quot;inf&quot;)  # 排除查询词本身
+    values, indices = scores.topk(min(k, vocab_size - 1))
+    return [
+        (idx_to_token[i], round(score, 4))
+        for i, score in zip(indices.tolist(), values.tolist())
+    ]
+
+
+print(nearest_words(skip_model, &quot;小猫&quot;))</pre></td></tr></table></figure>
+<p>Skip-gram的输入形状为<code>[B]</code>，查表后为<code>[B, d]</code>；CBOW的输入为<code>[B, 2]</code>，查表后为<code>[B, 2, d]</code>，在上下文这一维求平均后也是<code>[B, d]</code>。所以最后可以共用同样的输出层。</p>
+<p><code>cross_entropy</code>接收原始分数logits，内部会处理log-softmax。这里不要在输出层后面再手动加一次softmax。<a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html">Pytorch文档</a>里给出了它的输入要求。</p>
+<h3 id="几个容易混淆的地方">几个容易混淆的地方</h3>
+<ol type="1">
+<li><strong>Embedding层本身不负责预测。</strong> 它只是可训练的查表矩阵。因为后面的预测任务产生了梯度，词向量才会被更新。</li>
+<li><strong>输入向量和输出向量不是同一组参数。</strong> 这里取<code>embedding.weight</code>作为训练后的词向量。两组参数共同完成预测，但不能默认它们训练后相等。</li>
+<li><strong>训练loss不一定能降到0。</strong> 比如“喜欢”同时对应多个上下文词，模型对同一个输入给出的是一个概率分布，不能把所有不同目标的概率都变成1。</li>
+<li><strong>loss下降不等于已经学到了好的语义关系。</strong> 还需要足够的语料，以及近邻、相似度或下游任务等检查。上面的数据太少，不适合拿来验证“国王减男人加女人”这样的关系。</li>
+</ol>
+<p>这个版本每次都要计算整个词表的输出分数，单个预测的输出层计算量约为<span class="math inline">\(O(Vd)\)</span>。词表很大时，这一步就比较贵了。负采样等方法解决的是后面的训练效率问题，可以在把这个基本流程弄清楚以后再看。<a href="https://arxiv.org/abs/1310.4546">后续论文</a>讨论了负采样和高频词下采样等改进。</p>
+<h3 id="参考">参考</h3>
+<ul>
+<li><a href="https://arxiv.org/abs/1301.3781">Efficient Estimation of Word Representations in Vector Space</a></li>
+<li><a href="https://arxiv.org/abs/1310.4546">Distributed Representations of Words and Phrases and their Compositionality</a></li>
+<li><a href="https://d2l.ai/chapter_natural-language-processing-pretraining/word2vec.html">动手学深度学习 word2vec</a></li>
+<li><a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Embedding.html">Pytorch Embedding</a></li>
+<li><a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html">Pytorch CrossEntropyLoss</a></li>
+</ul>
 
         </div>
 
@@ -223,7 +378,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="https://www.zoyass.site/2023/12/12/embedding%E4%B8%AD%E7%9A%84word2vec%E7%9A%84%E4%B8%8D%E5%90%ABtrick%E7%9A%84%E7%AE%80%E5%8D%95%E5%B0%9D%E8%AF%95/">https://www.zoyass.site/2023/12/12/embedding%E4%B8%AD%E7%9A%84word2vec%E7%9A%84%E4%B8%8D%E5%90%ABtrick%E7%9A%84%E7%AE%80%E5%8D%95%E5%B0%9D%E8%AF%95/</a></span>
+                        <span><a href="https://zoyassisoe.github.io/2023/12/12/embedding%E4%B8%AD%E7%9A%84word2vec%E7%9A%84%E4%B8%8D%E5%90%ABtrick%E7%9A%84%E7%AE%80%E5%8D%95%E5%B0%9D%E8%AF%95/">https://zoyassisoe.github.io/2023/12/12/embedding%E4%B8%AD%E7%9A%84word2vec%E7%9A%84%E4%B8%8D%E5%90%ABtrick%E7%9A%84%E7%AE%80%E5%8D%95%E5%B0%9D%E8%AF%95/</a></span>
                     </p>
                 
                 

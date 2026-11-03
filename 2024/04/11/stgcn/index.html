@@ -29,6 +29,7 @@
 
 
 <title>Stgcn | 1214</title>
+<link rel="canonical" href="https://zoyassisoe.github.io/2024/04/11/stgcn/">
 
 
 
@@ -202,12 +203,216 @@
                         </span>
                     
                     
+                <span class="post-time">Updated: <time datetime="2026-11-03">十一月 3, 2026</time></span>
                 </div>
             
         </header>
 
         <div class="post-content">
-            
+<p>论文：<a href="https://arxiv.org/abs/1709.04875">Spatio-Temporal Graph Convolutional Networks: A Deep Learning Framework for Traffic Forecasting</a></p>
+<p>前面的GCN和ChebNet是在一张图上处理节点特征。交通预测还要多考虑一个时间维度：除了看相邻路段的情况，也要看同一路段之前的变化。</p>
+<p>STGCN的做法比较直接，图卷积处理空间关系，时间卷积处理历史序列，再把这两部分放进同一个block。这里记录的是交通预测的STGCN。</p>
+<h2 id="输入和输出">输入和输出</h2>
+<p>假设路网上有<span class="math inline">\(N\)</span>个传感器，每个时刻记录一次速度。一个时刻的数据可以写成<span class="math inline">\(X_t\in\mathbb{R}^{N\times C}\)</span>，只有速度这一项时<span class="math inline">\(C=1\)</span>。</p>
+<p>用过去<span class="math inline">\(M\)</span>个时刻的数据预测未来<span class="math inline">\(H\)</span>步，可以写成：</p>
+<p><span class="math display">\[
+\hat X_{t+1:t+H}=f_\theta(X_{t-M+1:t},A)
+\]</span></p>
+<p>其中<span class="math inline">\(A\in\mathbb{R}^{N\times N}\)</span>表示传感器之间的图结构。节点特征随时间变化，邻接矩阵在这里固定不变。</p>
+<p>下面的代码统一使用<code>[B, C, T, N]</code>：batch、通道、时间、节点。输入<span class="math inline">\(M\)</span>步，输出<span class="math inline">\(H\)</span>步，先把这两个长度分开记，不能把历史窗口长度当成预测步数。</p>
+<h2 id="空间部分-chebnet">空间部分 ChebNet</h2>
+<p>在同一个时刻，相邻路段的交通状态可能有关。图卷积负责沿着图的边聚合这些信息，不是直接按照传感器编号做普通卷积。</p>
+<p>STGCN讨论了Chebyshev近似和一阶近似两个版本。这里接着前面的ChebNet，使用前一种。</p>
+<p>对非负、对称的邻接矩阵，先构造归一化拉普拉斯矩阵：</p>
+<p><span class="math display">\[
+L=I-D^{-\frac12}AD^{-\frac12},\qquad D_{ii}=\sum_j A_{ij}
+\]</span></p>
+<p>再把特征值范围缩放到<span class="math inline">\([-1,1]\)</span>：</p>
+<p><span class="math display">\[
+\tilde L=\frac{2}{\lambda_{\max}}L-I
+\]</span></p>
+<p>切比雪夫多项式可以递推得到：</p>
+<p><span class="math display">\[
+T_0(\tilde L)=I,\quad T_1(\tilde L)=\tilde L,\quad
+T_k(\tilde L)=2\tilde L T_{k-1}(\tilde L)-T_{k-2}(\tilde L)
+\]</span></p>
+<p>对于某个时刻的多通道特征，图卷积为：</p>
+<p><span class="math display">\[
+Z_t=\sum_{k=0}^{K-1}T_k(\tilde L)X_t\Theta_k,
+\qquad \Theta_k\in\mathbb{R}^{C_{in}\times C_{out}}
+\]</span></p>
+<p>左边的多项式作用在节点维度，右边的<span class="math inline">\(\Theta_k\)</span>作用在通道维度。这两个操作分开看，形状就不容易弄错了。</p>
+<p>这里<span class="math inline">\(K\)</span>表示保留<span class="math inline">\(K\)</span>项，最高次数为<span class="math inline">\(K-1\)</span>。例如<span class="math inline">\(K=3\)</span>时包含<span class="math inline">\(T_0,T_1,T_2\)</span>，单层最多涉及2跳邻域。图卷积对每个时间切片使用同一组参数，不会在这一步把时间维度压掉。<a href="https://arxiv.org/abs/1606.09375">ChebNet论文</a>里有更完整的谱域推导。</p>
+<h2 id="时间部分-门控卷积">时间部分 门控卷积</h2>
+<p>对一个节点而言，它的历史记录是一段序列。这里沿时间轴做卷积，卷积核宽度为<span class="math inline">\(K_t\)</span>，节点轴上的宽度为1。</p>
+<p>所以Pytorch中可以用<code>nn.Conv2d</code>，将<code>kernel_size</code>设为<code>(K_t, 1)</code>。虽然叫二维卷积，实际并没有按节点编号把附近几个节点卷到一起。不同节点共享这组时间卷积参数。</p>
+<p>GLU把卷积输出分成两部分：</p>
+<p><span class="math display">\[
+[P,Q]=\operatorname{Conv}(X),\qquad
+Y=P\odot\sigma(Q)
+\]</span></p>
+<p><span class="math inline">\(P\)</span>是内容，<span class="math inline">\(\sigma(Q)\)</span>是门，决定对应位置通过多少信息。卷积要先输出<span class="math inline">\(2C_{out}\)</span>个通道，再沿通道维度切成两半。这个门控结构来自<a href="https://arxiv.org/abs/1612.08083">GLU相关论文</a>。</p>
+<p>STGCN的时间卷积不做padding，因此一次卷积后，时间长度从<span class="math inline">\(T\)</span>变成<span class="math inline">\(T-K_t+1\)</span>。残差分支也需要裁剪，和卷积输出的时间位置对齐。把窗口右端作为当前时刻时，保留残差的<code>K_t-1:</code>部分。</p>
+<p>这时每个输出只依赖对应窗口及其之前的输入。不能随便换成左右对称padding，再假设仍然保持同样的时间对齐方式。</p>
+<h2 id="st-conv-block">ST-Conv Block</h2>
+<p>一个block的主线是：</p>
+<figure class="highlight "><table><tr><td class="code"><pre>时间卷积 -&gt; 图卷积 -&gt; 时间卷积</pre></td></tr></table></figure>
+<p>第一层时间卷积先提取局部变化，中间的图卷积把相邻节点的信息混合进来，最后再做时间上的处理。block中还使用了残差连接和LayerNorm。</p>
+<p>两个时间卷积都会缩短序列，所以一个block之后的时间长度为：</p>
+<p><span class="math display">\[
+T&#39;=T-2(K_t-1)
+\]</span></p>
+<p>例如输入12步，<span class="math inline">\(K_t=3\)</span>，一个block后剩8步，再接一个后剩4步。图卷积本身不改变时间长度，也不改变节点数。</p>
+<p>看<a href="https://github.com/VeritasYin/STGCN_IJCAI-18/blob/master/models/layers.py">作者的公开实现</a>时还有一个细节：block入口的时间层使用GLU，出口的时间层调用默认的ReLU分支。下面按这个顺序写一个小版本，不把所有时间层都直接替换成GLU。</p>
+<h2 id="pytorch实现">Pytorch实现</h2>
+<p>下面保留两个ST-Conv block，使用小规模稠密矩阵，把张量流转写清楚。通道数和输出层作了简化：输出头直接预测未来<span class="math inline">\(H\)</span>步；原作者代码的输出层生成单步预测，多步处理还要结合它的推理逻辑。因此这段是结构示例，不是论文实验的完整复现。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre>import torch
+from torch import nn
+from torch.nn import functional as F
+
+
+def cheb_supports(a, k):
+    # a: [N, N]，本例只处理非负、无向图
+    if k &lt; 1 or a.ndim != 2 or a.shape[0] != a.shape[1]:
+        raise ValueError(&quot;需要方阵邻接矩阵，且k &gt;= 1&quot;)
+    if not torch.allclose(a, a.T) or torch.any(a &lt; 0):
+        raise ValueError(&quot;本例要求非负、对称的邻接矩阵&quot;)
+
+    n = a.shape[0]
+    eye = torch.eye(n, dtype=a.dtype, device=a.device)
+    degree = a.sum(dim=1)
+    inv = degree.clamp_min(1e-12).rsqrt()
+    inv = torch.where(degree &gt; 0, inv, torch.zeros_like(inv))
+    lap = eye - inv[:, None] * a * inv[None, :]
+    lambda_max = torch.linalg.eigvalsh(lap).max().clamp_min(1e-6)
+    scaled_lap = 2 * lap / lambda_max - eye
+
+    supports = [eye]
+    if k &gt; 1:
+        supports.append(scaled_lap)
+    for _ in range(2, k):
+        supports.append(2 * scaled_lap @ supports[-1] - supports[-2])
+    return torch.stack(supports)  # [K, N, N]
+
+
+class ChebConv(nn.Module):
+    def __init__(self, c_in, c_out, k):
+        super().__init__()
+        self.weight = nn.Parameter(torch.empty(k, c_in, c_out))
+        self.bias = nn.Parameter(torch.zeros(c_out))
+        for weight in self.weight:
+            nn.init.xavier_uniform_(weight)
+
+    def forward(self, x, supports):
+        # x: [B, C_in, T, N]
+        out = 0
+        for k, weight in enumerate(self.weight):
+            h = torch.einsum(&quot;nm,bctm-&gt;bctn&quot;, supports[k], x)
+            out = out + torch.einsum(&quot;bctn,co-&gt;botn&quot;, h, weight)
+        return out + self.bias[None, :, None, None]
+
+
+class TemporalConv(nn.Module):
+    def __init__(self, c_in, c_out, kt, glu):
+        super().__init__()
+        self.kt, self.glu = kt, glu
+        channels = 2 * c_out if glu else c_out
+        self.conv = nn.Conv2d(c_in, channels, (kt, 1))
+        self.align = (
+            nn.Identity() if c_in == c_out
+            else nn.Conv2d(c_in, c_out, 1, bias=False)
+        )
+
+    def forward(self, x):
+        h = self.conv(x)
+        residual = self.align(x)[:, :, self.kt - 1:, :]
+        if self.glu:
+            p, q = h.chunk(2, dim=1)
+            return (p + residual) * torch.sigmoid(q)
+        return F.relu(h + residual)
+
+
+class STConvBlock(nn.Module):
+    def __init__(self, c_in, c_hidden, c_out, n, k=3, kt=3):
+        super().__init__()
+        self.temporal1 = TemporalConv(c_in, c_hidden, kt, glu=True)
+        self.spatial = ChebConv(c_hidden, c_hidden, k)
+        self.temporal2 = TemporalConv(c_hidden, c_out, kt, glu=False)
+        self.norm = nn.LayerNorm([n, c_out])
+
+    def forward(self, x, supports):
+        h = self.temporal1(x)
+        h = F.relu(self.spatial(h, supports) + h)
+        h = self.temporal2(h)
+        # 每个时间位置，在节点和通道维度上做LayerNorm
+        h = self.norm(h.permute(0, 2, 3, 1))
+        return h.permute(0, 3, 1, 2).contiguous()
+
+
+class STGCN(nn.Module):
+    def __init__(self, a, history=12, horizon=3, k=3, kt=3):
+        super().__init__()
+        a = a.detach().to(dtype=torch.float32)
+        n = a.shape[0]
+        self.history = history
+        self.register_buffer(&quot;supports&quot;, cheb_supports(a, k))
+        self.block1 = STConvBlock(1, 16, 32, n, k, kt)
+        self.block2 = STConvBlock(32, 16, 32, n, k, kt)
+
+        remaining = history - 4 * (kt - 1)
+        if remaining &lt; 1:
+            raise ValueError(&quot;历史长度不足以通过两个ST-Conv block&quot;)
+        self.head = nn.Conv2d(32, horizon, (remaining, 1))
+
+    def forward(self, x):
+        if x.shape[2] != self.history:
+            raise ValueError(&quot;输入时间长度需要与history一致&quot;)
+        h = self.block1(x, self.supports)
+        h = self.block2(h, self.supports)
+        return self.head(h).squeeze(2)  # [B, H, N]
+
+
+# 4个节点组成的链式图，仅演示输入输出形状
+torch.manual_seed(7)
+a = torch.tensor([
+    [0., 1., 0., 0.],
+    [1., 0., 1., 0.],
+    [0., 1., 0., 1.],
+    [0., 0., 1., 0.],
+])
+net = STGCN(a, history=12, horizon=3)
+x = torch.randn(2, 1, 12, 4)
+y_hat = net(x)
+assert y_hat.shape == (2, 3, 4)</pre></td></tr></table></figure>
+<p>这里几个地方单独说明一下：</p>
+<ul>
+<li><code>supports</code>由图结构计算，作为buffer保存，跟随模型移动设备，但不作为可训练参数更新。</li>
+<li>两个<code>einsum</code>分别处理节点聚合和通道变换。节点维度即使排在最后，仍然可以对应前面的<span class="math inline">\(T_k(\tilde L)X_t\Theta_k\)</span>。</li>
+<li><code>LayerNorm([N, C])</code>要求先把节点和通道放在最后两个维度，不能直接对<code>[B, C, T, N]</code>照着写。</li>
+<li>本例通道不一致时统一用<span class="math inline">\(1\times1\)</span>卷积对齐残差，省略了作者代码中部分零填充、dropout和输出层细节。</li>
+<li>稠密实现方便看清楚计算，但大图不能据此认为计算量是线性的。实际大规模实现需要考虑稀疏存储、稀疏乘法或直接递推图信号。</li>
+</ul>
+<h2 id="接真实数据时">接真实数据时</h2>
+<p>假设原始序列是<code>[全部时间点, N]</code>。一个样本取过去<span class="math inline">\(M\)</span>步作为输入，紧接着的<span class="math inline">\(H\)</span>步作为标签，整理后分别对应<code>[1, M, N]</code>和<code>[H, N]</code>，再由DataLoader拼成batch。</p>
+<p>有几个地方比模型本身还容易出问题：</p>
+<ol type="1">
+<li><strong>节点顺序。</strong> 数据第<span class="math inline">\(i\)</span>列对应的传感器，必须和邻接矩阵第<span class="math inline">\(i\)</span>行、第<span class="math inline">\(i\)</span>列对应，不能各自排序以后直接拼起来。</li>
+<li><strong>时间划分。</strong> 先确定训练、验证、测试的时间边界，再构造样本，确保训练标签不跨进验证或测试时段。高度重叠的窗口直接随机分组，容易让评估结果偏乐观。</li>
+<li><strong>标准化。</strong> 均值和标准差只从训练部分计算。验证和测试沿用这组数，计算实际速度单位的MAE、RMSE时，再把预测和标签反标准化。</li>
+<li><strong>缺失值。</strong> 缺失标记不能直接当成真实的0速度。补值方式、有效值mask和指标计算口径需要一致；MAPE在真实值接近0时也要特别注意。</li>
+</ol>
+<p>训练可以先用均方误差接起来，但上面的随机输入只检查结构，不能用来报告交通预测精度。比较论文结果时，还需要对齐数据版本、时间划分、预测方式和指标处理。</p>
+<h3 id="参考">参考</h3>
+<ul>
+<li><a href="https://arxiv.org/abs/1709.04875">STGCN论文</a></li>
+<li><a href="https://github.com/VeritasYin/STGCN_IJCAI-18">作者代码</a></li>
+<li><a href="https://github.com/VeritasYin/STGCN_IJCAI-18/blob/master/models/layers.py">作者的网络层实现</a></li>
+<li><a href="https://github.com/VeritasYin/STGCN_IJCAI-18/blob/master/models/base_model.py">作者的输出与训练目标</a></li>
+<li><a href="https://arxiv.org/abs/1606.09375">ChebNet论文</a></li>
+<li><a href="https://arxiv.org/abs/1612.08083">Language Modeling with Gated Convolutional Networks</a></li>
+<li><a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Conv2d.html">Pytorch Conv2d</a></li>
+<li><a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.LayerNorm.html">Pytorch LayerNorm</a></li>
+</ul>
 
         </div>
 
@@ -222,7 +427,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="https://www.zoyass.site/2024/04/11/stgcn/">https://www.zoyass.site/2024/04/11/stgcn/</a></span>
+                        <span><a href="https://zoyassisoe.github.io/2024/04/11/stgcn/">https://zoyassisoe.github.io/2024/04/11/stgcn/</a></span>
                     </p>
                 
                 
